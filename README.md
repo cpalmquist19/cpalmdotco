@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Caleb Palmquist — Portfolio
+
+Personal portfolio site for Caleb Palmquist, an AI engineer. It presents featured projects over a full-bleed background video and includes a chat panel meant to answer questions about Caleb's work.
+
+Built with Next.js (App Router), React, TypeScript, and Tailwind CSS v4.
+
+## Features
+
+- Hero section with headline and call to action
+- Featured work grid with tech tags and GitHub links
+- Background that shows a still image and fades in a short video once it is playing, then fades back to the image
+- Responsive layout: single column on small screens, two-column hero on large screens
+- Chat panel UI (see [Status](#status))
+
+## Requirements
+
+- Node.js 20.9 or newer (required by Next.js 16)
+- npm (the repo includes `package-lock.json`)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone <repo-url>
+cd cpalmdotco
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The page reloads as you edit files in `src/`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command         | Description                                              |
+| --------------- | -------------------------------------------------------- |
+| `npm run dev`   | Start the development server                             |
+| `npm run build` | Create a production build (includes the TypeScript check) |
+| `npm start`     | Serve the production build (run `npm run build` first)   |
+| `npm run lint`  | Lint the project with ESLint                             |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/app/
+  layout.tsx            Root layout, fonts, and page metadata
+  page.tsx              Home page: hero, chat panel, and featured work
+  background-media.tsx  Background image and video
+  globals.css           Tailwind import and base styles
+public/                 Images, video, and other static assets
+next.config.ts          Next.js configuration
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Customizing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Projects:** edit the `PROJECTS` array in `src/app/page.tsx`. Each entry sets the title, description, tags, thumbnail image, and GitHub link.
+- **Chat prompts:** edit `CHAT_PROMPTS` in `src/app/page.tsx`.
+- **Navigation:** edit `NAV_LINKS` and `ACTIVE_LINK` in `src/app/page.tsx`.
+- **Site title and description:** edit `metadata` in `src/app/layout.tsx`.
+- **Background:** replace `public/distance.jpg` (still image) and `public/background.webm` / `public/background-opt.mp4` (video). The video sources are listed in `src/app/background-media.tsx`.
+- **Avatar:** replace `public/caleb_avatar_professional.jpg`.
 
-## Deploy on Vercel
+## Status
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The chat panel is a UI preview. Its prompt buttons and input do not send messages yet. The `ai` and `@ai-sdk/anthropic` packages are installed for a planned chat backend but are not used by the code.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Development Notes
+
+- `next.config.ts` sets `allowedDevOrigins` to `192.168.*.*`, so the dev server can be reached from other devices on your local network (for example, a phone). This setting only applies to `npm run dev`.
+
+## Deployment
+
+The simplest option is [Vercel](https://vercel.com/new), which detects Next.js automatically. To run it on any other Node.js host:
+
+```bash
+npm ci
+npm run build
+npm start
+```
+
+The app listens on port 3000 by default.
+
+## Credits
+
+- Typography: [Geist](https://vercel.com/font) by Vercel, loaded with `next/font`.

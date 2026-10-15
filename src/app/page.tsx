@@ -17,37 +17,40 @@ const PROJECTS: {
   description: string;
   tags: string[];
   thumbnail: string;
+  image?: string;
+  href: string;
+  github: string;
   preview?: ReactNode;
 }[] = [
   {
-    title: "TestScribeAI",
+    title: "Ticket Radar",
+    href: "/projects/ticket-radar",
     description:
-      "AI-powered test documentation and automation tool for modern web applications.",
-    tags: ["Python", "Flask", "MySQL", "Stripe"],
+      "Fine-tuned DistilBERT that sorts support tickets into Change, Issue, or Request at 98% accuracy.",
+    tags: ["Python", "PyTorch", "ONNX"],
+    github: "https://github.com/cpalmquist19/ticket_radar",
     thumbnail: "from-[#0b1020] to-[#101a33]",
-    preview: (
-      <div className="p-2.5 font-mono text-[10px] leading-4 text-emerald-300/80">
-        <p>&gt; run e2e</p>
-        <p>✓ 12 tests passed (12/12)</p>
-        <p>✓ 0 failures</p>
-        <p>✓ 0 skipped</p>
-        <p className="mt-1 text-sky-300/70">Tests completed in 45.2s</p>
-      </div>
-    ),
+    image: "/ticket_radar.jpg",
   },
   {
-    title: "YourLocalServices",
+    title: "Relay",
+    href: "https://github.com/cpalmquist19/relay",
     description:
-      "Local business directory for Indian Trail, NC, helping people find trusted service providers.",
-    tags: ["Next.js", "Tailwind", "TypeScript", "PostgreSQL"],
-    thumbnail: "from-[#dfe9d8] to-[#c9d8e6]",
+      "Local coding agent with a web UI, plus an 11-task eval harness that scores models on pass rate, speed, and cost.",
+    tags: ["Python", "LLM", "Agents", "Evals"],
+    github: "https://github.com/cpalmquist19/relay",
+    thumbnail: "from-[#0b1020] to-[#101a33]",
+    image: "/relay.jpg",
   },
   {
-    title: "AI Education Companion",
+    title: "Quark",
+    href: "/projects/quark",
     description:
-      "Adaptive learning companion for neurodivergent kids, with personalized support and encouragement.",
-    tags: ["Python", "FastAPI", "LLM", "React"],
-    thumbnail: "from-[#6b7a3a] to-[#d9c9b0]",
+      "Workbench for small GPT models: swap in paper-inspired components and compare them with paired-seed ablations.",
+    tags: ["Python", "PyTorch", "LLM"],
+    github: "https://github.com/cpalmquist19/quark",
+    thumbnail: "from-[#0b1020] to-[#101a33]",
+    image: "/quark.jpg",
   },
   // TEMP: placeholder cards hidden for a height check
   // {
@@ -287,7 +290,7 @@ export default function Home() {
         />
         <section
           id="projects"
-          className="mx-auto w-full max-w-[1480px] px-6 pb-12 pt-[3rem] sm:px-10 lg:flex lg:flex-1 lg:flex-col lg:px-16 lg:pb-12"
+          className="mx-auto w-full max-w-[1480px] px-6 pb-12 pt-[1rem] sm:px-10 lg:flex lg:flex-1 lg:flex-col lg:px-16 lg:pb-12"
         >
           <div className="flex items-end justify-between">
             <h2 className="text-xl font-semibold tracking-tight">
@@ -305,18 +308,45 @@ export default function Home() {
           <ul className="mt-3 grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] lg:flex-1">
             {PROJECTS.map((project) => (
               <li key={project.title}>
-                <article className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0c1226]/95">
+                <article className="relative flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0c1226]/95 transition-all duration-[400ms] ease-out hover:-translate-y-1 hover:scale-[1.05] hover:border-2 hover:border-[#ff5555]">
                   <div
                     aria-hidden="true"
-                    className={`h-[5.4rem] overflow-hidden bg-gradient-to-br lg:h-auto lg:max-h-[18rem] lg:min-h-0 lg:flex-1 ${project.thumbnail}`}
+                    className={`absolute inset-0 bg-gradient-to-br ${project.thumbnail}`}
                   >
                     {project.preview}
                   </div>
-                  <div className="flex flex-1 flex-col p-4">
+                  {project.image && (
+                    <Image
+                      src={project.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 100vw"
+                      className="object-cover object-top"
+                    />
+                  )}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-b from-[#0c1226]/20 via-[#0c1226]/70 to-[#0c1226]"
+                  />
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${project.title} on GitHub`}
+                    className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
+                      <path d="M12 .5C5.37.5 0 5.78 0 12.292c0 5.211 3.438 9.63 8.205 11.188.6.111.82-.254.82-.567 0-.28-.01-1.022-.015-2.005-3.338.711-4.042-1.582-4.042-1.582-.546-1.361-1.335-1.723-1.335-1.723-1.087-.731.084-.716.084-.716 1.205.082 1.838 1.217 1.838 1.217 1.07 1.799 2.809 1.279 3.495.978.108-.76.417-1.279.76-1.573-2.665-.296-5.466-1.309-5.466-5.827 0-1.287.465-2.339 1.235-3.164-.135-.298-.54-1.497.105-3.121 0 0 1.005-.317 3.3 1.209a11.7 11.7 0 0 1 3-.399c1.02.004 2.045.136 3 .399 2.28-1.526 3.285-1.209 3.285-1.209.645 1.624.24 2.823.12 3.121.765.825 1.23 1.877 1.23 3.164 0 4.53-2.805 5.527-5.475 5.817.42.354.81 1.077.81 2.182 0 1.573-.015 2.846-.015 3.229 0 .309.21.678.825.56C20.565 21.917 24 17.499 24 12.292 24 5.78 18.627.5 12 .5z" />
+                    </svg>
+                    Code on GitHub
+                  </a>
+                  <div
+                    className="relative mt-auto bg-[#0c1226]/85 p-4 backdrop-blur-sm"
+                  >
                     <h3 className="text-base font-semibold tracking-tight">
                       {project.title}
                     </h3>
-                    <p className="mt-1 flex-1 text-[13px] leading-5 text-slate-300">
+                    <p className="mt-1 text-[13px] leading-5 text-slate-300">
                       {project.description}
                     </p>
                     <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -332,6 +362,13 @@ export default function Home() {
                       ))}
                     </ul>
                   </div>
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={project.title}
+                    className="absolute inset-0 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+                  />
                 </article>
               </li>
             ))}
