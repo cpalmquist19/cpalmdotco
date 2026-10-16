@@ -1,6 +1,8 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { BackgroundMedia } from "./background-media";
+import { FeaturedCarousel } from "./featured-carousel";
+import { ModelPicker } from "./model-picker";
 
 const NAV_LINKS = ["Projects", "Experience", "Skills", "About", "Contact"];
 const ACTIVE_LINK = "Projects";
@@ -21,6 +23,10 @@ const PROJECTS: {
   href: string;
   github: string;
   preview?: ReactNode;
+  overlay?: boolean;
+  caption?: boolean;
+  imageFit?: "cover" | "contain";
+  aspect?: "3/2";
 }[] = [
   {
     title: "Ticket Radar",
@@ -30,7 +36,11 @@ const PROJECTS: {
     tags: ["Python", "PyTorch", "ONNX"],
     github: "https://github.com/cpalmquist19/ticket_radar",
     thumbnail: "from-[#0b1020] to-[#101a33]",
-    image: "/ticket_radar.jpg",
+    image: "/ticket_radar_new.jpg",
+    overlay: false,
+    caption: false,
+    imageFit: "contain",
+    aspect: "3/2",
   },
   {
     title: "Relay",
@@ -41,6 +51,10 @@ const PROJECTS: {
     github: "https://github.com/cpalmquist19/relay",
     thumbnail: "from-[#0b1020] to-[#101a33]",
     image: "/relay.jpg",
+    overlay: false,
+    caption: false,
+    imageFit: "contain",
+    aspect: "3/2",
   },
   {
     title: "Quark",
@@ -50,15 +64,25 @@ const PROJECTS: {
     tags: ["Python", "PyTorch", "LLM"],
     github: "https://github.com/cpalmquist19/quark",
     thumbnail: "from-[#0b1020] to-[#101a33]",
-    image: "/quark.jpg",
+    image: "/quark_new.jpg",
+    overlay: false,
+    caption: false,
+    imageFit: "contain",
+    aspect: "3/2",
   },
-  // TEMP: placeholder cards hidden for a height check
-  // {
-  //   title: "Placeholder Project 1",
-  //   description: "Replace with a short description of this project.",
-  //   tags: ["Placeholder"],
-  //   thumbnail: "from-[#1a2238] to-[#2a3a5c]",
-  // },
+  // TEMP: placeholder card 2 hidden for a height check
+  {
+    title: "Placeholder Project 1",
+    description: "Replace with a short description of this project.",
+    tags: ["Placeholder"],
+    href: "#",
+    github: "#",
+    thumbnail: "from-[#1a2238] to-[#2a3a5c]",
+    overlay: false,
+    caption: false,
+    imageFit: "contain",
+    aspect: "3/2",
+  },
   // {
   //   title: "Placeholder Project 2",
   //   description: "Replace with a short description of this project.",
@@ -112,7 +136,7 @@ function ChatCard() {
   return (
     <aside
       aria-label="Ask me about Caleb"
-      className="w-full max-w-[460px] rounded-3xl xl:w-[480px] xl:max-w-[480px] border border-white/10 bg-[#0e1428]/80 shadow-2xl shadow-black/40 backdrop-blur-md"
+      className="w-full max-w-[625px] rounded-3xl xl:w-[650px] xl:max-w-[650px] border border-white/10 bg-[#0e1428]/80 shadow-2xl shadow-black/40 backdrop-blur-md lg:flex lg:flex-col lg:self-stretch"
     >
       <header className="flex items-center gap-4 border-b border-white/5 px-6 py-3">
         <div className="relative">
@@ -136,26 +160,9 @@ function ChatCard() {
             AI assistant · answers from my work
           </p>
         </div>
-        <button
-          type="button"
-          aria-label="Close chat"
-          className="rounded-full p-1.5 text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            className="size-5"
-            aria-hidden="true"
-          >
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        </button>
       </header>
 
-      <div className="flex flex-col gap-2 px-6 py-4">
+      <div className="flex flex-col gap-2 px-6 py-4 lg:flex-1 lg:justify-center">
         {CHAT_PROMPTS.map((prompt) => (
           <button
             key={prompt}
@@ -180,17 +187,19 @@ function ChatCard() {
       </div>
 
       <form className="px-6 pb-5" action="#">
-        <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-[#0a0f20]/70 py-2 pl-5 pr-2">
+        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-[#0a0f20]/70 py-1.5 pl-1.5 pr-1.5 focus-within:border-blue-400/50">
+          <ModelPicker />
+          <span aria-hidden="true" className="h-6 w-px shrink-0 bg-white/15" />
           <input
             type="text"
             placeholder="Type a question…"
             aria-label="Type a question"
-            className="min-w-0 flex-1 bg-transparent text-base text-slate-100 placeholder:text-slate-500 focus:outline-none"
+            className="min-w-0 flex-1 bg-transparent px-2 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none"
           />
           <button
             type="submit"
             aria-label="Send"
-            className="flex size-10 items-center justify-center rounded-full border border-blue-400/40 bg-blue-500/20 text-white transition-colors duration-150 hover:bg-blue-500/30"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full border border-blue-400/40 bg-blue-500/20 text-white transition-colors duration-150 hover:bg-blue-500/30"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="size-5" aria-hidden="true">
               <g transform="translate(10 14) scale(0.83) translate(-12 -12)">
@@ -210,10 +219,6 @@ export default function Home() {
     <div className="relative isolate flex min-h-dvh flex-1 flex-col overflow-hidden bg-[#070b1a] text-white lg:h-dvh lg:min-h-0 lg:flex-none">
       {/* Static mountain image, with the video layered on once it plays */}
       <BackgroundMedia />
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-[#060a18] via-[#060a18]/85 to-transparent"
-      />
 
       <header className="mx-auto flex w-full max-w-[1480px] shrink-0 items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
         <a href="#" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
@@ -256,8 +261,8 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto grid w-full max-w-[1480px] gap-10 px-6 pb-12 pt-8 sm:px-10 lg:flex-none lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-16 lg:pb-6 lg:pt-2">
-        <div className="flex max-w-xl flex-col items-start gap-5 lg:justify-center lg:gap-7">
+      <section className="mx-auto grid w-full max-w-[1480px] gap-10 px-6 pb-12 pt-8 sm:px-10 lg:flex-none lg:grid-cols-[minmax(0,1fr)_625px] xl:grid-cols-[minmax(0,1fr)_650px] lg:items-center lg:px-16 lg:pb-6 lg:pt-2">
+        <div className="flex max-w-xl flex-col items-start gap-5 lg:self-stretch lg:justify-center lg:gap-7">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-blue-300">
             AI Engineer
           </p>
@@ -283,11 +288,17 @@ export default function Home() {
       </section>
 
       {/* Featured work */}
-      <div className="relative w-full bg-[#0e1428]/80 backdrop-blur-md lg:flex lg:flex-1 lg:flex-col">
+      <div className="relative w-full lg:flex lg:flex-1 lg:flex-col">
+        {/*
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 -top-16 h-16 bg-gradient-to-b from-transparent to-[#0e1428]/80"
+          className="pointer-events-none absolute left-0 top-0 h-1.5 w-1/2 bg-gradient-to-r from-transparent via-[#ff5555]/70 to-transparent blur-md"
         />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0 h-0.5 w-1/2 bg-gradient-to-r from-transparent via-[#ff5555]/90 to-transparent"
+        />
+        */}
         <section
           id="projects"
           className="mx-auto w-full max-w-[1480px] px-6 pb-12 pt-[1rem] sm:px-10 lg:flex lg:flex-1 lg:flex-col lg:px-16 lg:pb-12"
@@ -305,74 +316,89 @@ export default function Home() {
             </a>
           </div>
 
-          <ul className="mt-3 grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] lg:flex-1">
-            {PROJECTS.map((project) => (
-              <li key={project.title}>
-                <article className="relative flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0c1226]/95 transition-all duration-[400ms] ease-out hover:-translate-y-1 hover:scale-[1.05] hover:border-2 hover:border-[#ff5555]">
-                  <div
-                    aria-hidden="true"
-                    className={`absolute inset-0 bg-gradient-to-br ${project.thumbnail}`}
-                  >
-                    {project.preview}
-                  </div>
-                  {project.image && (
-                    <Image
-                      src={project.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 100vw"
-                      className="object-cover object-top"
+          <div className="mt-3 flex min-h-0 flex-1 flex-col">
+            <FeaturedCarousel>
+              {PROJECTS.map((project) => (
+                <li
+                  key={project.title}
+                  className="w-full shrink-0 snap-start md:w-[calc((100%_-_1rem)/2)] lg:w-[calc((100%_-_3rem)/4)]"
+                >
+                  <article className={`relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0c1226]/95 transition-all duration-[400ms] ease-out hover:-translate-y-1 hover:scale-[1.05] hover:border-2 hover:border-[#ff5555] ${project.aspect ? "aspect-[3/2]" : "h-full"}`}>
+                    <div
+                      aria-hidden="true"
+                      className={`absolute inset-0 bg-gradient-to-br ${project.thumbnail}`}
+                    >
+                      {project.preview}
+                    </div>
+                    {project.image && (
+                      <Image
+                        src={project.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 100vw"
+                        className={
+                          project.imageFit === "contain"
+                            ? "object-contain object-center"
+                            : "object-cover object-top"
+                        }
+                      />
+                    )}
+                    {project.overlay !== false && (
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-gradient-to-b from-[#0c1226]/20 via-[#0c1226]/70 to-[#0c1226]"
+                      />
+                    )}
+                    {/*
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} on GitHub`}
+                      className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
+                        <path d="M12 .5C5.37.5 0 5.78 0 12.292c0 5.211 3.438 9.63 8.205 11.188.6.111.82-.254.82-.567 0-.28-.01-1.022-.015-2.005-3.338.711-4.042-1.582-4.042-1.582-.546-1.361-1.335-1.723-1.335-1.723-1.087-.731.084-.716.084-.716 1.205.082 1.838 1.217 1.838 1.217 1.07 1.799 2.809 1.279 3.495.978.108-.76.417-1.279.76-1.573-2.665-.296-5.466-1.309-5.466-5.827 0-1.287.465-2.339 1.235-3.164-.135-.298-.54-1.497.105-3.121 0 0 1.005-.317 3.3 1.209a11.7 11.7 0 0 1 3-.399c1.02.004 2.045.136 3 .399 2.28-1.526 3.285-1.209 3.285-1.209.645 1.624.24 2.823.12 3.121.765.825 1.23 1.877 1.23 3.164 0 4.53-2.805 5.527-5.475 5.817.42.354.81 1.077.81 2.182 0 1.573-.015 2.846-.015 3.229 0 .309.21.678.825.56C20.565 21.917 24 17.499 24 12.292 24 5.78 18.627.5 12 .5z" />
+                      </svg>
+                      Code on GitHub
+                    </a>
+                    */}
+                    {project.caption !== false && (
+                      <div className="relative mt-auto bg-[#0c1226]/85 p-4 backdrop-blur-sm">
+                        <h3 className="text-base font-semibold tracking-tight">
+                          {project.title}
+                        </h3>
+                        <p className="mt-1 text-[13px] leading-5 text-slate-300">
+                          {project.description}
+                        </p>
+                        {/*
+                        <ul className="mt-3 flex flex-wrap gap-1.5">
+                          {project.tags.map((tag) => (
+                            <li
+                              key={tag}
+                              className={`rounded-full border px-2.5 py-0.5 text-xs ${
+                                CHIP_STYLES[TAG_CATEGORY[tag] ?? "service"]
+                              }`}
+                            >
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                        */}
+                      </div>
+                    )}
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={project.title}
+                      className="absolute inset-0 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
                     />
-                  )}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-b from-[#0c1226]/20 via-[#0c1226]/70 to-[#0c1226]"
-                  />
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${project.title} on GitHub`}
-                    className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
-                      <path d="M12 .5C5.37.5 0 5.78 0 12.292c0 5.211 3.438 9.63 8.205 11.188.6.111.82-.254.82-.567 0-.28-.01-1.022-.015-2.005-3.338.711-4.042-1.582-4.042-1.582-.546-1.361-1.335-1.723-1.335-1.723-1.087-.731.084-.716.084-.716 1.205.082 1.838 1.217 1.838 1.217 1.07 1.799 2.809 1.279 3.495.978.108-.76.417-1.279.76-1.573-2.665-.296-5.466-1.309-5.466-5.827 0-1.287.465-2.339 1.235-3.164-.135-.298-.54-1.497.105-3.121 0 0 1.005-.317 3.3 1.209a11.7 11.7 0 0 1 3-.399c1.02.004 2.045.136 3 .399 2.28-1.526 3.285-1.209 3.285-1.209.645 1.624.24 2.823.12 3.121.765.825 1.23 1.877 1.23 3.164 0 4.53-2.805 5.527-5.475 5.817.42.354.81 1.077.81 2.182 0 1.573-.015 2.846-.015 3.229 0 .309.21.678.825.56C20.565 21.917 24 17.499 24 12.292 24 5.78 18.627.5 12 .5z" />
-                    </svg>
-                    Code on GitHub
-                  </a>
-                  <div
-                    className="relative mt-auto bg-[#0c1226]/85 p-4 backdrop-blur-sm"
-                  >
-                    <h3 className="text-base font-semibold tracking-tight">
-                      {project.title}
-                    </h3>
-                    <p className="mt-1 text-[13px] leading-5 text-slate-300">
-                      {project.description}
-                    </p>
-                    <ul className="mt-3 flex flex-wrap gap-1.5">
-                      {project.tags.map((tag) => (
-                        <li
-                          key={tag}
-                          className={`rounded-full border px-2.5 py-0.5 text-xs ${
-                            CHIP_STYLES[TAG_CATEGORY[tag] ?? "service"]
-                          }`}
-                        >
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <a
-                    href={project.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={project.title}
-                    className="absolute inset-0 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
-                  />
-                </article>
-              </li>
-            ))}
-          </ul>
+                  </article>
+                </li>
+              ))}
+            </FeaturedCarousel>
+          </div>
         </section>
       </div>
     </div>
