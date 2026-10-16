@@ -1,5 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import type { ReactNode } from "react";
+import quarkCard from "../../public/quark_card.jpg";
+import relayCard from "../../public/relay_card.jpg";
+import ticketRadarCard from "../../public/ticket_radar_card.jpg";
 import { BackgroundMedia } from "./background-media";
 import { FeaturedCarousel } from "./featured-carousel";
 import { ModelPicker } from "./model-picker";
@@ -12,6 +15,7 @@ const CHAT_PROMPTS = [
   "What projects are you most proud of?",
   "Tell me about your experience with AI and testing.",
   "What technologies do you work with?",
+  "What are you working on right now?",
 ];
 
 const PROJECTS: {
@@ -19,7 +23,7 @@ const PROJECTS: {
   description: string;
   tags: string[];
   thumbnail: string;
-  image?: string;
+  image?: StaticImageData;
   href: string;
   github: string;
   preview?: ReactNode;
@@ -36,10 +40,10 @@ const PROJECTS: {
     tags: ["Python", "PyTorch", "ONNX"],
     github: "https://github.com/cpalmquist19/ticket_radar",
     thumbnail: "from-[#0b1020] to-[#101a33]",
-    image: "/ticket_radar_new.jpg",
+    image: ticketRadarCard,
     overlay: false,
     caption: false,
-    imageFit: "contain",
+    imageFit: "cover",
     aspect: "3/2",
   },
   {
@@ -50,10 +54,10 @@ const PROJECTS: {
     tags: ["Python", "LLM", "Agents", "Evals"],
     github: "https://github.com/cpalmquist19/relay",
     thumbnail: "from-[#0b1020] to-[#101a33]",
-    image: "/relay.jpg",
+    image: relayCard,
     overlay: false,
     caption: false,
-    imageFit: "contain",
+    imageFit: "cover",
     aspect: "3/2",
   },
   {
@@ -64,23 +68,10 @@ const PROJECTS: {
     tags: ["Python", "PyTorch", "LLM"],
     github: "https://github.com/cpalmquist19/quark",
     thumbnail: "from-[#0b1020] to-[#101a33]",
-    image: "/quark_new.jpg",
+    image: quarkCard,
     overlay: false,
     caption: false,
-    imageFit: "contain",
-    aspect: "3/2",
-  },
-  // TEMP: placeholder card 2 hidden for a height check
-  {
-    title: "Placeholder Project 1",
-    description: "Replace with a short description of this project.",
-    tags: ["Placeholder"],
-    href: "#",
-    github: "#",
-    thumbnail: "from-[#1a2238] to-[#2a3a5c]",
-    overlay: false,
-    caption: false,
-    imageFit: "contain",
+    imageFit: "cover",
     aspect: "3/2",
   },
   // {
@@ -162,7 +153,7 @@ function ChatCard() {
         </div>
       </header>
 
-      <div className="flex flex-col gap-2 px-6 py-4 lg:flex-1 lg:justify-center">
+      <div className="grid grid-cols-2 gap-2 px-6 py-4 lg:flex-1 lg:content-center">
         {CHAT_PROMPTS.map((prompt) => (
           <button
             key={prompt}
@@ -289,20 +280,24 @@ export default function Home() {
 
       {/* Featured work */}
       <div className="relative w-full lg:flex lg:flex-1 lg:flex-col">
-        {/*
+        {/* Dark overlay over the page background behind this section; eases into solid at the transition line just above the title, then stays solid */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 h-1.5 w-1/2 bg-gradient-to-r from-transparent via-[#ff5555]/70 to-transparent blur-md"
+          className="pointer-events-none absolute inset-0 -z-[1] bg-[linear-gradient(to_bottom,rgba(14,20,40,0)_0rem,rgba(14,20,40,0.5)_1.375rem,rgba(14,20,40,1)_2.75rem,rgba(14,20,40,1)_100%)]"
         />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 h-0.5 w-1/2 bg-gradient-to-r from-transparent via-[#ff5555]/90 to-transparent"
-        />
-        */}
         <section
           id="projects"
-          className="mx-auto w-full max-w-[1480px] px-6 pb-12 pt-[1rem] sm:px-10 lg:flex lg:flex-1 lg:flex-col lg:px-16 lg:pb-12"
+          className="relative mx-auto w-full max-w-[1480px] px-6 pb-12 pt-[3.25rem] sm:px-10 lg:flex lg:flex-1 lg:flex-col lg:px-16 lg:pb-12"
         >
+          {/* Glowing orange-red transition line; tapers out at both ends */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-[2.75rem] h-1.5 w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#ff5555]/30 to-transparent blur-md"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-[2.75rem] h-0.5 w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#ff5555] to-transparent"
+          />
           <div className="flex items-end justify-between">
             <h2 className="text-xl font-semibold tracking-tight">
               Featured Work
