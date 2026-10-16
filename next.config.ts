@@ -12,7 +12,10 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
  */
 function getDeploymentId() {
   if (process.env.NEXT_DEPLOYMENT_ID) return process.env.NEXT_DEPLOYMENT_ID;
-  if (process.env.VERCEL_GIT_COMMIT_SHA) return process.env.VERCEL_GIT_COMMIT_SHA;
+  if (process.env.VERCEL_GIT_COMMIT_SHA) {
+    // Vercel limits deployment IDs to 32 characters; the full SHA is 40.
+    return process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7);
+  }
   try {
     return execSync("git rev-parse --short HEAD", {
       stdio: ["ignore", "pipe", "ignore"],
