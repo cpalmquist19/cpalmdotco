@@ -1,4 +1,5 @@
 import Image, { type StaticImageData } from "next/image";
+import { asset } from "@/lib/asset";
 import type { ReactNode } from "react";
 import quarkCard from "../../public/quark_card.jpg";
 import relayCard from "../../public/relay_card.jpg";
@@ -133,7 +134,7 @@ function ChatCard() {
         <div className="relative">
           <div className="size-10 overflow-hidden rounded-full bg-slate-700">
             <Image
-              src="/caleb_avatar_professional.jpg"
+              src={asset("/caleb_avatar_professional.jpg")}
               alt="Caleb Palmquist"
               width={80}
               height={80}
@@ -215,7 +216,7 @@ export default function Home() {
         <a href="#" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
           <span className="size-10 shrink-0 overflow-hidden rounded-full bg-slate-700">
             <Image
-              src="/caleb_avatar_professional.jpg"
+              src={asset("/caleb_avatar_professional.jpg")}
               alt=""
               width={80}
               height={80}

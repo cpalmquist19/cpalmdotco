@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { asset } from "@/lib/asset";
 
 const PLAYED_COOKIE = "background-video-played";
 
@@ -38,7 +39,8 @@ export function BackgroundMedia() {
     <>
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[url('/distance.jpg')] bg-cover bg-center"
+        style={{ backgroundImage: `url(${asset("/distance.jpg")})` }}
+        className="absolute inset-0 -z-10 bg-cover bg-center"
       />
       <video
         ref={videoRef}
@@ -55,8 +57,8 @@ export function BackgroundMedia() {
           showVideo ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src="/background.webm" type="video/webm" />
-        <source src="/background-opt.mp4" type="video/mp4" />
+        <source src={asset("/background.webm")} type="video/webm" />
+        <source src={asset("/background-opt.mp4")} type="video/mp4" />
       </video>
     </>
   );
