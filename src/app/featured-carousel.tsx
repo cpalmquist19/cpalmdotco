@@ -72,7 +72,7 @@ export function FeaturedCarousel({ children }: { children: ReactNode }) {
     <div className="flex min-h-0 flex-1 flex-col">
       <ul
         ref={trackRef}
-        className="relative -m-2 flex min-h-0 flex-1 snap-x snap-mandatory scroll-p-2 gap-4 overflow-x-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="relative -m-2 flex min-h-0 flex-1 snap-x snap-mandatory scroll-p-2 gap-4 lg:justify-start overflow-x-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {children}
       </ul>
