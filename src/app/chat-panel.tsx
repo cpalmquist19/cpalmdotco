@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
+import { MAX_USER_CHARS, checkMessage } from "@/lib/chat-guard";
+import { Markdown } from "./markdown";
 import { ModelPicker } from "./model-picker";
 
 const CHAT_PROMPTS = [
@@ -30,6 +32,8 @@ export function ChatPanel({ className = "" }: { className?: string }) {
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Why the last message was refused before or by the server; shown above the composer, with the draft kept
+  const [notice, setNotice] = useState<string | null>(null);
   const [videoMode, setVideoMode] = useState<VideoMode>("ready");
   const [videoFailed, setVideoFailed] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -59,6 +63,14 @@ export function ChatPanel({ className = "" }: { className?: string }) {
     const content = text.trim();
     if (!content || isSending) return;
 
+    // Same screening the server runs. A blocked message never leaves the browser, and the draft stays so it can be reworded
+    const verdict = checkMessage(content);
+    if (!verdict.ok) {
+      setNotice(verdict.message);
+      return;
+    }
+    setNotice(null);
+
     const next: Message[] = [...messages, { role: "user", content }];
     setMessages(next);
     setDraft("");
@@ -77,6 +89,13 @@ export function ChatPanel({ className = "" }: { className?: string }) {
       });
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => null);
+        if (data?.blocked) {
+          // The server refused it (blocked content or a rate limit): take it back out of the thread so it isn't resent, and keep the draft
+          setMessages(messages);
+          setDraft(content);
+          setNotice(data.error ?? "That message couldn't be sent.");
+          return;
+        }
         throw new Error(data?.error ?? "Something went wrong.");
       }
 
@@ -186,10 +205,10 @@ export function ChatPanel({ className = "" }: { className?: string }) {
               className={
                 message.role === "user"
                   ? "max-w-[85%] self-end whitespace-pre-wrap rounded-2xl rounded-br-md bg-blue-500/25 px-4 py-2.5 text-[15px] leading-relaxed text-slate-50"
-                  : "max-w-[85%] self-start whitespace-pre-wrap rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-slate-200"
+                  : "max-w-[85%] self-start rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-slate-200"
               }
             >
-              {message.content}
+              {message.role === "user" ? message.content : <Markdown text={message.content} />}
             </div>
           ))}
           {isSending && messages[messages.length - 1]?.role === "user" && (
@@ -235,6 +254,11 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           void send(draft);
         }}
       >
+        {notice && (
+          <p role="alert" className="mb-2 px-1 text-sm text-amber-300">
+            {notice}
+          </p>
+        )}
         {/* Composer: the text area gets the full width on top, with the model picker and send button in a toolbar underneath */}
         <div
           onClick={() => inputRef.current?.focus()}
@@ -246,7 +270,11 @@ export function ChatPanel({ className = "" }: { className?: string }) {
             placeholder="Ask me anything about my work…"
             aria-label="Type a question"
             value={draft}
-            onChange={(event) => setDraft(event.target.value)}
+            onChange={(event) => {
+              setDraft(event.target.value);
+              setNotice(null);
+            }}
+            maxLength={MAX_USER_CHARS}
             onKeyDown={(event) => {
               // Enter sends, Shift+Enter adds a new line
               if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {

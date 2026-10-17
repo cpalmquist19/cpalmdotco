@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "optimize-video": "node scripts/optimize-video.mjs"
+    "optimize-video": "node scripts/optimize-video.mjs",
+    "check:guard": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-chat-guard.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.80",

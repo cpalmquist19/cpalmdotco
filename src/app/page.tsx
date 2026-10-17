@@ -203,7 +203,7 @@ export default function HomeV2() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm text-slate-300 transition-colors hover:text-white"
             >
-              All projects on GitHub
+              View All Projects
               <ArrowUpRight className="size-3.5" />
             </a>
           </div>
