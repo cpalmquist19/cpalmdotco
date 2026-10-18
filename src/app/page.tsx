@@ -46,6 +46,8 @@ const PROJECTS: {
   },
 ];
 
+const ROW_RATIO = PROJECTS.reduce((sum, { image }) => sum + image.width / image.height, 0);
+
 function GitHubIcon({ className }: { className: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -308,7 +310,11 @@ export default function HomeV2() {
           </AlignToCards>
 
           {/* Below xl the images stack at full width. On xl they run in one row that fills the height left under the hero, so each card is as wide as its image's proportions allow */}
-          <ul className="grid gap-4 @2xl:grid-cols-3 xl:flex xl:min-h-0 xl:flex-1">
+          {/* The max height keeps the row inside the column: at height H the three cards are H * (sum of aspect ratios) wide, plus gaps and borders, so on tall screens the row stops growing instead of running under the chat panel */}
+          <ul
+            style={{ "--row-ratio": ROW_RATIO } as React.CSSProperties}
+            className="grid gap-4 @2xl:grid-cols-3 xl:flex xl:min-h-0 xl:max-h-[calc((100cqw_-_2rem_-_6px)/var(--row-ratio))] xl:flex-1"
+          >
             {PROJECTS.map((project) => (
               <li key={project.title} className="xl:min-h-0">
                 <SpotlightCard className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-blue-400/50 bg-[#0e1428]/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_44px_-6px_rgba(59,130,246,0.5)] backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 focus-within:border-blue-400/60">
