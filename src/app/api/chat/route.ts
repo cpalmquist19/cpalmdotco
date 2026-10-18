@@ -1,4 +1,5 @@
 import { anthropic } from "@ai-sdk/anthropic";
+import { openai } from "@ai-sdk/openai";
 import { streamText, type ModelMessage } from "ai";
 import { NextResponse } from "next/server";
 import {
@@ -7,13 +8,13 @@ import {
   checkConversation,
 } from "@/lib/chat-guard";
 import { checkRate, clientId, recordStrike, reserveModelCall } from "@/lib/chat-limits";
+import { DEFAULT_MODEL_ID, findModel, type ModelId } from "@/lib/models";
 import { isSameOrigin } from "@/lib/same-origin";
 import { QUARK } from "@/content/quark";
 import { RELAY } from "@/content/relay";
 import { RESUME } from "@/content/resume";
 import { TICKET_RADAR } from "@/content/ticket-radar";
 
-const MODEL_ID = "claude-haiku-5-5";
 const MAX_MESSAGES = 20;
 const MAX_BODY_BYTES = 40_000;
 
@@ -56,6 +57,11 @@ function parseMessages(body: unknown): IncomingMessage[] | null {
   return valid && recent[recent.length - 1].role === "user" ? recent : null;
 }
 
+// Only ids from the shared model list get this far, so the provider is chosen from a known set
+function languageModel(id: ModelId) {
+  return findModel(id)?.provider === "OpenAI" ? openai(id) : anthropic(id);
+}
+
 function reject(message: string, status: number, headers?: Record<string, string>) {
   // `blocked` tells the chat UI to take the message back out of the thread and keep the draft
   return NextResponse.json({ error: message, blocked: true }, { status, headers });
@@ -88,6 +94,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid messages." }, { status: 400 });
   }
 
+  // The model is optional and defaults to the first one listed; anything else must be a listed id
+  const selected = findModel((body as { model?: unknown }).model ?? DEFAULT_MODEL_ID);
+  if (!selected) {
+    return NextResponse.json({ error: "Unknown model." }, { status: 400 });
+  }
+
   // Screen every visitor message before anything is sent to the model. A blocked message costs nothing.
   const verdict = checkConversation(messages);
   if (!verdict.ok) {
@@ -100,7 +112,7 @@ export async function POST(request: Request) {
 
   // Plain-text stream: the client reads it chunk by chunk while the reply is still being written
   const result = streamText({
-    model: anthropic(MODEL_ID),
+    model: languageModel(selected.id),
     system: SYSTEM_PROMPT,
     messages: messages as ModelMessage[],
     maxOutputTokens: 600,

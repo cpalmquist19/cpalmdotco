@@ -1,9 +1,11 @@
 import Image, { type StaticImageData } from "next/image";
 import { asset } from "@/lib/asset";
-import quarkCard from "../../public/quark_card.jpg";
-import relayCard from "../../public/relay_card_new.jpg";
-import ticketRadarCard from "../../public/ticket_radar_card.jpg";
+import quarkCard from "../../public/quark_featured.jpg";
+import relayCard from "../../public/relay_featured.jpg";
+import ticketRadarCard from "../../public/ticket_radar_featured.jpg";
+import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
+import { SpotlightCard } from "./spotlight-card";
 
 const GITHUB_URL = "https://github.com/cpalmquist19";
 
@@ -68,6 +70,77 @@ function ArrowUpRight({ className }: { className: string }) {
     </svg>
   );
 }
+
+function BrainIcon({ className }: { className: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 18V5" />
+      <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" />
+      <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" />
+      <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" />
+      <path d="M18 18a4 4 0 0 0 2-7.464" />
+      <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" />
+      <path d="M6 18a4 4 0 0 1-2-7.464" />
+      <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" />
+    </svg>
+  );
+}
+
+function ShieldCheckIcon({ className }: { className: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+
+function CodeIcon({ className }: { className: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="m18 16 4-4-4-4" />
+      <path d="m6 8-4 4 4 4" />
+      <path d="m14.5 4-5 16" />
+    </svg>
+  );
+}
+
+const FOCUS_AREAS: {
+  label: string;
+  Icon: typeof BrainIcon;
+  highlight: boolean;
+}[] = [
+  { label: "AI systems", Icon: BrainIcon, highlight: true },
+  { label: "Evaluation", Icon: ShieldCheckIcon, highlight: true },
+  { label: "Developer tooling", Icon: CodeIcon, highlight: true },
+];
 
 export default function HomeV2() {
   return (
@@ -139,7 +212,7 @@ export default function HomeV2() {
         </a>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1480px] gap-12 px-6 pb-16 pt-6 sm:px-10 lg:px-16 lg:pt-10 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1fr)_540px] xl:grid-rows-[auto_minmax(0,1fr)] xl:gap-x-14 xl:gap-y-[clamp(1rem,3dvh,2rem)] xl:pb-[clamp(1rem,3dvh,2rem)] xl:pt-0">
+      <main className="mx-auto grid w-full max-w-[1480px] gap-12 px-6 pb-16 pt-6 sm:px-10 lg:px-16 lg:pt-10 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1fr)_480px] xl:grid-rows-[auto_minmax(0,1fr)] xl:gap-x-14 xl:gap-y-[clamp(1rem,3dvh,2rem)] xl:pb-[clamp(1rem,3dvh,2rem)] xl:pt-0">
         {/* Hero copy */}
         <div className="flex flex-col items-start gap-6 xl:col-start-1 xl:row-start-1 xl:gap-[clamp(0.75rem,2.2dvh,1.5rem)] xl:pt-[min(3dvh,1.5rem)]">
           <p className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-blue-300">
@@ -149,15 +222,34 @@ export default function HomeV2() {
           <h1 className="text-[clamp(2.5rem,7vw,3.25rem)] font-semibold leading-[1.08] tracking-tight sm:text-5xl xl:text-[clamp(2.25rem,min(3.8vw,7dvh),3.9rem)]">
             Better tools.
             <br />
-            <span className="bg-gradient-to-r from-white via-white to-[#9cc3ff] bg-clip-text text-transparent">
-              Bigger possibilities.
+            <span className="text-white">Bigger</span>{" "}
+            <span className="bg-gradient-to-b from-[#a8d8ff] to-[#5aa9ff] bg-clip-text text-transparent">
+              possibilities.
             </span>
           </h1>
           <p className="max-w-[34rem] text-lg leading-relaxed text-slate-300 xl:text-[clamp(1rem,2dvh,1.125rem)]">
-            I build AI systems, developer tools, and automation that help people and teams do
-            more.
+            I build AI-powered tools and evaluation systems that make complex workflows easier to
+            use, test, and trust.
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-3">
+          <ul className="flex flex-wrap gap-2.5">
+            {FOCUS_AREAS.map(({ label, Icon, highlight }) => (
+              <li key={label}>
+                {/* Same hover as the project cards: lift, brighter border, blue glow, and the pointer-following light */}
+                <SpotlightCard
+                  spotlightRadius={90}
+                  className={`relative inline-flex items-center gap-2.5 overflow-hidden rounded-full border px-4 py-2 text-sm font-medium backdrop-blur-md transition duration-300 ease-out hover:shadow-[0_10px_24px_-8px_rgba(7,12,30,0.6),0_0_24px_-4px_rgba(59,130,246,0.5)] ${
+                    highlight
+                      ? "border-blue-400/40 bg-blue-500/15 text-[#9cc3ff] hover:border-blue-400/80"
+                      : "border-white/15 bg-white/[0.06] text-slate-200 hover:border-white/30"
+                  }`}
+                >
+                  <Icon className="size-4 shrink-0" />
+                  {label}
+                </SpotlightCard>
+              </li>
+            ))}
+          </ul>
+          {/* <div className="mt-1 flex flex-wrap items-center gap-3">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-600/25 transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300"
@@ -174,7 +266,7 @@ export default function HomeV2() {
               GitHub
               <ArrowUpRight className="size-3.5 text-slate-400" />
             </a>
-          </div>
+          </div> */}
         </div>
 
         {/* Assistant: sits beside the copy on wide screens and stays in view while the left column scrolls */}
@@ -190,63 +282,71 @@ export default function HomeV2() {
           aria-labelledby="featured-heading"
           className="@container scroll-mt-6 xl:col-start-1 xl:row-start-2 xl:flex xl:min-h-0 xl:flex-col"
         >
-          <div className="mb-4 flex shrink-0 items-end justify-between gap-4">
+          <AlignToCards className="mb-4 flex shrink-0 items-end justify-between gap-4">
             <h2
               id="featured-heading"
               className="text-xl font-semibold tracking-tight"
             >
-              Featured work
+              Featured Projects
             </h2>
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-slate-300 transition-colors hover:text-white"
+            {/* Same hover as the hero chips: brighter border, blue glow, and the pointer-following light. The link stretches over the pill so the whole pill is clickable */}
+            <SpotlightCard
+              spotlightRadius={90}
+              className="relative inline-flex overflow-hidden rounded-full border border-white/10 bg-black/40 backdrop-blur-sm transition duration-300 ease-out hover:border-white/30 hover:shadow-[0_10px_24px_-8px_rgba(7,12,30,0.6),0_0_24px_-4px_rgba(59,130,246,0.5)]"
             >
-              View All Projects
-              <ArrowUpRight className="size-3.5" />
-            </a>
-          </div>
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:text-white after:absolute after:inset-0"
+              >
+                View all projects on GitHub
+                <GitHubIcon className="size-3.5" />
+                <ArrowUpRight className="size-3.5" />
+              </a>
+            </SpotlightCard>
+          </AlignToCards>
 
-          <ul className="grid gap-4 @2xl:grid-cols-3 xl:min-h-0 xl:flex-1 xl:grid-rows-3 xl:@2xl:flex-none xl:@2xl:grid-rows-1">
+          {/* Below xl the images stack at full width. On xl they run in one row that fills the height left under the hero, so each card is as wide as its image's proportions allow */}
+          <ul className="grid gap-4 @2xl:grid-cols-3 xl:flex xl:min-h-0 xl:flex-1">
             {PROJECTS.map((project) => (
               <li key={project.title} className="xl:min-h-0">
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e1428]/75 shadow-xl shadow-black/30 backdrop-blur-md transition duration-300 ease-out focus-within:border-blue-400/60 hover:-translate-y-1 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-950/40 @lg:flex-row @2xl:flex-col xl:min-h-0">
-                  <div className="relative aspect-[3/2] shrink-0 overflow-hidden bg-[#0b1020] @lg:w-[40%] @2xl:w-full xl:@max-2xl:aspect-auto xl:@lg:@max-2xl:w-[36%]">
+                <SpotlightCard className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-blue-400/50 bg-[#0e1428]/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_44px_-6px_rgba(59,130,246,0.5)] backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 focus-within:border-blue-400/60">
+                  {/* The full image at its own proportions, so nothing is cropped. The card link carries the accessible name, since the image has no alt text */}
+                  <div
+                    className="relative w-full overflow-hidden bg-[#0b1020] xl:h-full xl:w-auto"
+                    style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
+                  >
                     <Image
                       src={project.image}
                       alt=""
                       fill
-                      sizes="(min-width: 1280px) 240px, (min-width: 640px) 33vw, 100vw"
-                      className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                      sizes="(min-width: 1280px) 25vw, (min-width: 640px) 33vw, 100vw"
+                      className="scale-[1.04] object-cover transition-transform duration-500 ease-out"
                     />
                   </div>
-                  <div className="flex flex-col gap-2 p-4 @lg:flex-1 @lg:justify-center @2xl:justify-start xl:min-h-0 xl:p-3.5">
-                    <h3 className="flex items-center justify-between gap-2 text-base font-semibold tracking-tight">
-                      <a
-                        href={project.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="after:absolute after:inset-0 focus-visible:outline-none"
-                      >
-                        {project.title}
-                        <span className="sr-only"> on GitHub</span>
-                      </a>
-                      <ArrowUpRight className="size-4 shrink-0 text-slate-500 transition-colors group-hover:text-blue-300" />
-                    </h3>
-                    <p className="text-[13px] leading-5 text-slate-300 @lg:@max-2xl:line-clamp-2 xl:[@media(max-height:800px)]:@max-2xl:line-clamp-1">{project.description}</p>
-                    <ul className="mt-auto flex flex-wrap gap-1.5 pt-1 @lg:@max-2xl:hidden xl:[@media(max-height:880px)]:hidden">
-                      {project.tags.map((tag) => (
-                        <li
-                          key={tag}
-                          className="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 text-[11px] text-slate-300"
-                        >
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </article>
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="after:absolute after:inset-0 focus-visible:outline-none"
+                  >
+                    <span className="sr-only">
+                      {project.title} on GitHub
+                    </span>
+                  </a>
+                  {/* Gradient rim (disabled), same treatment as the chat pane. Masked to a 1px edge; pointer-events-none so the card link still gets clicks
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 z-10 rounded-2xl p-px"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(186,230,253,0.85) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.03) 55%, rgba(96,165,250,0.55) 80%, rgba(186,230,253,0.7) 100%)",
+                      WebkitMask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+                      mask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+                    }}
+                  /> */}
+                </SpotlightCard>
               </li>
             ))}
           </ul>

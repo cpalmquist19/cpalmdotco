@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Desktop layouts that fit the viewport exactly (used by /v5). Smaller screens fall back to a normal scrolling page */
+@custom-variant desk (@media (min-width: 1100px) and (min-height: 640px));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

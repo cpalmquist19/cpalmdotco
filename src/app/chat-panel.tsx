@@ -4,12 +4,17 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { MAX_USER_CHARS, checkMessage } from "@/lib/chat-guard";
+import { DEFAULT_MODEL_ID, type ModelId } from "@/lib/models";
 import { Markdown } from "./markdown";
 import { ModelPicker } from "./model-picker";
 
 const CHAT_PROMPTS = [
-  "Tell me about your experience with AI and testing.",
-  "What technologies do you work with?",
+  "Walk me through Relay's evaluation harness.",
+  "How did I measure Ticket Radar's performance?",
+  "Show me an experiment from Quark and what I learned.",
+  "What does Relay do, and why did I build it?",
+  "How did I go from QA to building AI systems?",
+  "What trade-offs did I make choosing a model for Ticket Radar?",
 ];
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -36,6 +41,8 @@ export function ChatPanel({ className = "" }: { className?: string }) {
   const [notice, setNotice] = useState<string | null>(null);
   const [videoMode, setVideoMode] = useState<VideoMode>("ready");
   const [videoFailed, setVideoFailed] = useState(false);
+  // The model the picker has selected; sent with each message so the server answers with it
+  const [modelId, setModelId] = useState<ModelId>(DEFAULT_MODEL_ID);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -84,7 +91,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: next, model: modelId }),
         signal: controller.signal,
       });
       if (!res.ok || !res.body) {
@@ -134,7 +141,8 @@ export function ChatPanel({ className = "" }: { className?: string }) {
     <aside
       id="chat"
       aria-label="Ask me about Caleb"
-      className={`relative mx-auto flex h-[clamp(34rem,calc(100dvh_-_8rem),47rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 shadow-2xl shadow-black/50 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl xl:max-w-none ${className}`}
+      className={`relative mx-auto flex h-[clamp(34rem,calc(100dvh_-_8rem),47rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl md:ml-auto md:max-w-[480px] xl:max-w-none ${className}`}
+      style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.35)" }}
     >
       {/* The still image sits underneath so something shows if the video cannot load; the video fades in over it once it has a frame */}
       <div className={`relative aspect-[1.78] shrink-0 overflow-hidden xl:aspect-auto xl:min-h-[8rem] xl:shrink ${messages.length > 0 ? "xl:flex-[0.7_1_0%]" : "xl:flex-[1.3_1_0%]"} bg-[#0a0f20] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.18),transparent_70%)]`}>
@@ -142,7 +150,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           src={asset("/beame/BEAM-E.jpg")}
           alt=""
           fill
-          sizes="(min-width: 1280px) 540px, (min-width: 544px) 544px, 100vw"
+          sizes="(min-width: 768px) 480px, 100vw"
           className="object-cover object-[50%_35%]"
         />
         <video
@@ -172,8 +180,9 @@ export function ChatPanel({ className = "" }: { className?: string }) {
         </span>
       </div>
 
-      <header className="flex shrink-0 items-center gap-3.5 border-b border-white/10 px-5 pb-4 pt-1">
-        <div className="size-11 shrink-0 overflow-hidden rounded-full bg-slate-700 ring-2 ring-white/10">
+      {/* Bot avatar on the left and Caleb's photo on the right, the same size, with the copy centered between them */}
+      <header className="grid shrink-0 grid-cols-[3.9rem_1fr_3.9rem] items-center gap-4 border-b border-white/10 px-5 pb-5 pt-3">
+        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-[#4f86f0]/40">
           <Image
             src={asset("/beame/BEAM-E-avatar.jpg")}
             alt="BEAM-E"
@@ -182,13 +191,22 @@ export function ChatPanel({ className = "" }: { className?: string }) {
             className="size-full object-cover"
           />
         </div>
-        <div className="min-w-0">
-          <h2 className="text-lg font-semibold leading-tight tracking-tight text-white">
+        <div className="min-w-0 text-center">
+          <h2 className="text-xl font-semibold leading-tight tracking-tight text-white">
             Ask me about Caleb
           </h2>
-          <p className="mt-0.5 text-sm text-slate-400">
-            BEAM-E, an AI assistant that answers from Caleb&rsquo;s work
+          <p className="mt-[0.3rem] text-[0.94rem] leading-[1.4] text-[#9fb0cc]">
+            I can explain his projects, technical decisions, trade-offs, and point you to evidence.
           </p>
+        </div>
+        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-white/20">
+          <Image
+            src={asset("/caleb_avatar_professional.jpg")}
+            alt=""
+            width={96}
+            height={96}
+            className="size-full object-cover"
+          />
         </div>
       </header>
 
@@ -217,33 +235,34 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           {error && <p className="text-sm text-red-300">{error}</p>}
         </div>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-hidden px-5 py-4 xl:flex-[1_1_0%] xl:py-3">
-          <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">
-            Try asking
-          </p>
-          {CHAT_PROMPTS.map((prompt) => (
-            <button
-              key={prompt}
-              type="button"
-              onClick={() => send(prompt)}
-              disabled={isSending}
-              className="group flex w-full items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left text-[15px] leading-snug text-slate-100 transition-colors hover:border-blue-400/40 hover:bg-blue-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 disabled:opacity-50"
-            >
-              <span>{prompt}</span>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="size-5 shrink-0 text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-blue-300"
-                aria-hidden="true"
+        <div className="flex min-h-0 flex-1 flex-col px-5 py-4 xl:flex-[1_1_0%] xl:py-3">
+          <p className="mb-1.5 shrink-0 px-1 text-lg leading-tight text-[#9cc3ff]">Try asking</p>
+          {/* Scrolls inside the card when there are more suggestions than fit. The thin, blue-tinted scrollbar matches the card */}
+          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pb-1 pr-1 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin]">
+            {CHAT_PROMPTS.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                onClick={() => send(prompt)}
+                disabled={isSending}
+                className="group flex w-full shrink-0 items-center justify-between gap-4 rounded-2xl border border-[#4f86f0]/30 bg-gradient-to-br from-[#4f86f0]/[0.12] to-[#4f86f0]/[0.04] px-5 py-3.5 text-left text-[15px] leading-snug text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-colors hover:border-blue-400/60 hover:from-[#4f86f0]/[0.2] hover:to-[#4f86f0]/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 disabled:opacity-50"
               >
-                <path d="M9 6l6 6-6 6" />
-              </svg>
-            </button>
-          ))}
+                <span>{prompt}</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-5 shrink-0 text-[#9fb0cc] transition-all group-hover:translate-x-0.5 group-hover:text-blue-300"
+                  aria-hidden="true"
+                >
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -289,7 +308,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
             className="flex items-center justify-between gap-2 p-2 pt-0"
             onClick={(event) => event.stopPropagation()}
           >
-            <ModelPicker />
+            <ModelPicker value={modelId} onChange={setModelId} />
             {isSending ? (
               // While a reply is in progress the button becomes a stop button that cancels the stream
               <button
@@ -329,6 +348,17 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           AI-generated from Caleb&rsquo;s work. It can make mistakes.
         </p>
       </form>
+      {/* Gradient rim (disabled): a 1px stroke that is brightest at the top-left and bottom-right corners and fades out along the sides. Masked so only the edge shows
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 rounded-3xl p-px"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(186,230,253,0.85) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.03) 55%, rgba(96,165,250,0.55) 80%, rgba(186,230,253,0.7) 100%)",
+          WebkitMask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+          mask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+        }}
+      /> */}
     </aside>
   );
 }
