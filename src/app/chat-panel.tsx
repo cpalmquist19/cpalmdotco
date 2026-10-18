@@ -141,11 +141,11 @@ export function ChatPanel({ className = "" }: { className?: string }) {
     <aside
       id="chat"
       aria-label="Ask me about Caleb"
-      className={`relative mx-auto flex h-[clamp(34rem,calc(100dvh_-_8rem),47rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl md:ml-auto md:max-w-[480px] xl:max-w-none ${className}`}
+      className={`relative mx-auto flex h-[clamp(36rem,calc(100dvh_-_8rem),47rem)] w-full md:max-xl:h-[clamp(38rem,calc(100dvh_-_6rem),50rem)] max-w-[34rem] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl xl:max-w-none ${className}`}
       style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.35)" }}
     >
       {/* The still image sits underneath so something shows if the video cannot load; the video fades in over it once it has a frame */}
-      <div className={`relative aspect-[1.78] shrink-0 overflow-hidden xl:aspect-auto xl:min-h-[8rem] xl:shrink ${messages.length > 0 ? "xl:flex-[0.7_1_0%]" : "xl:flex-[1.3_1_0%]"} bg-[#0a0f20] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.18),transparent_70%)]`}>
+      <div className={`relative aspect-[1.78] shrink-0 overflow-hidden max-sm:aspect-[2.1] md:max-xl:aspect-[2.2] md:max-xl:max-h-56 xl:aspect-auto xl:min-h-[8rem] xl:shrink ${messages.length > 0 ? "xl:flex-[0.7_1_0%]" : "xl:flex-[1.3_1_0%]"} bg-[#0a0f20] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.18),transparent_70%)]`}>
         <Image
           src={asset("/beame/BEAM-E.jpg")}
           alt=""
@@ -181,8 +181,8 @@ export function ChatPanel({ className = "" }: { className?: string }) {
       </div>
 
       {/* Bot avatar on the left and Caleb's photo on the right, the same size, with the copy centered between them */}
-      <header className="grid shrink-0 grid-cols-[3.9rem_1fr_3.9rem] items-center gap-4 border-b border-white/10 px-5 pb-5 pt-3">
-        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-[#4f86f0]/40">
+      <header className="grid shrink-0 grid-cols-[3.9rem_1fr_3.9rem] items-center gap-4 border-b border-white/10 px-5 pb-5 pt-3 max-sm:grid-cols-[3rem_1fr] max-sm:gap-3 max-sm:pb-4">
+        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-[#4f86f0]/40 max-sm:size-12">
           <Image
             src={asset("/beame/BEAM-E-avatar.jpg")}
             alt="BEAM-E"
@@ -191,15 +191,15 @@ export function ChatPanel({ className = "" }: { className?: string }) {
             className="size-full object-cover"
           />
         </div>
-        <div className="min-w-0 text-center">
+        <div className="min-w-0 text-center max-sm:text-left">
           <h2 className="text-xl font-semibold leading-tight tracking-tight text-white">
             Ask me about Caleb
           </h2>
-          <p className="mt-[0.3rem] text-[0.94rem] leading-[1.4] text-[#9fb0cc]">
+          <p className="mt-[0.3rem] text-[0.94rem] leading-[1.4] text-[#9fb0cc] max-sm:text-sm">
             I can explain his projects, technical decisions, trade-offs, and point you to evidence.
           </p>
         </div>
-        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-white/20">
+        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-white/20 max-sm:hidden">
           <Image
             src={asset("/caleb_avatar_professional.jpg")}
             alt=""
@@ -238,7 +238,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
         <div className="flex min-h-0 flex-1 flex-col px-5 py-4 xl:flex-[1_1_0%] xl:py-3">
           <p className="mb-1.5 shrink-0 px-1 text-lg leading-tight text-[#9cc3ff]">Try asking</p>
           {/* Scrolls inside the card when there are more suggestions than fit. The thin, blue-tinted scrollbar matches the card */}
-          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pb-1 pr-1 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin]">
+          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pb-1 pr-1 md:max-lg:grid md:max-lg:auto-rows-min md:max-lg:grid-cols-2 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin]">
             {CHAT_PROMPTS.map((prompt) => (
               <button
                 key={prompt}

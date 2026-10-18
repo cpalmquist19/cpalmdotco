@@ -165,7 +165,7 @@ export default function HomeV2() {
       <header className="mx-auto flex w-full max-w-[1480px] shrink-0 items-center justify-between gap-6 px-6 py-5 sm:px-10 lg:px-16">
         <a
           href="#"
-          className="flex items-center gap-3 rounded-full text-lg font-semibold tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
+          className="flex items-center gap-3 whitespace-nowrap rounded-full text-lg font-semibold tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
         >
           <span className="size-10 shrink-0 overflow-hidden rounded-full bg-slate-700 ring-2 ring-white/15">
             <Image
@@ -189,7 +189,7 @@ export default function HomeV2() {
                   <a
                     href={`#${link.toLowerCase()}`}
                     aria-current={isActive ? "page" : undefined}
-                    className={`block rounded-full border px-4 py-2 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
+                    className={`block rounded-full border px-3 py-2 transition-colors lg:px-4 duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
                       isCta
                         ? "border-transparent bg-[#f5a25d] font-semibold text-[#1a0f05] hover:bg-[#f8b67d]"
                         : isActive
@@ -214,14 +214,14 @@ export default function HomeV2() {
         </a>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1480px] gap-12 px-6 pb-16 pt-6 sm:px-10 lg:px-16 lg:pt-10 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1fr)_480px] xl:grid-rows-[auto_minmax(0,1fr)] xl:gap-x-14 xl:gap-y-[clamp(1rem,3dvh,2rem)] xl:pb-[clamp(1rem,3dvh,2rem)] xl:pt-0">
+      <main className="mx-auto grid w-full max-w-[1480px] gap-12 px-6 pb-16 pt-6 sm:px-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:px-16 lg:pt-10 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1fr)_480px] xl:grid-rows-[auto_minmax(0,1fr)] xl:gap-x-14 xl:gap-y-[clamp(1rem,3dvh,2rem)] xl:pb-[clamp(1rem,3dvh,2rem)] xl:pt-0">
         {/* Hero copy */}
-        <div className="flex flex-col items-start gap-6 xl:col-start-1 xl:row-start-1 xl:gap-[clamp(0.75rem,2.2dvh,1.5rem)] xl:pt-[min(3dvh,1.5rem)]">
+        <div className="flex flex-col items-start gap-6 lg:col-start-1 lg:row-start-1 lg:justify-center xl:justify-start xl:col-start-1 xl:row-start-1 xl:gap-[clamp(0.75rem,2.2dvh,1.5rem)] xl:pt-[min(3dvh,1.5rem)]">
           <p className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-blue-300">
             <span aria-hidden="true" className="h-px w-8 bg-blue-300/60" />
             AI Engineer
           </p>
-          <h1 className="text-[clamp(2.5rem,7vw,3.25rem)] font-semibold leading-[1.08] tracking-tight sm:text-5xl xl:text-[clamp(2.25rem,min(3.8vw,7dvh),3.9rem)]">
+          <h1 className="text-[clamp(1.875rem,9.4vw,3.25rem)] font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[2.75rem] xl:text-[clamp(2.25rem,min(3.8vw,7dvh),3.9rem)]">
             Better tools.
             <br />
             <span className="text-white">Bigger</span>{" "}
@@ -272,7 +272,7 @@ export default function HomeV2() {
         </div>
 
         {/* Assistant: sits beside the copy on wide screens and stays in view while the left column scrolls */}
-        <div className="xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:min-h-0">
+        <div className="lg:col-start-2 lg:row-start-1 xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:min-h-0">
           <div className="xl:h-full">
             <ChatPanel className="xl:h-full" />
           </div>
@@ -282,12 +282,12 @@ export default function HomeV2() {
         <section
           id="projects"
           aria-labelledby="featured-heading"
-          className="@container scroll-mt-6 xl:col-start-1 xl:row-start-2 xl:flex xl:min-h-0 xl:flex-col"
+          className="@container scroll-mt-6 lg:col-span-2 lg:col-start-1 lg:row-start-2 xl:col-span-1 xl:col-start-1 xl:row-start-2 xl:flex xl:min-h-0 xl:flex-col"
         >
           <AlignToCards className="mb-4 flex shrink-0 items-end justify-between gap-4">
             <h2
               id="featured-heading"
-              className="text-xl font-semibold tracking-tight"
+              className="whitespace-nowrap text-xl font-semibold tracking-tight"
             >
               Featured Projects
             </h2>
@@ -300,9 +300,9 @@ export default function HomeV2() {
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:text-white after:absolute after:inset-0"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-sm font-medium text-white transition-colors hover:text-white after:absolute after:inset-0"
               >
-                View all projects on GitHub
+                <span><span className="max-sm:hidden">View all projects on </span>GitHub</span>
                 <GitHubIcon className="size-3.5" />
                 <ArrowUpRight className="size-3.5" />
               </a>
@@ -316,7 +316,7 @@ export default function HomeV2() {
             className="grid gap-4 @2xl:grid-cols-3 xl:flex xl:min-h-0 xl:max-h-[calc((100cqw_-_2rem_-_6px)/var(--row-ratio))] xl:flex-1"
           >
             {PROJECTS.map((project) => (
-              <li key={project.title} className="xl:min-h-0">
+              <li key={project.title} className="xl:min-h-0 max-xl:@max-2xl:mx-auto max-xl:@max-2xl:w-full max-xl:@max-2xl:max-w-sm">
                 <SpotlightCard className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-blue-400/50 bg-[#0e1428]/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_44px_-6px_rgba(59,130,246,0.5)] backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 focus-within:border-blue-400/60">
                   {/* The full image at its own proportions, so nothing is cropped. The card link carries the accessible name, since the image has no alt text */}
                   <div
