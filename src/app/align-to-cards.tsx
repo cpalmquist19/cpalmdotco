@@ -23,7 +23,10 @@ export function AlignToCards({
       if (!last) return;
       el.style.maxWidth = "";
       const width = last.getBoundingClientRect().right - el.getBoundingClientRect().left;
-      if (width > 0) el.style.maxWidth = `${width}px`;
+      // Never trim below what the header needs, or a lone narrow card would clip the link
+      const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+      const needed = [...el.children].reduce((sum, child) => sum + child.getBoundingClientRect().width, 0) + gap;
+      if (width > 0) el.style.maxWidth = `${Math.max(width, needed)}px`;
     };
 
     fit();

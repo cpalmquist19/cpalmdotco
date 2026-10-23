@@ -1,8 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
 import { asset } from "@/lib/asset";
-import quarkCard from "../../public/quark_featured.jpg";
-import relayCard from "../../public/relay_featured.jpg";
-import ticketRadarCard from "../../public/ticket_radar_featured.jpg";
+import calmdotcoCard from "../../public/calmdotco.jpg";
 import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
 import { SpotlightCard } from "./spotlight-card";
@@ -21,28 +19,12 @@ const PROJECTS: {
   href: string;
 }[] = [
   {
-    title: "Ticket Radar",
+    title: "cpalm.co",
     description:
-      "Fine-tuned DistilBERT that sorts support tickets into Change, Issue, or Request at 98% accuracy.",
-    tags: ["Python", "PyTorch", "ONNX"],
-    image: ticketRadarCard,
-    href: `${GITHUB_URL}/ticket_radar`,
-  },
-  {
-    title: "Relay",
-    description:
-      "Local coding agent with a web UI, plus an 11-task eval harness that scores models on pass rate, speed, and cost.",
-    tags: ["Python", "LLM", "Agents", "Evals"],
-    image: relayCard,
-    href: `${GITHUB_URL}/relay`,
-  },
-  {
-    title: "Quark",
-    description:
-      "Workbench for small GPT models: swap in paper-inspired components and compare them with paired-seed ablations.",
-    tags: ["Python", "PyTorch", "LLM"],
-    image: quarkCard,
-    href: `${GITHUB_URL}/quark`,
+      "This portfolio site, with a built-in assistant that answers questions about my projects.",
+    tags: ["Next.js", "TypeScript", "LLM"],
+    image: calmdotcoCard,
+    href: `${GITHUB_URL}/cpalmdotco`,
   },
 ];
 
@@ -309,18 +291,18 @@ export default function HomeV2() {
             </SpotlightCard>
           </AlignToCards>
 
-          {/* Below xl the images stack at full width. On xl they run in one row that fills the height left under the hero, so each card is as wide as its image's proportions allow */}
-          {/* The max height keeps the row inside the column: at height H the three cards are H * (sum of aspect ratios) wide, plus gaps and borders, so on tall screens the row stops growing instead of running under the chat panel */}
+          {/* Below xl the card stacks the image over the copy (side by side from @2xl). On xl the card fills the height left under the hero: the image keeps its own proportions at that height and the copy panel sits beside it */}
+          {/* The max height keeps the card inside the column: at height H the image is H * its aspect ratio wide, plus the copy panel and borders, so on tall screens the card stops growing instead of running under the chat panel */}
           <ul
-            style={{ "--row-ratio": ROW_RATIO } as React.CSSProperties}
-            className="grid gap-4 @2xl:grid-cols-3 xl:flex xl:min-h-0 xl:max-h-[calc((100cqw_-_2rem_-_6px)/var(--row-ratio))] xl:flex-1"
+            style={{ "--row-ratio": ROW_RATIO, "--panel-w": "15rem" } as React.CSSProperties}
+            className="grid gap-4 xl:flex xl:min-h-0 xl:max-h-[calc((100cqw_-_var(--panel-w)_-_6px)/var(--row-ratio))] xl:flex-1"
           >
             {PROJECTS.map((project) => (
-              <li key={project.title} className="xl:min-h-0 max-xl:@max-2xl:mx-auto max-xl:@max-2xl:w-full max-xl:@max-2xl:max-w-sm">
-                <SpotlightCard className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-blue-400/50 bg-[#0e1428]/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_44px_-6px_rgba(59,130,246,0.5)] backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 focus-within:border-blue-400/60">
-                  {/* The full image at its own proportions, so nothing is cropped. The card link carries the accessible name, since the image has no alt text */}
+              <li key={project.title} className="xl:min-h-0 max-xl:@max-2xl:mx-auto max-xl:@max-2xl:w-full max-xl:@max-2xl:max-w-sm max-xl:@2xl:max-w-2xl">
+                <SpotlightCard className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-blue-400/50 bg-[#0e1428]/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_44px_-6px_rgba(59,130,246,0.5)] backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 focus-within:border-blue-400/60 @2xl:flex-row xl:flex-row">
+                  {/* The full image at its own proportions, so nothing is cropped */}
                   <div
-                    className="relative w-full overflow-hidden bg-[#0b1020] xl:h-full xl:w-auto"
+                    className="relative w-full shrink-0 overflow-hidden bg-[#0b1020] @2xl:max-xl:w-60 xl:h-full xl:w-auto"
                     style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
                   >
                     <Image
@@ -331,16 +313,36 @@ export default function HomeV2() {
                       className="scale-[1.04] object-cover transition-transform duration-500 ease-out"
                     />
                   </div>
-                  <a
-                    href={project.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="after:absolute after:inset-0 focus-visible:outline-none"
-                  >
-                    <span className="sr-only">
-                      {project.title} on GitHub
+                  {/* Copy panel. The title link stretches over the whole card. The description drops out on short screens, where the card is small */}
+                  <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 border-t border-white/10 bg-[#0b1020]/60 p-5 @2xl:border-l @2xl:border-t-0 xl:border-l xl:border-t-0 xl:w-[var(--panel-w)] xl:flex-none xl:overflow-hidden">
+                    <h3 className="text-xl font-semibold leading-tight tracking-tight text-white">
+                      <a
+                        href={project.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="after:absolute after:inset-0 focus-visible:outline-none"
+                      >
+                        {project.title}
+                      </a>
+                    </h3>
+                    <p className="text-sm leading-relaxed text-slate-300 xl:[@media(max-height:820px)]:hidden">
+                      {project.description}
+                    </p>
+                    <ul className="flex flex-wrap gap-1.5">
+                      {project.tags.map((tag) => (
+                        <li
+                          key={tag}
+                          className="rounded-full border border-blue-400/25 bg-blue-500/10 px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-[#9cc3ff]"
+                        >
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[#9cc3ff] transition-colors group-hover:text-white">
+                      View on GitHub
+                      <ArrowUpRight className="size-3.5 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     </span>
-                  </a>
+                  </div>
                   {/* Gradient rim (disabled), same treatment as the chat pane. Masked to a 1px edge; pointer-events-none so the card link still gets clicks
                   <span
                     aria-hidden="true"
