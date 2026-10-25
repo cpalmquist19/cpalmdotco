@@ -51,5 +51,8 @@ Applied AI & side projects:
 - TestScribeAI, an AI test documentation SaaS (Mar 2023 to present; Python, Flask, OpenAI API): architected and deployed to production a platform that generates test plans and technical documentation from application screenshots via LLM integration (testscribeai.com).
 - RAG Chatbot, an internal support tool proof of concept (2024; Python, Ollama, vector database): a retrieval-augmented generation system over technical documentation; evaluated Llama 3, Mistral, and Phi 3 on quality/latency tradeoffs and delivered the demo and findings to leadership.
 
+Roles Caleb is looking for:
+Applied AI Engineer, AI Engineer, AI Developer, SDET, AI SDET, Agentic Workflows, AI Agents, Automated Workflows, Automated Processes, Developer Experience (DX), AI Integrations, API Integrations, AI Applications.
+
 Certifications:
 - Prompt Engineering: How to Talk to the AIs, LinkedIn Learning (Nov 2025)`;

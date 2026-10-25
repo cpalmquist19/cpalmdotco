@@ -23,4 +23,34 @@ The eval harness:
 - Is used both to pick a model (is it reliable enough and what does it cost) and to catch regressions when the agent's prompts or tools change.
 
 Engineering:
-Python 3.10+, with unit tests run by pytest and a GitHub Actions CI workflow. It is MIT licensed.`;
+Python 3.10+, with unit tests run by pytest and a GitHub Actions CI workflow. It is MIT licensed.
+
+Why Caleb built it:
+He wanted an AI development tool that doesn't depend on the cloud or its ongoing cost. His GPU is an RTX 3070 Ti with 8GB of VRAM, so he hoped a local model could run on it. There was also controversy around some open-source agent frameworks such as OpenClaw, and building the agent himself with a local model meant he could code with AI indefinitely at no cost.
+
+How it was built and Caleb's role:
+Caleb built Relay with Claude Code. He set the requirements and made the design decisions, researched and tested local models (which are often categorized inaccurately by size and capability, such as vision support), and tested the result. He did not hand-write every line, and he is open about that.
+
+Decisions that were Caleb's:
+- Tool calling that works with local models.
+- Vision support for local models, so a user can screenshot a problem and show the model exactly what they see.
+- Security limits so the agent can't roam across the user's computer or take destructive actions against their code repos.
+- A simple interface, an easy way to add new skills, and the ability to stop the agent at any time.
+- An evaluation harness, so the agent's capabilities can be measured instead of assumed.
+
+QA background in the project:
+Caleb tested that the agent can complete code tests, responds properly, and cannot leave the project directory it runs in. He also tested the modular skills.
+
+Eval results and lessons:
+- Earlier eval runs compared several models on success rate and cost, but that early research was lost and needs to be redone. There are no published results to cite yet.
+- Evaluations turned out to be harder than Caleb expected. They take real infrastructure and cost to be accurate and current, and to represent modern agents' capabilities rather than just cheap, fast "flash" models.
+
+Limits and next steps:
+- The shell is not sandboxed. Adding a sandbox environment (there are free options) is the first upgrade.
+- Local testing was not extensive because his GPU is too slow to run capable models at a useful pace.
+
+Why not LangChain or LangGraph:
+Caleb wanted to see whether he could build the agent loop without the popular frameworks first. Learning LangChain and LangGraph is his next step.
+
+What Caleb understands and what he's learning:
+He has a clear grasp of how to structure a real agent that does meaningful work. He wants to do more with evaluations, and plans to learn LangChain and LangGraph next.`;
