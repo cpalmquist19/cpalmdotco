@@ -12,6 +12,8 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
  */
 function getDeploymentId() {
   if (process.env.NEXT_DEPLOYMENT_ID) return process.env.NEXT_DEPLOYMENT_ID;
+  // Unique per deployment, so redeploying the same commit (for example after changing env vars) doesn't collide
+  if (process.env.VERCEL_DEPLOYMENT_ID) return process.env.VERCEL_DEPLOYMENT_ID.slice(0, 32);
   if (process.env.VERCEL_GIT_COMMIT_SHA) {
     // Vercel limits deployment IDs to 32 characters; the full SHA is 40.
     return process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7);
