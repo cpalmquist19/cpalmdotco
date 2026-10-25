@@ -10,11 +10,9 @@ import { ModelPicker } from "./model-picker";
 
 const CHAT_PROMPTS = [
   "Walk me through Relay's evaluation harness.",
-  "How did I measure Ticket Radar's performance?",
   "Show me an experiment from Quark and what I learned.",
   "What does Relay do, and why did I build it?",
   "How did I go from QA to building AI systems?",
-  "What trade-offs did I make choosing a model for Ticket Radar?",
 ];
 
 type Message = { role: "user" | "assistant"; content: string };

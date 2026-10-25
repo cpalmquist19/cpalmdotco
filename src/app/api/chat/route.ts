@@ -13,7 +13,6 @@ import { isSameOrigin } from "@/lib/same-origin";
 import { QUARK } from "@/content/quark";
 import { RELAY } from "@/content/relay";
 import { RESUME } from "@/content/resume";
-import { TICKET_RADAR } from "@/content/ticket-radar";
 
 const MAX_MESSAGES = 20;
 const MAX_BODY_BYTES = 40_000;
@@ -30,8 +29,6 @@ Resume:
 ${RESUME}
 
 Portfolio projects:
-
-${TICKET_RADAR}
 
 ${RELAY}
 
