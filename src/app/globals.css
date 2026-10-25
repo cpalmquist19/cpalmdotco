@@ -14,6 +14,17 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --animate-twinkle: twinkle 3.5s ease-in-out infinite;
+  --animate-edge-pulse: edge-pulse 3s ease-in-out infinite;
+}
+
+@keyframes edge-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes twinkle {
