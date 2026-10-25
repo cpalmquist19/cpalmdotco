@@ -7,13 +7,49 @@ import { MAX_USER_CHARS, checkMessage } from "@/lib/chat-guard";
 import { DEFAULT_MODEL_ID, type ModelId } from "@/lib/models";
 import { Markdown } from "./markdown";
 import { ModelPicker } from "./model-picker";
+import { SpotlightCard } from "./spotlight-card";
 
 const CHAT_PROMPTS = [
-  "Walk me through Relay's evaluation harness.",
-  "Show me an experiment from Quark and what I learned.",
-  "What does Relay do, and why did I build it?",
-  "How did I go from QA to building AI systems?",
+  "How does Relay's evaluation harness work?",
+  "What roles is Caleb looking for?",
+  "What does Relay do, and why did Caleb build it?",
+  "How did Caleb go from QA to building AI systems?",
 ];
+
+// Follow-up questions offered after a reply, grouped by topic. Each one must be answerable from src/content (relay.ts, quark.ts, resume.ts); check there before adding one, or the chat will answer "I don't know"
+const FOLLOW_UPS = [
+  {
+    match: /relay|eval|harness|agent|sandbox/g,
+    prompts: [
+      "What does Relay's eval dashboard show?",
+      "What are Relay's security trade-offs?",
+      "What kinds of tasks are in Relay's eval suite?",
+      "What did Caleb learn building Relay's evals?",
+      "What's next for Relay?",
+      "What was Caleb's role in building Relay?",
+      "Why didn't Caleb use LangChain for Relay?",
+    ],
+  },
+  {
+    match: /qa|sdet|resume|experience|role|testscribe|automation|ersp/g,
+    prompts: [
+      "What roles is Caleb looking for?",
+      "What's Caleb's test automation experience?",
+      "What is TestScribeAI, and what was Caleb's role?",
+      "What AI projects has Caleb built besides Relay?",
+    ],
+  },
+];
+
+/** Up to three unasked questions: two on the topic of the latest exchange, one from another topic */
+function followUps(messages: Message[]) {
+  const asked = new Set(messages.filter((m) => m.role === "user").map((m) => m.content));
+  const recent = messages.slice(-2).map((m) => m.content.toLowerCase()).join(" ");
+  const ranked = FOLLOW_UPS.map((topic, i) => ({ topic, i, hits: recent.match(topic.match)?.length ?? 0 }))
+    .sort((a, b) => b.hits - a.hits || a.i - b.i)
+    .map(({ topic }) => topic.prompts.filter((prompt) => !asked.has(prompt)));
+  return [...ranked[0].slice(0, 2), ...ranked.slice(1).flatMap((prompts) => prompts.slice(0, 1))].slice(0, 3);
+}
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -25,6 +61,94 @@ const VIDEO_SRC: Record<VideoMode, string> = {
   receive: "/beame/beam-e-receive-data-opt.mp4",
   send: "/beame/beam-e-send-data-opt.mp4",
 };
+
+// The send clip starts, and restarts each time it loops, this many seconds in, skipping its slow opening
+const SEND_START_SECONDS = 2;
+
+/**
+ * Copies text to the clipboard. The async Clipboard API only exists on secure pages (https or localhost),
+ * so on anything else, such as the dev server opened by LAN address, fall back to a hidden text area and execCommand
+ */
+async function copyText(text: string) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // Refused (permission denied or the page isn't focused): try the fallback
+  }
+  const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.cssText = "position:fixed;top:0;left:0;opacity:0;pointer-events:none";
+  document.body.appendChild(area);
+  area.select();
+  area.setSelectionRange(0, text.length);
+  let ok = false;
+  try {
+    ok = document.execCommand("copy");
+  } catch {
+    ok = false;
+  }
+  area.remove();
+  previous?.focus({ preventScroll: true });
+  return ok;
+}
+
+/** Small icon button under a message that copies its text. The icon turns into a check for a moment once copied, or red if the browser refused */
+function CopyButton({ text }: { text: string }) {
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const copied = status === "copied";
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
+
+  async function copy() {
+    setStatus((await copyText(text)) ? "copied" : "failed");
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setStatus("idle"), 1500);
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      aria-label={copied ? "Copied" : status === "failed" ? "Couldn't copy" : "Copy message"}
+      title={copied ? "Copied" : status === "failed" ? "Couldn't copy" : "Copy message"}
+      className={`flex size-7 items-center justify-center rounded-lg transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
+        copied
+          ? "text-emerald-400"
+          : status === "failed"
+            ? "text-red-300"
+            : "text-slate-500 hover:bg-white/[0.08] hover:text-slate-200"
+      }`}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4"
+        aria-hidden="true"
+      >
+        {copied ? (
+          <path d="M20 6 9 17l-5-5" />
+        ) : (
+          <>
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+          </>
+        )}
+      </svg>
+    </button>
+  );
+}
 
 /**
  * Chat card for the home page. Same behaviour as `chat-card.tsx` (used by /old);
@@ -134,6 +258,8 @@ export function ChatPanel({ className = "" }: { className?: string }) {
   }
 
   const canSend = draft.trim().length > 0;
+  const showFollowUps = !isSending && !error && messages[messages.length - 1]?.role === "assistant";
+  const suggestions = showFollowUps ? followUps(messages) : [];
 
   return (
     <aside
@@ -143,7 +269,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
       style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.35)" }}
     >
       {/* The still image sits underneath so something shows if the video cannot load; the video fades in over it once it has a frame */}
-      <div className={`relative aspect-[1.78] shrink-0 overflow-hidden max-sm:aspect-[2.1] md:max-xl:aspect-[2.2] md:max-xl:max-h-56 xl:aspect-auto xl:min-h-[8rem] xl:shrink ${messages.length > 0 ? "xl:flex-[0.7_1_0%]" : "xl:flex-[1.3_1_0%]"} bg-[#0a0f20] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.18),transparent_70%)]`}>
+      <div className={`relative aspect-[3.56] shrink-0 overflow-hidden max-sm:aspect-[4.2] md:max-xl:aspect-[4.4] md:max-xl:max-h-28 xl:aspect-auto xl:min-h-[4rem] xl:flex-[0.65_1_0%] xl:shrink bg-[#0a0f20] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.18),transparent_70%)]`}>
         <Image
           src={asset("/beame/BEAM-E.jpg")}
           alt=""
@@ -157,7 +283,16 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           autoPlay
           muted
           playsInline
-          loop={videoMode !== "receive"}
+          loop={videoMode === "ready"}
+          onLoadedMetadata={(event) => {
+            if (videoMode === "send") event.currentTarget.currentTime = SEND_START_SECONDS;
+          }}
+          onEnded={(event) => {
+            // The send clip loops by hand so it comes back to the start point instead of 0:00
+            if (videoMode !== "send") return;
+            event.currentTarget.currentTime = SEND_START_SECONDS;
+            void event.currentTarget.play();
+          }}
           onLoadedData={() => setVideoFailed(false)}
           onError={() => setVideoFailed(true)}
           className={`absolute inset-0 size-full object-cover object-[50%_35%] transition-opacity duration-300 ${
@@ -179,8 +314,8 @@ export function ChatPanel({ className = "" }: { className?: string }) {
       </div>
 
       {/* Bot avatar on the left and Caleb's photo on the right, the same size, with the copy centered between them */}
-      <header className="grid shrink-0 grid-cols-[3.9rem_1fr_3.9rem] items-center gap-4 border-b border-white/10 px-5 pb-5 pt-3 max-sm:grid-cols-[3rem_1fr] max-sm:gap-3 max-sm:pb-4">
-        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-[#4f86f0]/40 max-sm:size-12">
+      <header className="grid shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center gap-3 border-b border-white/10 px-5 py-2.5 max-sm:grid-cols-[2.5rem_1fr]">
+        <div className="size-10 overflow-hidden rounded-full bg-slate-700 ring-1 ring-[#4f86f0]/40">
           <Image
             src={asset("/beame/BEAM-E-avatar.jpg")}
             alt="BEAM-E"
@@ -190,14 +325,14 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           />
         </div>
         <div className="min-w-0 text-center max-sm:text-left">
-          <h2 className="text-xl font-semibold leading-tight tracking-tight text-white">
+          <h2 className="text-base font-semibold leading-tight tracking-tight text-white">
             Ask me about Caleb
           </h2>
-          <p className="mt-[0.3rem] text-[0.94rem] leading-[1.4] text-[#9fb0cc] max-sm:text-sm">
+          <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[#9fb0cc]">
             I can explain his projects, technical decisions, trade-offs, and point you to evidence.
           </p>
         </div>
-        <div className="size-[3.9rem] overflow-hidden rounded-full bg-slate-700 ring-1 ring-white/20 max-sm:hidden">
+        <div className="size-10 overflow-hidden rounded-full bg-slate-700 ring-1 ring-white/20 max-sm:hidden">
           <Image
             src={asset("/caleb_avatar_professional.jpg")}
             alt=""
@@ -213,24 +348,46 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           ref={listRef}
           role="log"
           aria-live="polite"
-          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4 xl:flex-[1_1_0%]"
+          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin] xl:flex-[1_1_0%]"
         >
           {messages.map((message, i) => (
             <div
               key={i}
-              className={
-                message.role === "user"
-                  ? "max-w-[85%] self-end whitespace-pre-wrap rounded-2xl rounded-br-md bg-blue-500/25 px-4 py-2.5 text-[15px] leading-relaxed text-slate-50"
-                  : "max-w-[85%] self-start rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-slate-200"
-              }
+              className={`flex max-w-[85%] flex-col gap-0.5 ${message.role === "user" ? "items-end self-end" : "items-start self-start"}`}
             >
-              {message.role === "user" ? message.content : <Markdown text={message.content} />}
+              <div
+                className={
+                  message.role === "user"
+                    ? "whitespace-pre-wrap rounded-2xl rounded-br-md bg-blue-500/25 px-4 py-2.5 text-[15px] leading-relaxed text-slate-50"
+                    : "rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-slate-200"
+                }
+              >
+                {message.role === "user" ? message.content : <Markdown text={message.content} />}
+              </div>
+              {/* Not offered on a reply that is still streaming in, since it would copy half a message */}
+              {!(isSending && message.role === "assistant" && i === messages.length - 1) && <CopyButton text={message.content} />}
             </div>
           ))}
           {isSending && messages[messages.length - 1]?.role === "user" && (
             <p className="text-sm text-slate-400">Thinking…</p>
           )}
           {error && <p className="text-sm text-red-300">{error}</p>}
+          {suggestions.length > 0 && (
+            <div className="mt-1 flex flex-col gap-2">
+              <p className="px-1 text-sm text-[#9cc3ff]">Ask next</p>
+              {suggestions.map((prompt) => (
+                <SpotlightCard key={prompt} as="div" spotlightRadius={180} className="relative rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => send(prompt)}
+                  className="w-full rounded-xl border border-[#4f86f0]/30 bg-gradient-to-br from-[#4f86f0]/[0.12] to-[#4f86f0]/[0.04] px-4 py-2.5 text-left text-sm leading-snug text-slate-100 transition-colors hover:border-blue-400/60 hover:from-[#4f86f0]/[0.2] hover:to-[#4f86f0]/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+                >
+                  {prompt}
+                </button>
+                </SpotlightCard>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex min-h-0 flex-1 flex-col px-5 py-4 xl:flex-[1_1_0%] xl:py-3">
@@ -238,12 +395,12 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           {/* Scrolls inside the card when there are more suggestions than fit. The thin, blue-tinted scrollbar matches the card */}
           <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pb-1 pr-1 md:max-lg:grid md:max-lg:auto-rows-min md:max-lg:grid-cols-2 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin]">
             {CHAT_PROMPTS.map((prompt) => (
+              <SpotlightCard key={prompt} as="div" spotlightRadius={180} className="relative shrink-0 rounded-2xl">
               <button
-                key={prompt}
                 type="button"
                 onClick={() => send(prompt)}
                 disabled={isSending}
-                className="group flex w-full shrink-0 items-center justify-between gap-4 rounded-2xl border border-[#4f86f0]/30 bg-gradient-to-br from-[#4f86f0]/[0.12] to-[#4f86f0]/[0.04] px-5 py-3.5 text-left text-[15px] leading-snug text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-colors hover:border-blue-400/60 hover:from-[#4f86f0]/[0.2] hover:to-[#4f86f0]/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 disabled:opacity-50"
+                className="flex w-full items-center justify-between gap-4 rounded-2xl border border-[#4f86f0]/30 bg-gradient-to-br from-[#4f86f0]/[0.12] to-[#4f86f0]/[0.04] px-5 py-3.5 text-left text-[15px] leading-snug text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-colors hover:border-blue-400/60 hover:from-[#4f86f0]/[0.2] hover:to-[#4f86f0]/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 disabled:opacity-50"
               >
                 <span>{prompt}</span>
                 <svg
@@ -259,6 +416,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
                   <path d="M9 6l6 6-6 6" />
                 </svg>
               </button>
+              </SpotlightCard>
             ))}
           </div>
         </div>
@@ -333,10 +491,14 @@ export function ChatPanel({ className = "" }: { className?: string }) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="size-4"
+                  className="size-5 -scale-x-100"
                   aria-hidden="true"
                 >
-                  <path d="M12 19V5M5 12l7-7 7 7" />
+                  <path d="M13 7 9 3 5 7l4 4" />
+                  <path d="m17 11 4 4-4 4-4-4" />
+                  <path d="m8 12 4 4 6-6-4-4Z" />
+                  <path d="m16 8 3-3" />
+                  <path d="M9 21a6 6 0 0 0-6-6" />
                 </svg>
               </button>
             )}

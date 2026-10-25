@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     model: languageModel(selected.id),
     system: SYSTEM_PROMPT,
     messages: messages as ModelMessage[],
-    maxOutputTokens: 600,
+    maxOutputTokens: 1500,
     onError: ({ error }) => console.error("Chat stream failed:", error),
   });
   return result.toTextStreamResponse();

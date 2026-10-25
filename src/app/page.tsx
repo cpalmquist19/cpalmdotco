@@ -1,7 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
 import { asset } from "@/lib/asset";
 import calmdotcoCard from "../../public/calmdotco.jpg";
-import quarkCard from "../../public/quark_featured.jpg";
 import relayCard from "../../public/relay_featured.jpg";
 import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
@@ -30,14 +29,6 @@ const PROJECTS: {
     image: calmdotcoCard,
     href: `${GITHUB_URL}/cpalmdotco`,
     detailed: true,
-  },
-  {
-    title: "Quark",
-    description:
-      "Workbench for small GPT models: swap in paper-inspired components and compare them with paired-seed ablations.",
-    tags: ["Python", "PyTorch", "LLM"],
-    image: quarkCard,
-    href: `${GITHUB_URL}/quark`,
   },
   {
     title: "Relay",
@@ -138,15 +129,36 @@ function CodeIcon({ className }: { className: string }) {
   );
 }
 
+function WorkflowIcon({ className }: { className: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect width="8" height="8" x="3" y="3" rx="2" />
+      <path d="M7 11v4a2 2 0 0 0 2 2h4" />
+      <rect width="8" height="8" x="13" y="13" rx="2" />
+    </svg>
+  );
+}
+
 const FOCUS_AREAS: {
   label: string;
   Icon: typeof BrainIcon;
   highlight: boolean;
 }[] = [
-  { label: "AI systems", Icon: BrainIcon, highlight: true },
-  { label: "Evaluation", Icon: ShieldCheckIcon, highlight: true },
-  { label: "Developer tooling", Icon: CodeIcon, highlight: true },
+  { label: "AI Agents", Icon: BrainIcon, highlight: true },
+  { label: "Evaluations", Icon: ShieldCheckIcon, highlight: true },
+  { label: "Automation", Icon: WorkflowIcon, highlight: true },
 ];
+
+// { label: "Developer Tooling", Icon: CodeIcon, highlight: true },
 
 export default function HomeV2() {
   return (
