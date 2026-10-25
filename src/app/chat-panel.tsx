@@ -334,7 +334,7 @@ export function ChatPanel({ className = "" }: { className?: string }) {
         </div>
         <div className="size-10 overflow-hidden rounded-full bg-slate-700 ring-1 ring-white/20 max-sm:hidden">
           <Image
-            src={asset("/caleb_avatar_professional.jpg")}
+            src={asset("/caleb_headshot.jpg")}
             alt=""
             width={96}
             height={96}

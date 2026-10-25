@@ -5,12 +5,15 @@ import relayCard from "../../public/relay_featured.jpg";
 import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
 import { ArrowUpRight } from "./icons";
+// import { ExternalLinkIcon, LinkedInIcon } from "./icons";
 import { ProjectGrid, type Project } from "./project-grid";
+import { ResumeMenu } from "./resume-menu";
 import { SpotlightCard } from "./spotlight-card";
 
 const GITHUB_URL = "https://github.com/cpalmquist19";
+const LINKEDIN_URL = "https://www.linkedin.com/in/calebfrommaine";
 
-const NAV_LINKS = ["Projects", "Experience", "Skills", "About", "Contact"];
+const NAV_LINKS = ["Projects", "Experience", "Skills", "Resume", "Contact"];
 const ACTIVE_LINK = "Projects";
 const CTA_LINK = "Contact";
 
@@ -151,14 +154,14 @@ export default function HomeV2() {
         className="absolute inset-x-0 top-0 -z-10 h-44 bg-gradient-to-b from-[#070b1a]/70 to-transparent"
       />
 
-      <header className="mx-auto flex w-full max-w-[1480px] shrink-0 items-center justify-between gap-6 px-6 py-5 sm:px-10 lg:px-16">
+      <header className="relative z-20 mx-auto flex w-full max-w-[1480px] shrink-0 items-center justify-between gap-6 px-6 py-5 sm:px-10 lg:px-16">
         <a
           href="#"
           className="flex items-center gap-3 whitespace-nowrap rounded-full text-lg font-semibold tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
         >
           <span className="size-10 shrink-0 overflow-hidden rounded-full bg-slate-700 ring-2 ring-white/15">
             <Image
-              src={asset("/caleb_avatar_professional.jpg")}
+              src={asset("/caleb_headshot.jpg")}
               alt=""
               width={80}
               height={80}
@@ -171,12 +174,14 @@ export default function HomeV2() {
         <nav aria-label="Primary" className="hidden md:block md:w-full md:max-w-[480px]">
           <ul className="flex w-full items-center justify-between gap-1 rounded-full border border-[#9cc3ff]/15 bg-[#0e1428]/50 p-1 text-sm shadow-lg shadow-black/20 backdrop-blur-xl">
             {NAV_LINKS.map((link) => {
+              if (link === "Resume") return <ResumeMenu key={link} />;
               const isActive = link === ACTIVE_LINK;
               const isCta = link === CTA_LINK;
               return (
                 <li key={link}>
                   <a
-                    href={`#${link.toLowerCase()}`}
+                    href={isCta ? LINKEDIN_URL : `#${link.toLowerCase()}`}
+                    {...(isCta ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     aria-current={isActive ? "page" : undefined}
                     className={`block rounded-full border px-3 py-2 transition-colors lg:px-4 duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
                       isCta
@@ -186,7 +191,15 @@ export default function HomeV2() {
                           : "border-transparent text-[#b6c2d8] hover:bg-[#9cc3ff]/10 hover:text-white"
                     }`}
                   >
-                    {link}
+                    {isCta ? (
+                      <span className="flex items-center gap-2">
+                        {link}
+                        {/* <LinkedInIcon className="size-4" /> */}
+                        {/* <ExternalLinkIcon className="-ml-0.5 size-3.5 opacity-70" /> */}
+                      </span>
+                    ) : (
+                      link
+                    )}
                   </a>
                 </li>
               );
@@ -196,10 +209,14 @@ export default function HomeV2() {
 
         {/* The full nav is hidden below md, so keep the main call to action reachable */}
         <a
-          href="#contact"
-          className="rounded-full bg-[#f5a25d] px-4 py-2 text-sm font-semibold text-[#1a0f05] transition-colors hover:bg-[#f8b67d] md:hidden"
+          href={LINKEDIN_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 rounded-full bg-[#f5a25d] px-4 py-2 text-sm font-semibold text-[#1a0f05] transition-colors hover:bg-[#f8b67d] md:hidden"
         >
           Contact
+          {/* <LinkedInIcon className="size-4" /> */}
+          {/* <ExternalLinkIcon className="-ml-0.5 size-3.5 opacity-70" /> */}
         </a>
       </header>
 
