@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { asset } from "@/lib/asset";
-import calmdotcoCard from "../../public/cpalm_dot_dev_final.jpg";
-import relayCard from "../../public/relay_agent_card_final.jpg";
+import calmdotcoCard from "../../public/cpalm_dot_dev_minimal.jpg";
+import relayCard from "../../public/relay_agent_card_minimal.jpg";
 import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
 import { ArrowUpRight } from "./icons";
@@ -308,7 +308,7 @@ export default function HomeV2() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-sm font-medium text-white transition-colors hover:text-white after:absolute after:inset-0"
               >
-                <span><span className="max-sm:hidden">View all projects on </span>GitHub</span>
+                <span><span className="max-sm:hidden">Explore the Code on </span>GitHub</span>
                 <GitHubIcon className="size-3.5" />
                 <ArrowUpRight className="size-3.5" />
               </a>

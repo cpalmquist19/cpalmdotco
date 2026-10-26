@@ -1,8 +1,8 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
-import { useState } from "react";
-import { ArrowUpRight } from "./icons";
+// import { useState } from "react";
+// import { ArrowUpRight } from "./icons";
 import { SpotlightCard } from "./spotlight-card";
 
 export type Project = {
@@ -26,13 +26,16 @@ const rowRatio = (projects: Project[]) =>
  * each image keeps its own proportions at that height, and an open card adds its copy panel beside the image.
  */
 export function ProjectGrid({ projects }: { projects: Project[] }) {
+  // Click-to-expand is switched off for now, so every card stays closed
   // Every card starts closed, and opening one closes the other
-  const [openTitle, setOpenTitle] = useState<string | null>(null);
-  const openCount = openTitle === null ? 0 : 1;
-
-  function toggle(title: string) {
-    setOpenTitle((current) => (current === title ? null : title));
-  }
+  // const [openTitle, setOpenTitle] = useState<string | null>(null);
+  // const openCount = openTitle === null ? 0 : 1;
+  //
+  // function toggle(title: string) {
+  //   setOpenTitle((current) => (current === title ? null : title));
+  // }
+  const openTitle: string | null = null;
+  const openCount = 0;
 
   return (
     // The max height keeps the row inside the column: at height H the images are H * (sum of aspect ratios) wide,
@@ -50,7 +53,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
     >
       {projects.map((project) => {
         const open = openTitle === project.title;
-        const panelId = `project-panel-${project.title.replace(/\W+/g, "-").toLowerCase()}`;
+        // const panelId = `project-panel-${project.title.replace(/\W+/g, "-").toLowerCase()}`;
         return (
           <li
             key={project.title}
@@ -59,6 +62,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             }`}
           >
             <SpotlightCard
+              spotlightRadius={180}
               className={`relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border bg-[#0e1428]/75 backdrop-blur-md transition duration-300 ease-out @2xl:flex-row xl:flex-row ${
                 open
                   ? "border-blue-400/50 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_44px_-6px_rgba(59,130,246,0.5)] hover:border-blue-400/80 focus-within:border-blue-400/60"
@@ -66,7 +70,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               }`}
             >
               {/* The full image at its own proportions, so nothing is cropped. The image is the toggle */}
-              <button
+              {/* <button
                 type="button"
                 onClick={() => toggle(project.title)}
                 aria-expanded={open}
@@ -76,6 +80,10 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
                   open ? "@2xl:max-xl:w-60" : ""
                 }`}
                 style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
+              > */}
+              <div
+                className="group/image relative block w-full shrink-0 overflow-hidden bg-[#0b1020] xl:h-full xl:w-auto"
+                style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
               >
                 <Image
                   src={project.image}
@@ -84,9 +92,10 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
                   sizes="(min-width: 1280px) 25vw, (min-width: 640px) 33vw, 100vw"
                   className="scale-[1.04] object-cover transition-transform duration-500 ease-out group-hover/image:scale-[1.08]"
                 />
-              </button>
+              </div>
+              {/* </button> */}
               {/* A closed card says it can be opened with an amber edge (the Contact nav's orange) that pulses softly. On hover or focus the pulse crossfades to a steady, much brighter edge. Both layers sit inside the card border, above the image, and ignore the pointer so clicks reach the button */}
-              {!open && (
+              {/* {!open && (
                 <>
                   <span
                     aria-hidden="true"
@@ -99,9 +108,9 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
                     className="pointer-events-none absolute inset-0 z-10 rounded-[inherit] opacity-0 shadow-[inset_0_0_0_2px_rgba(248,182,125,0.95),inset_0_0_30px_rgba(245,162,93,0.5)] transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
                   />
                 </>
-              )}
+              )} */}
               {/* Copy panel. Below xl it appears and disappears; on xl its width animates so the row grows and shrinks. The title link stretches over the panel (not the image, which toggles), and the description drops out on short screens, where the card is small. inert keeps a closed panel's link out of the tab order */}
-              <div
+              {/* <div
                 id={panelId}
                 inert={!open}
                 className={`flex min-w-0 overflow-hidden xl:flex-none xl:transition-[width] xl:duration-300 xl:ease-out ${
@@ -137,7 +146,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
                     <ArrowUpRight className="size-3.5 transition duration-300 group-hover/panel:-translate-y-0.5 group-hover/panel:translate-x-0.5" />
                   </span>
                 </div>
-              </div>
+              </div> */}
             </SpotlightCard>
           </li>
         );
