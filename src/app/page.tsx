@@ -21,7 +21,7 @@ const PROJECTS: Project[] = [
   {
     title: "cpalm.co",
     description:
-      "This portfolio site, with a built-in AI assistant that answers questions about Caleb's projects.",
+      "This portfolio site, with BEAM-E, a streaming AI assistant grounded in Caleb's resume and projects. It runs on Claude or OpenAI models and is hardened with input screening, rate limits, and a daily usage cap.",
     tags: ["Next.js", "TypeScript", "LLM"],
     image: calmdotcoCard,
     href: `${GITHUB_URL}/cpalmdotco`,
@@ -29,7 +29,7 @@ const PROJECTS: Project[] = [
   {
     title: "Relay",
     description:
-      "Local coding agent with a web UI, plus an 11-task eval harness that scores models on pass rate, speed, and cost.",
+      "Local coding agent with a web UI, plus an eval harness that runs an 11-task test matrix across models and scores pass rate, speed, and cost.",
     tags: ["Python", "LLM", "Agents", "Evals"],
     image: relayCard,
     href: `${GITHUB_URL}/relay`,
