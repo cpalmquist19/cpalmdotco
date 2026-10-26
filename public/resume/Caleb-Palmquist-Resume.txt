@@ -1,0 +1,71 @@
+CALEB PALMQUIST
+Remote | cpalmquist19@gmail.com | linkedin.com/in/calebfrommaine | github.com/cpalmquist19
+
+SUMMARY
+Senior test automation engineer with 14 years in healthcare SaaS, moving into AI automation and AI quality engineering. I built automation for a 22-year-old multi-tenant platform serving 2,000+ home-care agencies, with 1,000+ configurable settings, no central API, and PHI in every environment. I know the Medicaid claims flow (EDI 837 generation, validation, resubmission) from years in support, development, and QA. I build LLM tools with tool calling and RAG, and I measure them with evals. I started in customer support, so I'm comfortable with customers, with code, and with the gap between them.
+
+SKILLS
+Languages: Python, SQL / T-SQL, JavaScript, TypeScript (working knowledge), C#, ColdFusion
+AI / LLM: OpenAI API (3 years), tool calling, Ollama, LM Studio, LLM evaluation (custom harness), prompt engineering, PyTorch, LangChain (exploratory)
+Testing: Playwright (TypeScript), Selenium, PyTest, Appium, MSTest, Postman, Page Object Model
+CI/CD and data: GitHub Actions (self-hosted runner), Jenkins, Git; SQL Server, stored procedures, query optimization
+Domain: PHI-handling environments, Medicaid claims (EDI 837), EVV, multi-tenant SaaS
+AI-assisted development: Claude, ChatGPT, Cursor, Copilot, with human review of everything shipped
+
+EXPERIENCE
+eRSP (formerly Kaleida Systems), home-care management SaaS | Jun 2012 - Oct 2026
+
+Senior Software Development Engineer in Test | May 2024 - Oct 2026
+- Built a Playwright (TypeScript) end-to-end framework with Page Object Model and 60+ tests covering login, account creation / viewing / editing across account types, and core setup such as services and pricing, in a ColdFusion monolith with no API. Each run replaces about four hours of manual testing.
+- Cut regression-environment setup 90% (30 min to 3 min) by automating the admin-portal and in-app settings for the five most common customer configuration profiles.
+- Built a GitHub Actions workflow on a self-hosted runner: choose a test site and components, run a smoke or full pass, or list the tests; it passes those options to my test runner. It ran 10+ times during rollout.
+- Brought a neglected 192-test unit suite back to a working state and kept it passing.
+- Built a QA dashboard tracking code files, unit tests, and automation coverage across 13 test areas.
+- Prototyped an ML classifier to triage support tickets (support vs. development, and severity); advised two QA teammates on automation and test strategy.
+
+QA Lead | Mar 2019 - May 2024
+- Designed the Python / Selenium / PyTest framework for a legacy monolith with complex database interdependencies.
+- Led testing and rollout of the iOS and Android apps; built the mobile test framework in C# / Appium, later moved to Python / Appium.
+- Built internal QA tools; made the automation tooling decisions and guided two teammates.
+
+Web Developer | Mar 2018 - Mar 2019
+- Rewrote slow SQL queries and stored procedures; built an admin approval workflow for broadcasting open visits to caregivers, plus custom reports for franchise customers.
+
+QA Lead | Jun 2017 - Mar 2018
+- Built a QA analytics dashboard on the Jira REST API (defect escape rate, rework, coverage gaps); helped move the company to Agile / Scrum and wrote its QA, development, and support policies.
+
+QA Analyst | Aug 2016 - Jun 2017
+- Ran test plans for fixes and releases; managed Jenkins deployments and SQL script runs; proved out mobile test automation with Selenium and Appium.
+
+Junior Web Developer | Jun 2015 - Aug 2016
+- Fixed bugs and refactored core code; automated a report that replaced hours of manual Excel tracking.
+
+Enterprise Account Manager | Oct 2013 - Jun 2015
+- Managed two of the largest customer accounts; built the in-house issue tracker the dev team adopted.
+
+Product Support Specialist | Jun 2012 - Oct 2013
+- Supported 1,000+ agencies by phone and email; built support reports.
+
+PROJECTS
+Local AI Agent and Eval Harness | Python, FastAPI | github.com/cpalmquist19/ai-agent-base
+- Built a tool-calling agent on LM Studio's OpenAI-compatible API: up to 12 tool rounds per turn, 14 tools (files, shell, web, Playwright page inspection), SKILL.md skills, streaming UI, recovery when a model stops without answering, and stop controls that also kill running commands.
+- Built an evaluation harness for it: 8 tasks scored per step (tool choice, argument validity, end state, efficiency, safety), repeated runs for non-deterministic output, a regression gate, and an optional LLM judge. 100+ automated tests and scripted good-and-bad reference agents verify the scorer itself, and run in GitHub Actions on every push.
+- Compared 5 models (1 local, 4 OpenAI) and fixed what the results exposed: models kept passing folders to a file-only search tool and the shell tool named the wrong shell, so I fixed both (on one model, tool errors fell from 6 to 0 and tool calls from 55 to 34); a local model read a protected file through the shell on 3 of 3 runs, so I added a path guard. Also fixed a code-execution hole in the calculator tool and a Stop button that left child processes running on Linux (caught by CI).
+
+Small-Transformer Experiments | Python, PyTorch | [ADD REPO LINK once public]
+- Wrote a byte-level GPT-style decoder (3.3M parameters) and ran one-variable-at-a-time experiments on optimizer, LR schedule, depth, and attention layout with a fixed validation protocol and three seeds. Muon beat AdamW at matched budget on all three seeds (val loss about 1.43-1.44 vs. 1.65-1.66 on Tiny Shakespeare).
+
+RAG Support Chatbot (proof of concept) | Python, Ollama, vector database | 2024
+- Built a retrieval chatbot over Confluence support docs with local models; compared Llama 3, Mistral, and Phi 3 by hand on quality and speed; demoed it to leadership.
+
+EDUCATION
+High School Diploma, Gardiner Area High School
+LinkedIn Learning: Prompt Engineering, Generative AI problem solving, Solution Engineering (2025); DevOps Foundations (2019)
+
+------------------------------------------------------------
+NOTES FOR CALEB (delete before sending anything)
+- Condensed from v2 for the two-page limit: older roles are one or two lines, skills are merged, and the learning list is shorter. Word count is checked in my reply; the real page count has to be checked in the .docx.
+- NEW: the eval-harness bullet, the calculator-fix bullet, and "LLM evaluation (custom harness)" in the skills. All true today, but the repo must be pushed before this goes out, or the link shows the old code.
+- Two placeholders remain: [RESULTS] (needs a live run on real models) and the quark repo link (needs the repo published).
+- The 71 tests and scripted agents verify the harness, not any model. I left the judge out of the headline claim because it is unvalidated.
+- Cut from v2: the "AI coding assistants for scaffolding" bullet (the skills line covers it) and the separate "Advised two QA teammates" bullet (now merged). Say if you want either back.

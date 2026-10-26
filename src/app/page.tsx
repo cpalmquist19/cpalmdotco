@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { asset } from "@/lib/asset";
-import calmdotcoCard from "../../public/calmdotco.jpg";
+import calmdotcoCard from "../../public/cpalm_dot_dev_final.jpg";
 import relayCard from "../../public/relay_agent_card_final.jpg";
 import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
@@ -21,8 +21,8 @@ const PROJECTS: Project[] = [
   {
     title: "cpalm.co",
     description:
-      "This portfolio site, with BEAM-E, a streaming AI assistant grounded in Caleb's resume and projects. It runs on Claude or OpenAI models and is hardened with input screening, rate limits, and a daily usage cap.",
-    tags: ["Next.js", "TypeScript", "LLM"],
+      "Portfolio site with BEAM-E, a live AI assistant that answers questions about my work on either Claude or GPT. Messages are screened for injection and abuse before they reach the model, with per-visitor rate limits and a daily spend cap, all backed by a test suite and CI.",
+    tags: ["Next.js", "TypeScript", "LLM", "AI Safety"],
     image: calmdotcoCard,
     href: `${GITHUB_URL}/cpalmdotco`,
   },
