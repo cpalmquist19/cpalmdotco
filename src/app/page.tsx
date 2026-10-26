@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { asset } from "@/lib/asset";
 import calmdotcoCard from "../../public/calmdotco.jpg";
-import relayCard from "../../public/relay_featured.jpg";
+import relayCard from "../../public/relay_agent_card_final.jpg";
 import { AlignToCards } from "./align-to-cards";
 import { ChatPanel } from "./chat-panel";
 import { ArrowUpRight } from "./icons";
