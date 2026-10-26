@@ -15,6 +15,19 @@
   --font-mono: var(--font-geist-mono);
   --animate-twinkle: twinkle 3.5s ease-in-out infinite;
   --animate-edge-pulse: edge-pulse 3s ease-in-out infinite;
+  --animate-view-in: view-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* A page's view (a project's write-up, experience, skills) sliding in from the chat's side as the left column swaps */
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateX(2.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes edge-pulse {

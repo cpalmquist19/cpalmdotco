@@ -9,9 +9,9 @@ import { STRIKE_WEIGHT, type GuardReason } from "./chat-guard";
  * treat it as a speed bump. A shared store (Upstash/Vercel KV) is the upgrade for hard guarantees.
  */
 
-const BURST_LIMIT = 8; // requests per minute
+const BURST_LIMIT = 5; // requests per minute
 const HOURLY_LIMIT = 60;
-const STRIKE_LIMIT = 6; // blocked-message points inside the strike window trigger a lockout
+const STRIKE_LIMIT = 4; // blocked-message points inside the strike window trigger a lockout
 const STRIKE_WINDOW_MS = 10 * 60_000;
 const LOCKOUT_MS = 10 * 60_000;
 const DAILY_MODEL_CALLS = Number(process.env.CHAT_DAILY_LIMIT) || 2000;

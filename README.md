@@ -7,7 +7,7 @@ Built with Next.js (App Router), React, TypeScript, Tailwind CSS v4, and the Ver
 ## Features
 
 - Hero section with headline and call to action
-- Featured work grid with tech tags and GitHub links
+- Featured work cards that open a write-up for each project (`/projects/[slug]`), plus Experience and Skills pages, all in the same shell so the chat stays put
 - Full-bleed background image
 - Responsive layout: single column on small screens, two-column hero on large screens
 - BEAM-E chat assistant that streams answers, with a model picker (Claude Haiku 5.5 or GPT 5.6 Luna)
@@ -71,7 +71,12 @@ You can also pass specific files or folders, e.g. `npm run optimize-video -- cli
 ```
 src/app/
   layout.tsx            Root layout, fonts, and page metadata
-  page.tsx              Home page: hero, chat panel, and featured work
+  (site)/layout.tsx     The shell: background, header and nav, and the chat. Persists across navigation
+  (site)/page.tsx       Home page: hero and featured work
+  (site)/projects/[slug]/page.tsx   A project's write-up
+  (site)/experience, (site)/skills  The Experience and Skills pages
+  view.tsx, view-keys.tsx   Shared pieces for any page that fills the left column (panel, header, sections, keyboard)
+  site-nav.tsx          The nav, rendered from the list in src/site/config.ts
   chat-panel.tsx        Chat UI: streaming replies, model picker, client-side screening
   api/chat/route.ts     Chat endpoint: origin check, limits, screening, model call
   globals.css           Tailwind import and base styles
@@ -81,6 +86,7 @@ src/lib/
   same-origin.ts        Rejects requests that don't come from this site
   models.ts             Models the chat can run on (shared by the picker and the route)
 src/content/            Resume and project write-ups sent to the model as context
+src/site/               What the pages show: nav and links, projects and their write-ups, experience and skills
 scripts/
   check-chat-guard.mjs  Allow and block cases for the chat guard
   optimize-video.mjs    Video conversion helper
@@ -97,7 +103,7 @@ BEAM-E answers questions about Caleb using only the resume and project write-ups
 Every request to `/api/chat` passes through these checks, in order, before any model is called:
 
 1. **Same-origin check** (`same-origin.ts`): requests that don't come from a page on this site get a 403.
-2. **Per-visitor rate limits** (`chat-limits.ts`): 8 requests per minute and 60 per hour, plus a 10-minute lockout for visitors who keep sending blocked messages.
+2. **Per-visitor rate limits** (`chat-limits.ts`): 5 requests per minute and 60 per hour. Blocked messages also add strike points (2 for abuse, illegal requests, and injection attempts; 1 for spam, gibberish, and off-topic; 0 for empty, too-long, and self-harm messages). Reaching 4 points within 10 minutes locks the visitor out for 10 minutes, so two serious blocked messages are enough. The rate limit counts every request, including ones the screening later blocks.
 3. **Request validation**: capped body size, message count, and message length, and the model must be one of the listed ids.
 4. **Message screening** (`chat-guard.ts`): rejects prompt-injection attempts, abuse, illegal requests, spam and links, gibberish, and off-topic requests such as homework. It normalizes input first, so tricks like leetspeak, zero-width characters, and spaced-out letters don't slip through. The same rules run in the browser for instant feedback and on the server as the authoritative check. A blocked message never reaches the model.
 5. **Daily spend cap** (`chat-limits.ts`): a site-wide ceiling on model calls per day.
@@ -123,11 +129,13 @@ Limits and caveats:
 
 ## Customizing
 
-- **Projects:** edit the `PROJECTS` array in `src/app/page.tsx`. Each entry sets the title, description, tags, thumbnail image, and GitHub link.
+- **Projects:** edit the `PROJECTS` array in `src/site/projects.ts`. Each entry sets the slug, title, description, tags, card image, links, and the sections of its write-up. A new entry gets a card on the home page and its own page.
+- **Experience and Skills:** edit `src/site/experience.ts`. Keep it in step with `src/content/resume.ts` (what the assistant knows) and the files in `public/resume`.
 - **What the assistant knows:** edit the files in `src/content/`.
 - **Models:** edit `CHAT_MODELS` in `src/lib/models.ts`. The first entry is the default.
 - **Suggested chat prompts:** edit `CHAT_PROMPTS` in `src/app/chat-panel.tsx`.
-- **Navigation:** edit `NAV_LINKS` and `ACTIVE_LINK` in `src/app/page.tsx`.
+- **Navigation:** edit `NAV` in `src/site/config.ts`. The active item follows the route.
+- **A new page in the left column:** add a route under `src/app/(site)/` that returns a `View` (see `view.tsx`). It shares the shell, so the chat stays mounted.
 - **Site title and description:** edit `metadata` in `src/app/layout.tsx`.
 - **Background:** replace `public/distance.jpg`.
 

@@ -37,7 +37,8 @@ function FormatIcon({ icon }: { icon: (typeof FORMAT_ICONS)[keyof typeof FORMAT_
 
 // Nav pill that opens a small menu of resume downloads
 // The menu stays mounted and fades/scales in, so opening and closing both animate
-export function ResumeMenu() {
+// align "end" lines the menu up with the pill's right edge, for the narrow row under the header where a centered menu would run off screen
+export function ResumeMenu({ align = "center", compact = false }: { align?: "center" | "end"; compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLLIElement>(null);
   const menuId = useId();
@@ -68,7 +69,9 @@ export function ResumeMenu() {
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((isOpen) => !isOpen)}
-        className={`flex items-center gap-1.5 rounded-full border px-3 py-2 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 lg:pl-4 lg:pr-3.5 ${
+        className={`flex items-center gap-1.5 rounded-full border transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
+          compact ? "px-2.5 py-2" : "px-3 py-2 lg:pl-4 lg:pr-3.5"
+        } ${
           open
             ? "border-[#9cc3ff]/25 bg-[#9cc3ff]/15 text-white"
             : "border-transparent text-[#b6c2d8] hover:bg-[#9cc3ff]/10 hover:text-white"
@@ -94,9 +97,9 @@ export function ResumeMenu() {
         role="menu"
         aria-label="Resume"
         inert={!open}
-        className={`absolute left-1/2 top-full z-30 mt-3 w-48 -translate-x-1/2 origin-top rounded-xl border border-[#9cc3ff]/15 bg-[#0e1428]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-md transition-[opacity,transform,visibility] duration-200 ease-out ${
-          open ? "visible translate-y-0 scale-100 opacity-100" : "invisible -translate-y-1 scale-95 opacity-0"
-        }`}
+        className={`absolute top-full z-30 mt-3 w-48 rounded-xl border border-[#9cc3ff]/15 bg-[#0e1428]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-md transition-[opacity,transform,visibility] duration-200 ease-out ${
+          align === "end" ? "right-0 origin-top-right" : "left-1/2 -translate-x-1/2 origin-top"
+        } ${open ? "visible translate-y-0 scale-100 opacity-100" : "invisible -translate-y-1 scale-95 opacity-0"}`}
       >
         {RESUME_FORMATS.map(({ label, file, ext, icon }) => (
           <a
