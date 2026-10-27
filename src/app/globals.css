@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* Desktop layouts that fit the viewport exactly (used by /v5). Smaller screens fall back to a normal scrolling page */
-@custom-variant desk (@media (min-width: 1100px) and (min-height: 640px));
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -13,8 +10,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --animate-twinkle: twinkle 3.5s ease-in-out infinite;
-  --animate-edge-pulse: edge-pulse 3s ease-in-out infinite;
 }
 
 /*
@@ -65,28 +60,6 @@
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
-  }
-}
-
-@keyframes edge-pulse {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.15);
   }
 }
 

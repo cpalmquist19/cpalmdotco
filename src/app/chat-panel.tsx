@@ -149,10 +149,7 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-/**
- * Chat card for the home page. Same behaviour as `chat-card.tsx` (used by /old);
- * both talk to the same /api/chat route, only the presentation differs.
- */
+/** The BEAM-E chat card. Talks to /api/chat and keeps the thread in the browser. */
 export function ChatPanel({ className = "" }: { className?: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");

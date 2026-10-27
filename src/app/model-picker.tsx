@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { CHAT_MODELS, DEFAULT_MODEL_ID, type ModelId } from "@/lib/models";
+import { CHAT_MODELS, type ModelId } from "@/lib/models";
 
 const ANTHROPIC_LOGO =
   "M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z";
@@ -24,30 +24,15 @@ function ProviderLogo({ path, className }: { path: string; className: string }) 
   );
 }
 
-// "chip" is the compact, outlined pill used by the /v3 chat card and reads "Name (Provider)"
-// "mini" is the same chip, smaller and sized in rem so it scales with the /v5 layout
-// Pass value and onChange to control the selection from outside; without them the picker keeps its own choice
-export function ModelPicker({
-  variant = "default",
-  value,
-  onChange,
-}: {
-  variant?: "default" | "chip" | "mini";
-  value?: ModelId;
-  onChange?: (id: ModelId) => void;
-}) {
-  const isMini = variant === "mini";
-  const isChip = variant === "chip" || isMini;
-  const [localId, setLocalId] = useState<ModelId>(DEFAULT_MODEL_ID);
+// A controlled picker: the chat panel owns the selection and sends it with each message
+export function ModelPicker({ value, onChange }: { value: ModelId; onChange: (id: ModelId) => void }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
-  const modelId = value ?? localId;
-  const model = MODELS.find((m) => m.id === modelId) ?? MODELS[0];
+  const model = MODELS.find((m) => m.id === value) ?? MODELS[0];
 
   function select(id: ModelId) {
-    setLocalId(id);
-    onChange?.(id);
+    onChange(id);
     setOpen(false);
   }
 
@@ -70,7 +55,7 @@ export function ModelPicker({
   }, [open]);
 
   return (
-    <div ref={rootRef} className={`relative shrink-0 ${isChip ? "max-w-full" : "w-40"}`}>
+    <div ref={rootRef} className="relative w-40 shrink-0">
       <button
         type="button"
         aria-haspopup="menu"
@@ -79,22 +64,11 @@ export function ModelPicker({
         aria-label={`Model: ${model.provider} ${model.name}`}
         title={`${model.provider} · ${model.name}`}
         onClick={() => setOpen((isOpen) => !isOpen)}
-        className={
-          isMini
-            ? "flex h-[1.6rem] max-w-full items-center gap-[0.4rem] rounded-full border border-white/10 bg-white/[0.06] pl-[0.65rem] pr-[0.5rem] text-[0.75rem] text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-            : isChip
-            ? "flex h-9 max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] pl-3 pr-2.5 text-[13px] text-slate-200 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-            : "flex h-10 w-full items-center justify-between gap-2 rounded-full bg-white/10 pl-3 pr-2.5 text-sm font-medium text-white transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-        }
+        className="flex h-10 w-full items-center justify-between gap-2 rounded-full bg-white/10 pl-3 pr-2.5 text-sm font-medium text-white transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
       >
         <span className="flex min-w-0 items-center gap-2">
-          <ProviderLogo
-            path={model.logo}
-            className={isMini ? "size-[0.8rem] shrink-0" : isChip ? "size-4 shrink-0" : "size-5 shrink-0"}
-          />
-          <span className="truncate">
-            {isChip ? `${model.name} (${model.provider})` : model.name}
-          </span>
+          <ProviderLogo path={model.logo} className="size-5 shrink-0" />
+          <span className="truncate">{model.name}</span>
         </span>
         <svg
           viewBox="0 0 24 24"
@@ -103,7 +77,7 @@ export function ModelPicker({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`${isMini ? "size-[0.8rem]" : "size-4"} shrink-0 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`size-4 shrink-0 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
         >
           <path d="M6 9l6 6 6-6" />
