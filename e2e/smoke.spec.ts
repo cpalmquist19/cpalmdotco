@@ -195,7 +195,7 @@ test.describe("chat", () => {
     await ask(page, "What has Caleb built?");
     const log = page.getByRole("log");
     await push(page, "Caleb built ");
-    await expect(log.getByText("Caleb built")).toBeVisible();
+    await expect(log.getByText("Caleb built", { exact: true })).toBeVisible();
     await expect(log).toHaveAttribute("aria-busy", "true");
     await expect(page.getByRole("button", { name: "Stop" })).toBeVisible();
 
