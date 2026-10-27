@@ -78,12 +78,6 @@ export const SIDE_PROJECTS: SideProject[] = [
       "A tool-calling AI agent harness: a local multi-round LLM agent on LM Studio's OpenAI-compatible API with a 12-round tool loop and empty-response recovery, 14 tools (files, shell, web search, Playwright page inspection), SKILL.md-based agent skills, and a streaming web UI with a tool-activity timeline. The system prompt is written as a behavior contract, with provider abstraction, fallbacks, and stop and kill-switch controls.",
   },
   {
-    title: "TestScribeAI",
-    meta: "Mar 2023 to present · Python, Flask, OpenAI API",
-    description:
-      "An AI test documentation SaaS. I architected and deployed to production a platform that generates test plans and technical documentation from application screenshots via LLM integration (testscribeai.com).",
-  },
-  {
     title: "RAG Chatbot",
     meta: "2024 · Python, Ollama, vector database",
     description:

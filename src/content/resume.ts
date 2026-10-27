@@ -48,7 +48,6 @@ Early career, Jun 2012 to Aug 2016
 
 Applied AI & side projects:
 - Local Agent, a tool-calling AI agent harness (2025 to present; Python, FastAPI): a local multi-round LLM agent harness on LM Studio's OpenAI-compatible API with a 12-round tool loop and empty-response recovery, 14 tools (files, shell, web search, Playwright page inspection), SKILL.md-based agent skills, and a streaming web UI with a tool-activity timeline. The system prompt is written as a behavior contract, with provider abstraction, fallbacks, and stop/kill-switch controls.
-- TestScribeAI, an AI test documentation SaaS (Mar 2023 to present; Python, Flask, OpenAI API): architected and deployed to production a platform that generates test plans and technical documentation from application screenshots via LLM integration (testscribeai.com).
 - RAG Chatbot, an internal support tool proof of concept (2024; Python, Ollama, vector database): a retrieval-augmented generation system over technical documentation; evaluated Llama 3, Mistral, and Phi 3 on quality/latency tradeoffs and delivered the demo and findings to leadership.
 
 Roles Caleb is looking for:

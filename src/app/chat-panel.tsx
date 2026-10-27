@@ -31,11 +31,10 @@ const FOLLOW_UPS = [
     ],
   },
   {
-    match: /qa|sdet|resume|experience|role|testscribe|automation|ersp/g,
+    match: /qa|sdet|resume|experience|role|automation|ersp/g,
     prompts: [
       "What roles is Caleb looking for?",
       "What's Caleb's test automation experience?",
-      "What is TestScribeAI, and what was Caleb's role?",
       "What AI projects has Caleb built besides Relay?",
     ],
   },
