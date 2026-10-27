@@ -7,12 +7,13 @@ Professional summary:
 Senior Software Development Engineer in Test with 14 years in healthcare SaaS and a focus on AI quality engineering. Builds LLM-powered systems (AI-powered SaaS applications, tool-calling agent harnesses) and evaluates them with a tester's discipline: eval harnesses, regression detection, and groundedness checks. At eRSP he architected three test automation frameworks (Python/Playwright, Python/Selenium, Python/Appium), shipped 192+ automated tests across 6 application areas, and cut regression environment setup time by 90%.
 
 Technical skills:
-- Languages: Python, SQL, JavaScript, ColdFusion, HTML/CSS
-- AI / LLM: LLM API integration (OpenAI-compatible), Ollama, LM Studio, prompt engineering, agent tool-calling architectures
-- Test automation: Playwright, Selenium WebDriver, PyTest, Appium, Postman
+- Languages: Python, TypeScript, JavaScript, SQL, C#, ColdFusion, HTML/CSS
+- AI / LLM: LLM API integration (OpenAI, Anthropic, Gemini), Ollama, LM Studio, prompt engineering, agent tool-calling architectures, Agent Skills (SKILL.md), LLM evaluation & LLM-as-judge, AI safety & guardrails
+- Web: Next.js, React, Tailwind CSS, Vercel AI SDK, FastAPI
+- Test automation: Playwright, Selenium WebDriver, PyTest, Appium, mobile testing (iOS/Android), Postman
 - Data: SQL Server, T-SQL
-- CI/CD & DevOps: Jenkins, Git, CI/CD pipelines, code deployment, SQL script execution
-- Tools & methods: Cursor, Copilot, Jira, REST APIs, QA dashboards, coverage reporting, Page Object Model, Agile/Scrum
+- CI/CD & DevOps: GitHub Actions, Jenkins, Git, CI/CD pipelines, code deployment, SQL script execution
+- Tools & methods: Claude Code, Cursor, Copilot, Jira, REST APIs, QA dashboards, coverage reporting, Page Object Model, test strategy & mentoring, Agile/Scrum
 
 Professional experience:
 eRSP, a multi-tenant healthcare SaaS platform (Matthews, NC, remote), Jun 2012 to present

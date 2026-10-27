@@ -106,26 +106,34 @@ export const SIDE_PROJECTS: SideProject[] = [
 ];
 
 export const SKILLS: { group: string; items: string[] }[] = [
-  { group: "Languages", items: ["Python", "SQL", "JavaScript", "ColdFusion", "HTML/CSS"] },
+  { group: "Languages", items: ["Python", "TypeScript", "JavaScript", "SQL", "C#", "ColdFusion", "HTML/CSS"] },
   {
     group: "AI / LLM",
     items: [
-      "LLM API integration (OpenAI-compatible)",
+      "LLM API integration (OpenAI, Anthropic, Gemini)",
       "Ollama",
       "LM Studio",
       "Prompt engineering",
       "Agent tool-calling architectures",
+      "Agent Skills (SKILL.md)",
+      "LLM evaluation & LLM-as-judge",
+      "AI safety & guardrails",
     ],
   },
-  { group: "Test automation", items: ["Playwright", "Selenium WebDriver", "PyTest", "Appium", "Postman"] },
+  { group: "Web", items: ["Next.js", "React", "Tailwind CSS", "Vercel AI SDK", "FastAPI", "Flask"] },
+  {
+    group: "Test automation",
+    items: ["Playwright", "Selenium WebDriver", "PyTest", "Appium", "Mobile testing (iOS/Android)", "Postman"],
+  },
   { group: "Data", items: ["SQL Server", "T-SQL"] },
   {
     group: "CI/CD & DevOps",
-    items: ["Jenkins", "Git", "CI/CD pipelines", "Code deployment", "SQL script execution"],
+    items: ["GitHub Actions", "Jenkins", "Git", "CI/CD pipelines", "Code deployment", "SQL script execution"],
   },
   {
     group: "Tools & methods",
     items: [
+      "Claude Code",
       "Cursor",
       "Copilot",
       "Jira",
@@ -133,6 +141,7 @@ export const SKILLS: { group: string; items: string[] }[] = [
       "QA dashboards",
       "Coverage reporting",
       "Page Object Model",
+      "Test strategy & mentoring",
       "Agile/Scrum",
     ],
   },
