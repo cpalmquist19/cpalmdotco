@@ -54,6 +54,8 @@ Open [http://localhost:3000](http://localhost:3000). The page reloads as you edi
 | `npm run check:guard` | Run the chat guard against its allow and block cases |
 | `npm run test:e2e` | Browser smoke tests (Playwright). `/api/chat` is mocked, so no API key is needed. First run: `npx playwright install chromium`. Uses the dev server on port 3000 if it is running, otherwise starts one; set `PORT` to use another |
 | `npm run optimize-video -- <file.mp4>` | Convert an MP4 into web-optimized WebM and MP4 files (see below) |
+| `npm run resume:sync` | Rebuild the resume downloads and the chat's copy of the resume from the resume repo (see below) |
+| `npm run resume:check` | Say whether the site's resume is behind the source, without changing anything |
 
 ### Optimizing videos
 
@@ -67,6 +69,24 @@ Every `.mp4` in each `public/**/raw` folder is converted to `<name>.webm` (VP9) 
 
 You can also pass specific files or folders, e.g. `npm run optimize-video -- clip.mp4 --out public --poster`. Run with `--help` for width, fps, quality, trim, and output options.
 
+### Updating the resume
+
+The resume is written and kept in a separate repo, next to this one (`../resume`, or wherever `RESUME_REPO` points). Its `cpalm_final.txt` is the source of truth. After changing it there, run:
+
+```bash
+npm run resume:sync
+```
+
+The source holds a phone number and an email, so the script first makes a redacted copy and builds every output from that, never from the original. It then searches the outputs for what it removed and stops if anything got through. The outputs are:
+
+- `public/resume/Caleb-Palmquist-Resume.docx`, built by that repo's own `build.js` (run on the redacted copy)
+- `public/resume/Caleb-Palmquist-Resume.pdf`, printed from the same source with headless Chromium (`npx playwright install chromium` once)
+- `public/resume/Caleb-Palmquist-Resume.txt`, the redacted source with its Markdown marks removed
+- `src/content/resume.generated.ts`, the copy the chat model reads
+- `src/site/experience.ts`, what the Experience and Skills pages show
+
+Commit the results: the deployed site cannot reach the resume repo. `npm run resume:check` tells you whether they are behind the source and whether the `.docx` holds any personal details. If you change how the contact line is written in the source, check `redactSource` in `scripts/resume-render.mjs`: the script refuses to run if it finds nothing to remove.
+
 ## Project Structure
 
 ```
@@ -78,7 +98,7 @@ src/app/
   (site)/experience, (site)/skills  The Experience and Skills pages
   view.tsx, view-keys.tsx   Shared pieces for any page that fills the left column (panel, header, sections, keyboard)
   site-nav.tsx          The nav, rendered from the list in src/site/config.ts
-  chat-panel.tsx        Chat UI: streaming replies, model picker, client-side screening
+  chat/                 Chat UI: the panel, the useChat hook (streaming, client-side screening), and its smaller parts
   api/chat/route.ts     Chat endpoint: origin check, limits, screening, model call
   globals.css           Tailwind import and base styles
 src/lib/
@@ -91,6 +111,7 @@ src/site/               What the pages show: nav and links, projects and their w
 scripts/
   check-chat-guard.mjs  Allow and block cases for the chat guard
   optimize-video.mjs    Video conversion helper
+  sync-resume.mjs       Pulls the resume in from the resume repo (resume-render.mjs holds the conversions)
 public/                 Images, video, and other static assets
 next.config.ts          Next.js configuration
 ```
@@ -131,10 +152,10 @@ Limits and caveats:
 ## Customizing
 
 - **Projects:** edit the `PROJECTS` array in `src/site/projects.ts`. Each entry sets the slug, title, description, tags, card image, links, and the sections of its write-up. A new entry gets a card on the home page and its own page.
-- **Experience and Skills:** edit `src/site/experience.ts`. Keep it in step with `src/content/resume.ts` (what the assistant knows) and the files in `public/resume`.
-- **What the assistant knows:** edit the files in `src/content/`.
+- **Experience, Skills and the resume:** these are generated from the resume source, so change it in the resume repo and run `npm run resume:sync` (see "Updating the resume" above). Don't edit `src/site/experience.ts` or `src/content/resume.generated.ts` by hand.
+- **What the assistant knows:** edit the files in `src/content/`, except the resume part, which is generated as above.
 - **Models:** edit `CHAT_MODELS` in `src/lib/models.ts`. The first entry is the default.
-- **Suggested chat prompts:** edit `CHAT_PROMPTS` in `src/app/chat-panel.tsx`.
+- **Suggested chat prompts:** edit `CHAT_PROMPTS` in `src/app/chat/starter-prompts.tsx`.
 - **Navigation:** edit `NAV` in `src/site/config.ts`. The active item follows the route.
 - **A new page in the left column:** add a route under `src/app/(site)/` that returns a `View` (see `view.tsx`). It shares the shell, so the chat stays mounted.
 - **Site title and description:** edit `metadata` in `src/app/layout.tsx`.

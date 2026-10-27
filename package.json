@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "optimize-video": "node scripts/optimize-video.mjs",
+    "resume:sync": "node scripts/sync-resume.mjs",
+    "resume:check": "node scripts/sync-resume.mjs --check",
     "test:e2e": "playwright test",
     "check:guard": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-chat-guard.mjs"
   },
