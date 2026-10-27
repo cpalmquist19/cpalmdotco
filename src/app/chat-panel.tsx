@@ -515,17 +515,6 @@ export function ChatPanel({ className = "" }: { className?: string }) {
           AI-generated from Caleb&rsquo;s work. It can make mistakes.
         </p>
       </form>
-      {/* Gradient rim (disabled): a 1px stroke that is brightest at the top-left and bottom-right corners and fades out along the sides. Masked so only the edge shows
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 rounded-3xl p-px"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(186,230,253,0.85) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.03) 55%, rgba(96,165,250,0.55) 80%, rgba(186,230,253,0.7) 100%)",
-          WebkitMask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
-          mask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
-        }}
-      /> */}
     </aside>
   );
 }
