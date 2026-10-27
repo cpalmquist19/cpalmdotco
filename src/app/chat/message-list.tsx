@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Markdown } from "../markdown";
 import { SpotlightCard } from "../spotlight-card";
-import { CopyButton } from "./copy-button";
+import { MessageBubble } from "./message-bubble";
 import type { Message } from "./types";
 
 /** The thread: each message, the thinking and error lines, and the follow-up questions offered after a reply */
@@ -21,9 +20,16 @@ export function MessageList({
   onSend: (text: string) => void;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
+  const seen = useRef({ count: 0, sending: false });
 
+  // Glide to the bottom when something is added (a message, the thinking line, the follow-ups). While a reply grows
+  // line by line, jump instead: a new smooth scroll on every redraw never catches up and looks like stuttering
   useEffect(() => {
-    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+    const list = listRef.current;
+    if (!list) return;
+    const changed = messages.length !== seen.current.count || isSending !== seen.current.sending;
+    seen.current = { count: messages.length, sending: isSending };
+    list.scrollTo({ top: list.scrollHeight, behavior: changed ? "smooth" : "auto" });
   }, [messages, isSending]);
 
   return (
@@ -31,25 +37,17 @@ export function MessageList({
       ref={listRef}
       role="log"
       aria-live="polite"
+      // Screen readers wait for the reply to finish instead of reading every chunk as it arrives
+      aria-busy={isSending}
       className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin] xl:flex-[1_1_0%]"
     >
       {messages.map((message, i) => (
-        <div
-          key={i}
-          className={`flex max-w-[85%] flex-col gap-0.5 ${message.role === "user" ? "items-end self-end" : "items-start self-start"}`}
-        >
-          <div
-            className={
-              message.role === "user"
-                ? "whitespace-pre-wrap rounded-2xl rounded-br-md bg-blue-500/25 px-4 py-2.5 text-[15px] leading-relaxed text-slate-50"
-                : "rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-slate-200"
-            }
-          >
-            {message.role === "user" ? message.content : <Markdown text={message.content} />}
-          </div>
-          {/* Not offered on a reply that is still streaming in, since it would copy half a message */}
-          {!(isSending && message.role === "assistant" && i === messages.length - 1) && <CopyButton text={message.content} />}
-        </div>
+        <MessageBubble
+          key={message.id}
+          message={message}
+          // Not offered on a reply that is still streaming in, since it would copy half a message
+          showCopy={!(isSending && message.role === "assistant" && i === messages.length - 1)}
+        />
       ))}
       {isSending && messages[messages.length - 1]?.role === "user" && (
         <p className="text-sm text-slate-400">Thinking…</p>
