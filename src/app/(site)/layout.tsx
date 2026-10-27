@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { asset } from "@/lib/asset";
 import { LINKEDIN_URL } from "@/site/config";
-import { ChatPanel } from "../chat-panel";
+import { ChatPanel } from "../chat/chat-panel";
 import { SiteNav } from "../site-nav";
 
 export const metadata: Metadata = {
