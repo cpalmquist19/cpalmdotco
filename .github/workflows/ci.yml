@@ -42,3 +42,20 @@ jobs:
       # The same build Vercel runs on deploy, so a broken page or config fails here first
       - name: Build
         run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # Serves the build above and drives it in a real browser. /api/chat is mocked, so no API keys are needed
+      - name: Smoke tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

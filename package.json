@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "optimize-video": "node scripts/optimize-video.mjs",
+    "test:e2e": "playwright test",
     "check:guard": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-chat-guard.mjs"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

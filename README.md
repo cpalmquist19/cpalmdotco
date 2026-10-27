@@ -52,6 +52,7 @@ Open [http://localhost:3000](http://localhost:3000). The page reloads as you edi
 | `npm start`     | Serve the production build (run `npm run build` first)   |
 | `npm run lint`  | Lint the project with ESLint                             |
 | `npm run check:guard` | Run the chat guard against its allow and block cases |
+| `npm run test:e2e` | Browser smoke tests (Playwright). `/api/chat` is mocked, so no API key is needed. First run: `npx playwright install chromium`. Uses the dev server on port 3000 if it is running, otherwise starts one; set `PORT` to use another |
 | `npm run optimize-video -- <file.mp4>` | Convert an MP4 into web-optimized WebM and MP4 files (see below) |
 
 ### Optimizing videos
