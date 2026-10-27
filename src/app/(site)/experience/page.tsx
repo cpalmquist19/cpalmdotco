@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EMPLOYER, ROLES, SIDE_PROJECTS, SUMMARY } from "@/site/experience";
-import { Bullets, Paragraphs, Section, Timeline, TimelineItem, View, ViewBody, ViewHeader } from "../../view";
+import { Bullets, Section, Timeline, TimelineItem, View, ViewBody, ViewHeader } from "../../view";
 
 export const metadata: Metadata = {
   title: "Experience",
@@ -23,7 +23,7 @@ export default function ExperiencePage() {
 
         <Section heading={EMPLOYER.name}>
           <p className="-mt-2 font-mono text-xs text-[#9fb0cc]">
-            {EMPLOYER.about} · {EMPLOYER.where} · {EMPLOYER.period}
+            {EMPLOYER.about} · {EMPLOYER.period}
           </p>
           <Timeline>
             {ROLES.map((role) => (
@@ -34,11 +34,11 @@ export default function ExperiencePage() {
           </Timeline>
         </Section>
 
-        <Section heading="Applied AI & side projects">
+        <Section heading="Selected AI & evaluation projects">
           <Timeline>
             {SIDE_PROJECTS.map((project) => (
               <TimelineItem key={project.title} title={project.title} meta={project.meta}>
-                <Paragraphs items={[project.description]} />
+                <Bullets items={project.highlights} />
               </TimelineItem>
             ))}
           </Timeline>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { CERTIFICATIONS, SKILLS } from "@/site/experience";
-import { Bullets, Section, TagList, View, ViewBody, ViewHeader } from "../../view";
+import { SKILLS } from "@/site/experience";
+import { TONE_NAMES, TagList, View, ViewBody, ViewHeader } from "../../view";
 
 export const metadata: Metadata = {
   title: "Skills",
@@ -24,17 +24,17 @@ export default function SkillsPage() {
         </header>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {SKILLS.map(({ group, items }) => (
-            <section key={group} className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <h2 className="text-base font-semibold tracking-tight text-white">{group}</h2>
-              <TagList tags={items} variant="chip" />
-            </section>
-          ))}
+          {SKILLS.map(({ group, items }, i) => {
+            // Each group gets its own syntax color, in the order of the theme's palette
+            const tone = TONE_NAMES[i % TONE_NAMES.length];
+            return (
+              <section key={group} className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <h2 className="text-base font-semibold tracking-tight text-white">{group}</h2>
+                <TagList tags={items} variant="chip" tone={tone} />
+              </section>
+            );
+          })}
         </div>
-
-        <Section heading="Certifications">
-          <Bullets items={CERTIFICATIONS} />
-        </Section>
       </ViewBody>
     </View>
   );

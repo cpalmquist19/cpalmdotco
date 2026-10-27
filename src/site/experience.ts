@@ -1,14 +1,14 @@
-// What the Experience and Skills pages show. It follows the resume in src/content/resume.ts (the text BEAM-E answers
-// from) and the downloadable files in public/resume, so when the resume changes, update all three together
+// What the Experience and Skills pages show. The Experience copy follows the resume text (summary, roles, projects). It
+// sits alongside src/content/resume.ts (the text BEAM-E answers from) and the downloadable files in public/resume, so
+// when the resume changes, update all three together
 
 export const SUMMARY =
-  "Senior Software Development Engineer in Test with 14 years in healthcare SaaS and a focus on AI quality engineering. I build LLM-powered systems (AI-powered SaaS applications, RAG pipelines, tool-calling agent harnesses) and evaluate them with a tester's discipline: eval harnesses, regression detection, and groundedness checks.";
+  "Software engineering and quality professional with 14 years of experience across healthcare SaaS, test automation, and software development. Hands-on experience building tool-calling LLM agents and evaluation infrastructure, including a multi-model evaluation harness with repeated-run scoring, safety checks, cost tracking, and GitHub Actions regression gates. Combines Python-based engineering, systematic failure analysis, and automation expertise with experience testing complex, data-intensive business systems in healthcare.";
 
 export const EMPLOYER = {
   name: "eRSP",
-  about: "A multi-tenant healthcare SaaS platform",
-  where: "Matthews, NC, remote",
-  period: "Jun 2012 to present",
+  about: "Formerly Kaleida Systems · Home-care management SaaS",
+  period: "Jun 2012 to Present",
 };
 
 export type Role = { title: string; period: string; highlights: string[] };
@@ -17,71 +17,91 @@ export type Role = { title: string; period: string; highlights: string[] };
 export const ROLES: Role[] = [
   {
     title: "Senior Software Development Engineer in Test",
-    period: "May 2024 to present",
+    period: "May 2024 to Present",
     highlights: [
-      "Architected a Playwright test automation framework using Page Object Model: 192+ automated tests across 6 critical application areas in a monolithic, database-heavy multi-tenant system.",
-      "Built a QA Dashboard tracking thousands of code files, unit tests, and automation coverage across 13 test areas: real-time test health, coverage confidence, and complexity metrics for leadership.",
-      "Cut regression environment setup 90% (30 min to 3 min) by automating admin-portal and in-app settings across the multi-tenant environment.",
-      "Integrated AI-assisted workflows into QA practice: LLM-generated test scaffolding and documentation review via Copilot and Cursor, with human verification gates on all AI-generated output.",
-      "Automated REST API validation with Postman collections; identified endpoint coverage and CI/CD gaps.",
-      "Mentors QA team members on automation best practices, framework architecture, and test strategy.",
+      "End-to-End Automation: Built a Playwright/TypeScript framework using the Page Object Model, with 60+ tests covering login, account creation, viewing and editing across account types, and core configuration workflows such as services and pricing. Automated a legacy ColdFusion monolith with no central API; each run replaces approximately four hours of manual testing.",
+      "Environment Setup Automation: Automated admin-portal and application settings for the five most common customer configuration profiles, reducing regression-environment setup time by 90%, from 30 minutes to 3 minutes.",
+      "CI/CD Integration: Built a GitHub Actions workflow on a self-hosted runner to launch UI automation on demand. Users can select the target server and tests by component, smoke suite, or full suite, or list tests without executing them. Passed selections to a custom test runner as parameters.",
+      "Unit Test Recovery: Restored a neglected 192-test unit suite to a working state and kept it passing.",
+      "Quality Metrics: Built a QA dashboard tracking code files, unit tests, and automation coverage across 13 test areas.",
+      "ML Experimentation & Mentoring: Prototyped an ML classifier to triage support tickets by routing category (support versus development) and severity. Advised two QA teammates on automation and test strategy.",
     ],
   },
   {
     title: "QA Lead",
     period: "Mar 2019 to May 2024",
     highlights: [
-      "Architected a Python/Selenium/PyTest automation framework for a legacy monolithic architecture with complex database interdependencies.",
-      "Led end-to-end testing and rollout of mobile applications (iOS/Android); built the original mobile test automation framework in C#/Appium, then migrated it to Python/Appium.",
-      "Built internal QA tools, including test management utilities, reducing rework cycles.",
-      "Ran code reviews and peer-review alignment to reduce refactoring overhead and production bugs.",
+      "Designed a Python/Selenium/PyTest automation framework for a legacy monolith with complex database interdependencies.",
+      "Led testing and rollout of iOS and Android applications; built mobile automation frameworks in C#/Appium and later Python/Appium.",
+      "Built internal QA tools, made automation tooling decisions, and guided two QA teammates on automation and test strategy.",
     ],
   },
   {
     title: "Web Developer",
     period: "Mar 2018 to Mar 2019",
     highlights: [
-      "Refactored inefficient SQL queries and stored procedures; centralized data access patterns for performance and maintainability.",
-      "Engineered an admin approval workflow for critical scheduling operations, including new UI and database-layer governance.",
+      "Optimized slow SQL queries and stored procedures; built an administrative approval workflow for broadcasting open caregiver visits and developed custom reports for franchise customers.",
     ],
   },
   {
     title: "QA Lead",
     period: "Jun 2017 to Mar 2018",
     highlights: [
-      "Built a real-time QA analytics dashboard on the Jira REST API with local database caching: defect escape rate, rework cycles, developer coverage gaps.",
-      "Helped drive the company-wide Agile transformation: QA practices, acceptance criteria standards, reporting frameworks.",
+      "Built a QA analytics dashboard using the Jira REST API to track defect escape rates, rework, and coverage gaps.",
+      "Helped transition the company to Agile/Scrum and authored QA, development, and support policies.",
     ],
   },
   {
     title: "QA Analyst",
     period: "Aug 2016 to Jun 2017",
     highlights: [
-      "Executed test plans for bug fixes, feature updates, and releases.",
-      "Managed Jenkins CI/CD pipelines: code deployment and SQL script execution across test environments.",
+      "Executed test plans for fixes and releases, managed Jenkins deployments and SQL script runs, and evaluated mobile test automation using Selenium and Appium.",
     ],
   },
   {
-    title: "Early career",
-    period: "Jun 2012 to Aug 2016",
-    highlights: ["Product Support Specialist, then Enterprise Account Manager, then Junior Web Developer."],
+    title: "Junior Web Developer",
+    period: "Jun 2015 to Aug 2016",
+    highlights: [
+      "Fixed defects, refactored core application code, and automated a reporting workflow that replaced hours of manual Excel tracking.",
+    ],
+  },
+  {
+    title: "Enterprise Account Manager",
+    period: "Oct 2013 to Jun 2015",
+    highlights: [
+      "Managed two of the company's largest customer accounts and built an internal issue tracker adopted by the development team.",
+    ],
+  },
+  {
+    title: "Product Support Specialist",
+    period: "Jun 2012 to Oct 2013",
+    highlights: ["Supported 1,000+ home-care agencies by phone and email and developed internal support reports."],
   },
 ];
 
-export type SideProject = { title: string; meta: string; description: string };
+export type SideProject = { title: string; meta: string; highlights: string[] };
 
 export const SIDE_PROJECTS: SideProject[] = [
   {
-    title: "Local Agent",
-    meta: "2025 to present · Python, FastAPI",
-    description:
-      "A tool-calling AI agent harness: a local multi-round LLM agent on LM Studio's OpenAI-compatible API with a 12-round tool loop and empty-response recovery, 14 tools (files, shell, web search, Playwright page inspection), SKILL.md-based agent skills, and a streaming web UI with a tool-activity timeline. The system prompt is written as a behavior contract, with provider abstraction, fallbacks, and stop and kill-switch controls.",
+    title: "Relay: Local AI Agent & Evaluation Harness",
+    meta: "Python, FastAPI, LM Studio, GitHub Actions",
+    highlights: [
+      "Agent Engineering: Built a tool-calling LLM agent using LM Studio's OpenAI-compatible API, with 14 tools for file operations, shell execution, web access, and Playwright page inspection. Implemented reusable SKILL.md instructions, a streaming UI, up to 12 tool rounds per turn, recovery from incomplete model responses, and stop controls that terminate running commands.",
+      "Evaluation Framework: Designed an 11-task evaluation suite covering scenarios such as fixing a failing test, performing a behavior-preserving refactor, and writing tests that detect planted bugs. Scored tool selection, argument validity, end-state correctness, efficiency, and safety; added repeated runs, cost-per-run tracking, and an optional LLM judge.",
+      "Automated Verification & CI: Built 200+ automated tests and scripted good- and bad-reference agents to verify the evaluation scorer's behavior. Integrated evaluation runs into GitHub Actions on every push as a regression gate.",
+      "Model Benchmarking & Failure Analysis: Compared local, OpenAI, and Anthropic models, then used observed failures to improve agent behavior. In targeted runs for one model, reduced tool errors from 6 to 0 and tool calls from 55 to 34 by fixing tool definitions and behavior.",
+      "Safety & Runtime Reliability: Detected protected-file access through shell execution in 3 of 3 runs by a local model and added a path guard. Also fixed a code-execution hole in the calculator tool and Linux child-process cleanup failures discovered through testing.",
+    ],
   },
   {
-    title: "RAG Chatbot",
-    meta: "2024 · Python, Ollama, vector database",
-    description:
-      "An internal support tool proof of concept: a retrieval-augmented generation system over technical documentation. I evaluated Llama 3, Mistral, and Phi 3 on quality and latency trade-offs and delivered the demo and findings to leadership.",
+    title: "Portfolio Site (cpalm.dev)",
+    meta: "Next.js, React, TypeScript, Tailwind CSS, Vercel AI SDK, GitHub Actions",
+    highlights: [
+      "Site Build: Built a responsive portfolio site with the Next.js App Router, React, TypeScript, and Tailwind CSS v4, featuring a hero section, a featured-work grid with tech tags and GitHub links, and a script that converts MP4 background video to web-optimized WebM and MP4.",
+      "Live AI Assistant: Built BEAM-E, a streaming chat assistant that answers questions about my work using only my resume and project write-ups supplied in its system prompt, and says so when something isn't covered. Visitors can choose between Claude Haiku 5.5 and GPT 5.6 Luna, with the provider selected server-side from an allowlist of model IDs.",
+      "Chat Safeguards: Layered protections on the chat endpoint: same-origin check, per-visitor rate limits with temporary lockouts, request size and model validation, message screening for prompt injection, abuse, illegal requests, spam, and gibberish (run in the browser for instant feedback and on the server as the authoritative check), and a daily model-call cap. Blocked messages never reach the model.",
+      "Testing & CI: Wrote a test script with 100+ allow and block cases for the message screening, including honest questions that must not be blocked. GitHub Actions runs it, plus type checking and linting, on every push and pull request.",
+    ],
   },
 ];
 
@@ -122,5 +142,3 @@ export const SKILLS: { group: string; items: string[] }[] = [
     ],
   },
 ];
-
-export const CERTIFICATIONS = ["Prompt Engineering: How to Talk to the AIs, LinkedIn Learning (Nov 2025)"];

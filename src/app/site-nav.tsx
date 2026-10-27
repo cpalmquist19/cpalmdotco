@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, type MouseEvent } from "react";
 import { NAV, isActive } from "@/site/config";
 import { ResumeMenu } from "./resume-menu";
 
@@ -19,6 +20,23 @@ const CTA = "border-transparent bg-[#f5a25d] font-semibold text-[#1a0f05] hover:
 export function SiteNav({ variant }: { variant: "bar" | "row" }) {
   const pathname = usePathname();
   const row = variant === "row";
+  // The page a click is already on its way to, so spam-clicking a link doesn't start the same navigation again
+  const pending = useRef<string | null>(null);
+
+  useEffect(() => {
+    pending.current = null;
+  }, [pathname]);
+
+  /** Ignore a click on the page that is already showing, or already loading. Links with a hash still scroll to their anchor */
+  function skipRepeat(event: MouseEvent, href: string) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    if (href.includes("#")) return;
+    if (href === pathname || href === pending.current) {
+      event.preventDefault();
+      return;
+    }
+    pending.current = href;
+  }
 
   return (
     <nav
@@ -55,6 +73,7 @@ export function SiteNav({ variant }: { variant: "bar" | "row" }) {
             <li key={item.label}>
               <Link
                 href={item.href}
+                onClick={(event) => skipRepeat(event, item.href)}
                 aria-current={active ? "page" : undefined}
                 className={`${ITEM} ${padding} ${active ? ACTIVE : IDLE}`}
               >

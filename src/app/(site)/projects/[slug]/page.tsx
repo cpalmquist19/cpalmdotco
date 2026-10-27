@@ -28,8 +28,8 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
     <View key={slug} labelledBy={titleId}>
       <ViewHeader
         back={{ href: "/#projects", label: "All projects" }}
-        prev={{ href: `/projects/${prev.slug}`, label: prev.title }}
-        next={{ href: `/projects/${next.slug}`, label: next.title }}
+        prev={prev && { href: `/projects/${prev.slug}`, label: prev.title }}
+        next={next && { href: `/projects/${next.slug}`, label: next.title }}
         position={`${position} / ${total}`}
       />
       <ViewBody>

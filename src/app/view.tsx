@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { ViewTransition, type ReactNode } from "react";
 import type { Section as SectionData } from "@/site/projects";
 import { ArrowLeft, ArrowRight } from "./icons";
 import { ViewKeys } from "./view-keys";
@@ -12,16 +12,19 @@ type Crumb = { href: string; label: string };
 /**
  * The panel itself, and its place in the shell's grid. On xl it takes the whole left column and the body scrolls inside
  * it, so the page keeps fitting the screen with the chat beside it; below that the page scrolls as a whole, with the
- * panel ahead of the chat. It slides in whenever it mounts, which is on every navigation between pages.
+ * panel ahead of the chat. Only the content animates when views swap (see globals.css): the frame is the same on every
+ * view, so it never flashes, and the content crossfades between views or slides in when arriving from the home page.
  */
 export function View({ labelledBy, children }: { labelledBy: string; children: ReactNode }) {
   return (
     <section
       aria-labelledby={labelledBy}
-      className="animate-view-in motion-reduce:animate-none flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl max-lg:order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:min-h-0"
+      className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl max-lg:order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:min-h-0"
       style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.25)" }}
     >
-      {children}
+      <ViewTransition name="view-content" share="view-swap" enter="view-enter" exit="view-exit" default="none">
+        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+      </ViewTransition>
     </section>
   );
 }
@@ -31,25 +34,36 @@ const PILL =
 
 /**
  * Top bar: a way back to where the visitor came from, and optionally the previous and next sibling. It also wires up
- * the keyboard for the same moves (Escape, left and right). Escape's key is labelled; the arrows are already drawn on the buttons.
+ * the keyboard for the same moves (Escape, and [ and ] or the left and right arrows). The three keys are labelled together beside the way back.
  */
 export function ViewHeader({ back, prev, next, position }: { back: Crumb; prev?: Crumb; next?: Crumb; position?: string }) {
-  // With only two siblings, previous and next are the same page, so just offer next
-  const showPrev = prev && prev.href !== next?.href;
-  const kbd = "hidden rounded border border-white/15 px-1 font-mono text-[10px] leading-4 text-slate-400 xl:inline";
+  // Lit like a keyword in an editor theme: violet text and border with a soft glow that brightens when the pill is hovered
+  const kbdBase = "hidden rounded-md border px-1.5 font-mono text-[11px] font-medium leading-4 xl:inline";
+  const kbd = `${kbdBase} border-[#c084fc]/50 bg-[#a855f7]/15 text-[#e0b8ff] shadow-[0_0_10px_rgba(192,132,252,0.4),inset_0_0_6px_rgba(192,132,252,0.18)] [text-shadow:0_0_8px_rgba(217,170,255,0.7)] transition-[box-shadow,border-color] duration-150 group-hover:border-[#e879f9]/80 group-hover:shadow-[0_0_16px_rgba(232,121,249,0.6),inset_0_0_8px_rgba(232,121,249,0.25)]`;
+  // A bracket with nothing to step to (the first or last page) goes dark, because its key does nothing
+  const kbdOff = `${kbdBase} border-white/10 text-slate-600`;
 
   return (
     <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-3 py-2.5 sm:px-5">
       <ViewKeys back={back.href} prev={prev?.href} next={next?.href} />
-      <Link href={back.href} className={PILL}>
-        <ArrowLeft className="size-4" />
-        {back.label}
-        <kbd className={kbd}>Esc</kbd>
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link href={back.href} className={`group ${PILL}`}>
+          <ArrowLeft className="size-4" />
+          {back.label}
+          <kbd className={kbd}>Esc</kbd>
+        </Link>
+        {/* Both brackets whenever the page has siblings; the one with nowhere to go is dimmed */}
+        {(prev || next) && (
+          <span aria-hidden="true" className="flex items-center gap-1.5">
+            <kbd className={prev ? kbd : kbdOff}>[</kbd>
+            <kbd className={next ? kbd : kbdOff}>]</kbd>
+          </span>
+        )}
+      </div>
       {(prev || next) && (
         <div className="flex items-center gap-1">
           {position && <span className="mr-1 font-mono text-xs text-slate-500">{position}</span>}
-          {showPrev && (
+          {prev && (
             <Link href={prev.href} aria-label={`Previous: ${prev.label}`} className={PILL}>
               <ArrowLeft className="size-4" />
               <span className="max-sm:hidden">{prev.label}</span>
@@ -122,8 +136,28 @@ export function ContentSection({ section }: { section: SectionData }) {
   );
 }
 
-/** Small pills. "tag" is the mono, uppercase label used on projects; "chip" is a plainer pill for names such as skills */
-export function TagList({ tags, variant = "tag" }: { tags: string[]; variant?: "tag" | "chip" }) {
+/**
+ * Chip colors borrowed from an editor's syntax theme (keyword, function, string, number, type, variable). Each is a
+ * lit pill: tinted border and fill, bright text, and a soft glow that strengthens on hover. Written out in full so
+ * Tailwind can see every class.
+ */
+const TONES = {
+  purple:
+    "border-[#c678dd]/40 bg-[#c678dd]/10 text-[#e2b6f0] shadow-[0_0_10px_rgba(198,120,221,0.22)] [text-shadow:0_0_8px_rgba(198,120,221,0.55)] hover:border-[#c678dd]/80 hover:shadow-[0_0_16px_rgba(198,120,221,0.5)]",
+  blue: "border-[#61afef]/40 bg-[#61afef]/10 text-[#a9d3fa] shadow-[0_0_10px_rgba(97,175,239,0.22)] [text-shadow:0_0_8px_rgba(97,175,239,0.55)] hover:border-[#61afef]/80 hover:shadow-[0_0_16px_rgba(97,175,239,0.5)]",
+  green:
+    "border-[#98c379]/40 bg-[#98c379]/10 text-[#c5e3ae] shadow-[0_0_10px_rgba(152,195,121,0.22)] [text-shadow:0_0_8px_rgba(152,195,121,0.55)] hover:border-[#98c379]/80 hover:shadow-[0_0_16px_rgba(152,195,121,0.5)]",
+  orange:
+    "border-[#d19a66]/40 bg-[#d19a66]/10 text-[#ecc59c] shadow-[0_0_10px_rgba(209,154,102,0.22)] [text-shadow:0_0_8px_rgba(209,154,102,0.55)] hover:border-[#d19a66]/80 hover:shadow-[0_0_16px_rgba(209,154,102,0.5)]",
+  cyan: "border-[#56b6c2]/40 bg-[#56b6c2]/10 text-[#9adbe4] shadow-[0_0_10px_rgba(86,182,194,0.22)] [text-shadow:0_0_8px_rgba(86,182,194,0.55)] hover:border-[#56b6c2]/80 hover:shadow-[0_0_16px_rgba(86,182,194,0.5)]",
+  pink: "border-[#e06c9f]/40 bg-[#e06c9f]/10 text-[#f4a9c8] shadow-[0_0_10px_rgba(224,108,159,0.22)] [text-shadow:0_0_8px_rgba(224,108,159,0.55)] hover:border-[#e06c9f]/80 hover:shadow-[0_0_16px_rgba(224,108,159,0.5)]",
+} as const;
+
+export type Tone = keyof typeof TONES;
+export const TONE_NAMES = Object.keys(TONES) as Tone[];
+
+/** Small pills. "tag" is the mono, uppercase label used on projects; "chip" is a lit, editor-style pill for names such as skills */
+export function TagList({ tags, variant = "tag", tone = "blue" }: { tags: string[]; variant?: "tag" | "chip"; tone?: Tone }) {
   return (
     <ul className="flex flex-wrap gap-1.5">
       {tags.map((tag) => (
@@ -132,7 +166,7 @@ export function TagList({ tags, variant = "tag" }: { tags: string[]; variant?: "
           className={
             variant === "tag"
               ? "rounded-full border border-blue-400/25 bg-blue-500/10 px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-[#9cc3ff]"
-              : "rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-sm text-slate-200"
+              : `rounded-md border px-2.5 py-1 font-mono text-[13px] transition-[border-color,box-shadow] duration-150 ${TONES[tone]}`
           }
         >
           {tag}

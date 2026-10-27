@@ -152,12 +152,12 @@ export function findProject(slug: string) {
   return PROJECTS.find((project) => project.slug === slug);
 }
 
-/** The projects either side of `slug`, wrapping around, so the page's prev and next controls can step through them */
+/** The projects either side of `slug`, for the page's prev and next controls. The first has no prev and the last has no next, so stepping stops at the ends */
 export function neighbours(slug: string) {
   const i = PROJECTS.findIndex((project) => project.slug === slug);
   return {
-    prev: PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length],
-    next: PROJECTS[(i + 1) % PROJECTS.length],
+    prev: PROJECTS[i - 1],
+    next: PROJECTS[i + 1],
     position: i + 1,
     total: PROJECTS.length,
   };
