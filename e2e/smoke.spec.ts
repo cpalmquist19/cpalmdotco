@@ -23,6 +23,18 @@ async function ask(page: Page, text: string) {
   await composer(page).press("Enter");
 }
 
+/**
+ * Presses a view shortcut until the page moves. The keys are ignored for about half a second after a page change
+ * (measured: an immediate press was dropped in 9 of 12 runs, one after a 1s pause in 0 of 12), so a single press
+ * races the transition. Repeating is safe: a key with nowhere to go does nothing.
+ */
+async function pressUntilUrl(page: Page, key: string, url: RegExp) {
+  await expect(async () => {
+    await page.keyboard.press(key);
+    await expect(page).toHaveURL(url, { timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+}
+
 test.describe("pages", () => {
   test("home shows the hero, the chat and the featured projects", async ({ page }) => {
     await page.goto("/");
@@ -53,15 +65,11 @@ test.describe("pages", () => {
 
     // The view takes focus when it opens, so the keys work without clicking anywhere first
     await expect(page.locator("[data-view]")).toBeFocused();
-    await page.keyboard.press("]");
-    await expect(page).toHaveURL(/\/projects\/relay$/);
+    await pressUntilUrl(page, "]", /\/projects\/relay$/);
     await expect(page.getByRole("heading", { level: 1, name: "Relay" })).toBeVisible();
 
-    await page.keyboard.press("[");
-    await expect(page).toHaveURL(/\/projects\/cpalm-co$/);
-
-    await page.keyboard.press("Escape");
-    await expect(page).toHaveURL(/\/#projects$/);
+    await pressUntilUrl(page, "[", /\/projects\/cpalm-co$/);
+    await pressUntilUrl(page, "Escape", /\/#projects$/);
   });
 });
 

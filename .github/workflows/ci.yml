@@ -43,8 +43,28 @@ jobs:
       - name: Build
         run: npm run build
 
+      # The browser download is cached per Playwright version. The system libraries it needs are not part of that
+      # cache, so they are installed on every run
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(npx playwright --version | cut -d' ' -f2)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browser
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
       - name: Install Playwright browser
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 5
         run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system libraries
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        timeout-minutes: 5
+        run: npx playwright install-deps chromium
 
       # Serves the build above and drives it in a real browser. /api/chat is mocked, so no API keys are needed
       - name: Smoke tests
