@@ -40,7 +40,7 @@ export const ROLES: Role[] = [
     title: "Web Developer",
     period: "Mar 2018 to Mar 2019",
     highlights: [
-      "Optimized slow SQL queries and stored procedures; built an administrative approval workflow for broadcasting open caregiver visits and developed custom reports for franchise customers.",
+      "Optimized slow SQL queries; built an administrative approval workflow for broadcasting open caregiver visits and developed custom reports for franchise customers.",
     ],
   },
   {
@@ -113,17 +113,12 @@ export const SKILLS: { group: string; items: string[] }[] = [
       "LLM API integration (OpenAI-compatible)",
       "Ollama",
       "LM Studio",
-      "RAG pipelines",
-      "Vector databases & embeddings",
       "Prompt engineering",
       "Agent tool-calling architectures",
     ],
   },
-  { group: "Test automation", items: ["Playwright", "Selenium WebDriver", "PyTest", "Appium", "MSTest", "Postman"] },
-  {
-    group: "Data",
-    items: ["SQL Server", "T-SQL", "Stored procedures", "Query optimization", "Database regression testing"],
-  },
+  { group: "Test automation", items: ["Playwright", "Selenium WebDriver", "PyTest", "Appium", "Postman"] },
+  { group: "Data", items: ["SQL Server", "T-SQL"] },
   {
     group: "CI/CD & DevOps",
     items: ["Jenkins", "Git", "CI/CD pipelines", "Code deployment", "SQL script execution"],

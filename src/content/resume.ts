@@ -4,13 +4,13 @@ export const RESUME = `Caleb Palmquist
 LinkedIn: linkedin.com/in/calebfrommaine
 
 Professional summary:
-Senior Software Development Engineer in Test with 14 years in healthcare SaaS and a focus on AI quality engineering. Builds LLM-powered systems (AI-powered SaaS applications, RAG pipelines, tool-calling agent harnesses) and evaluates them with a tester's discipline: eval harnesses, regression detection, and groundedness checks. At eRSP he architected three test automation frameworks (Python/Playwright, Python/Selenium, Python/Appium), shipped 192+ automated tests across 6 application areas, and cut regression environment setup time by 90%.
+Senior Software Development Engineer in Test with 14 years in healthcare SaaS and a focus on AI quality engineering. Builds LLM-powered systems (AI-powered SaaS applications, tool-calling agent harnesses) and evaluates them with a tester's discipline: eval harnesses, regression detection, and groundedness checks. At eRSP he architected three test automation frameworks (Python/Playwright, Python/Selenium, Python/Appium), shipped 192+ automated tests across 6 application areas, and cut regression environment setup time by 90%.
 
 Technical skills:
 - Languages: Python, SQL, JavaScript, ColdFusion, HTML/CSS
-- AI / LLM: LLM API integration (OpenAI-compatible), Ollama, LM Studio, RAG pipelines, vector databases & embeddings, prompt engineering, agent tool-calling architectures
-- Test automation: Playwright, Selenium WebDriver, PyTest, Appium, MSTest, Postman
-- Data: SQL Server, T-SQL, stored procedures, query optimization, database regression testing
+- AI / LLM: LLM API integration (OpenAI-compatible), Ollama, LM Studio, prompt engineering, agent tool-calling architectures
+- Test automation: Playwright, Selenium WebDriver, PyTest, Appium, Postman
+- Data: SQL Server, T-SQL
 - CI/CD & DevOps: Jenkins, Git, CI/CD pipelines, code deployment, SQL script execution
 - Tools & methods: Cursor, Copilot, Jira, REST APIs, QA dashboards, coverage reporting, Page Object Model, Agile/Scrum
 
@@ -32,7 +32,7 @@ QA Lead, Mar 2019 to May 2024
 - Ran code reviews and peer-review alignment to reduce refactoring overhead and production bugs.
 
 Web Developer, Mar 2018 to Mar 2019
-- Refactored inefficient SQL queries and stored procedures; centralized data access patterns for performance and maintainability.
+- Refactored inefficient SQL queries; centralized data access patterns for performance and maintainability.
 - Engineered an admin approval workflow for critical scheduling operations, including new UI and database-layer governance.
 
 QA Lead, Jun 2017 to Mar 2018
@@ -48,7 +48,6 @@ Early career, Jun 2012 to Aug 2016
 
 Applied AI & side projects:
 - Local Agent, a tool-calling AI agent harness (2025 to present; Python, FastAPI): a local multi-round LLM agent harness on LM Studio's OpenAI-compatible API with a 12-round tool loop and empty-response recovery, 14 tools (files, shell, web search, Playwright page inspection), SKILL.md-based agent skills, and a streaming web UI with a tool-activity timeline. The system prompt is written as a behavior contract, with provider abstraction, fallbacks, and stop/kill-switch controls.
-- RAG Chatbot, an internal support tool proof of concept (2024; Python, Ollama, vector database): a retrieval-augmented generation system over technical documentation; evaluated Llama 3, Mistral, and Phi 3 on quality/latency tradeoffs and delivered the demo and findings to leadership.
 
 Roles Caleb is looking for:
 Applied AI Engineer, AI Engineer, AI Developer, SDET, AI SDET, Agentic Workflows, AI Agents, Automated Workflows, Automated Processes, Developer Experience (DX), AI Integrations, API Integrations, AI Applications.
