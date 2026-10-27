@@ -351,6 +351,18 @@ export function checkMessage(raw: string): GuardResult {
 }
 
 /**
+ * True when text contains an attempt to override, extract, or impersonate the system prompt. Meant for earlier
+ * assistant turns, which the client supplies and which are not screened like a visitor's message. The bot's own
+ * refusals can brush against these patterns ("I can't pretend to be..."), so callers should leave such a turn out of
+ * the history rather than reject the request.
+ */
+export function looksInjected(raw: string) {
+  const text = clean(raw);
+  const { leet, joined } = canonical(text);
+  return INJECTION.some((rule) => [leet, joined].some((v) => rule.test(v)) || rule.test(text));
+}
+
+/**
  * Screen a whole conversation as the server receives it: every user turn, plus the same
  * question being asked over and over. Assistant turns are not screened (they are only context).
  */
