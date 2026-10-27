@@ -35,5 +35,10 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
+      # Warnings fail the run too, so they get fixed when they appear instead of piling up
       - name: Lint
-        run: npm run lint
+        run: npm run lint -- --max-warnings 0
+
+      # The same build Vercel runs on deploy, so a broken page or config fails here first
+      - name: Build
+        run: npm run build
