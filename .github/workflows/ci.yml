@@ -43,28 +43,23 @@ jobs:
       - name: Build
         run: npm run build
 
-      # The browser download is cached per Playwright version. The system libraries it needs are not part of that
-      # cache, so they are installed on every run
+      # The browser download is cached per Playwright version
       - name: Get Playwright version
         id: playwright
         run: echo "version=$(npx playwright --version | cut -d' ' -f2)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Playwright browser
-        id: playwright-cache
         uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
 
+      # Only the browser, without --with-deps. The runner image already has the libraries Chromium needs, and the
+      # apt step that --with-deps adds fetches CJK fonts from the Ubuntu mirror, which stalled in 2 of 3 runs. If a
+      # future runner image lacks a library, the tests fail with a clear "missing dependencies" error
       - name: Install Playwright browser
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
         timeout-minutes: 5
-        run: npx playwright install --with-deps chromium
-
-      - name: Install Playwright system libraries
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        timeout-minutes: 5
-        run: npx playwright install-deps chromium
+        run: npx playwright install chromium
 
       # Serves the build above and drives it in a real browser. /api/chat is mocked, so no API keys are needed
       - name: Smoke tests
