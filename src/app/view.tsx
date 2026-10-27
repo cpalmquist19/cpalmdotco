@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ViewTransition, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { Section as SectionData } from "@/site/projects";
 import { ArrowLeft, ArrowRight } from "./icons";
 import { ViewFocus } from "./view-focus";
@@ -13,8 +13,7 @@ type Crumb = { href: string; label: string };
 /**
  * The panel itself, and its place in the shell's grid. On xl it takes the whole left column and the body scrolls inside
  * it, so the page keeps fitting the screen with the chat beside it; below that the page scrolls as a whole, with the
- * panel ahead of the chat. Only the content animates when views swap (see globals.css): the frame is the same on every
- * view, so it never flashes, and the content crossfades between views or slides in when arriving from the home page.
+ * panel ahead of the chat. Views swap instantly, with no transition: the animation made switching feel sluggish.
  */
 export function View({ labelledBy, children }: { labelledBy: string; children: ReactNode }) {
   return (
@@ -26,9 +25,7 @@ export function View({ labelledBy, children }: { labelledBy: string; children: R
       style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.25)" }}
     >
       <ViewFocus />
-      <ViewTransition name="view-content" share="view-swap" enter="view-enter" exit="view-exit" default="none">
-        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
-      </ViewTransition>
+      <div className="flex min-h-0 flex-1 flex-col">{children}</div>
     </section>
   );
 }
