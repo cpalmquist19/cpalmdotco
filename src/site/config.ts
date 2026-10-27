@@ -17,7 +17,7 @@ export const NAV: NavItem[] = [
   { kind: "route", label: "Experience", href: "/experience", paths: ["/experience"] },
   { kind: "route", label: "Skills", href: "/skills", paths: ["/skills"] },
   { kind: "resume", label: "Resume" },
-  { kind: "external", label: "Contact", href: LINKEDIN_URL, cta: true },
+  { kind: "external", label: "LinkedIn", href: LINKEDIN_URL, cta: true },
 ];
 
 export function isActive(paths: string[], pathname: string) {

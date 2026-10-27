@@ -78,7 +78,7 @@ export const PROJECTS: Project[] = [
     slug: "relay",
     title: "Relay",
     description:
-      "Local coding agent with a web UI, plus an eval harness that runs an 11-task test matrix across models and scores pass rate, speed, and cost.",
+      "A coding agent that runs locally with your choice of local or cloud-hosted models. Its built-in evaluation harness benchmarks models across 11 coding tasks, comparing success rates, speed, and cost. Includes automated testing and CI.",
     tags: ["Python", "LLM", "Agents", "Evals"],
     image: relayCard,
     links: [{ label: "View on GitHub", href: `${GITHUB_URL}/relay` }],
@@ -86,14 +86,14 @@ export const PROJECTS: Project[] = [
       {
         heading: "What it is",
         paragraphs: [
-          "A coding agent that runs on my own machine with a web UI, plus an evaluation harness that measures how well different models use the agent's tools. It started life as lm-studio-chat and was renamed Relay.",
+          "A coding agent that runs on your local computer with a web UI, plus an evaluation harness that measures how well different models use the agent's tools. It started life as lm-studio-chat and was renamed Relay.",
           "It's where I apply my QA background to AI agents: building the agent, then testing it.",
         ],
       },
       {
         heading: "The agent",
         bullets: [
-          "Runs against a model in LM Studio on my own machine, or against OpenAI, Anthropic (Claude), Google Gemini, or a local Unsloth server. One setting chooses the provider.",
+          "Runs against a model in LM Studio on your local computer, or against OpenAI, Anthropic (Claude), Google Gemini, or a local Unsloth server. One setting chooses the provider.",
           "Streams responses to the web UI, and a generation can be stopped at any time.",
           "Gives the model tools to read, write, edit and search project files, list directories, run shell commands, search the web, fetch pages, and inspect pages in a headless Playwright browser.",
           "Loads reusable Agent Skills: task procedures written as SKILL.md files that the model can list and read when relevant.",
