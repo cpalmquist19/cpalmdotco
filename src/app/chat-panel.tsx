@@ -176,8 +176,10 @@ export function ChatPanel({ className = "" }: { className?: string }) {
     el.style.height = `${el.scrollHeight}px`;
   }, [draft]);
 
-  // On desktop, keep the cursor in the box (on load and after each reply). Skipped on touch layouts so the keyboard doesn't pop up unasked
+  // On desktop, keep the cursor in the box (on load and after each reply). Skipped on touch layouts so the keyboard doesn't pop up unasked,
+  // and while a view has focus (see ViewFocus), so a view opened by its URL or during a reply keeps its [ and ] keys
   useEffect(() => {
+    if (document.activeElement?.closest("[data-view]")) return;
     if (!isSending && window.matchMedia("(min-width: 1024px)").matches) {
       inputRef.current?.focus({ preventScroll: true });
     }

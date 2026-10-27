@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ViewTransition, type ReactNode } from "react";
 import type { Section as SectionData } from "@/site/projects";
 import { ArrowLeft, ArrowRight } from "./icons";
+import { ViewFocus } from "./view-focus";
 import { ViewKeys } from "./view-keys";
 
 // Building blocks for every page that fills the left column in place of the home page: a project's write-up,
@@ -19,9 +20,12 @@ export function View({ labelledBy, children }: { labelledBy: string; children: R
   return (
     <section
       aria-labelledby={labelledBy}
-      className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl max-lg:order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:min-h-0"
+      data-view=""
+      tabIndex={-1}
+      className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl focus:outline-none max-lg:order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:min-h-0"
       style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.25)" }}
     >
+      <ViewFocus />
       <ViewTransition name="view-content" share="view-swap" enter="view-enter" exit="view-exit" default="none">
         <div className="flex min-h-0 flex-1 flex-col">{children}</div>
       </ViewTransition>
