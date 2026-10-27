@@ -35,6 +35,9 @@ export function ChatVideo({ phase }: { phase: ChatPhase }) {
         alt=""
         fill
         sizes="(min-width: 768px) 480px, 100vw"
+        // Above the fold and the largest paint on the page, so it must not wait to be lazy-loaded
+        loading="eager"
+        fetchPriority="high"
         className="object-cover object-[50%_35%]"
       />
       {!reduceMotion && (
