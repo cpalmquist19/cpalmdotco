@@ -7,7 +7,7 @@ const versions: Record<string, string> = JSON.parse(
  * browsers and CDNs refetch it whenever the file changes. The hash manifest is
  * built in `next.config.ts`. Unknown paths are returned unchanged.
  *
- *   asset("/background.webm") // "/background.webm?v=3f9a1c2b"
+ *   asset("/distance.jpg") // "/distance.jpg?v=3f9a1c2b"
  */
 export function asset(path: string) {
   const version = versions[path];

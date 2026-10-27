@@ -31,7 +31,7 @@ function getDeploymentId() {
 
 /**
  * Maps every file in `public/` to a short content hash, e.g.
- * `{ "/background.webm": "3f9a1c2b" }`. Files in `public/` keep a stable URL,
+ * `{ "/distance.jpg": "3f9a1c2b" }`. Files in `public/` keep a stable URL,
  * so browsers and CDNs would otherwise serve old copies after an edit. The
  * `asset()` helper in `src/lib/asset.ts` appends the hash as `?v=`, so the URL
  * only changes when the file's bytes do.
@@ -76,7 +76,7 @@ export default function nextConfig(phase: string): NextConfig {
         {
           // Versioned public files (`?v=<hash>`) can never change under the
           // same URL, so they are safe to cache for a year.
-          source: "/:file(.+\.(?:jpg|jpeg|png|webp|avif|gif|svg|mp4|webm|woff2?))",
+          source: "/:file(.+\\.(?:jpg|jpeg|png|webp|avif|gif|svg|mp4|webm|woff2?))",
           has: [{ type: "query", key: "v" }],
           headers: [
             {
