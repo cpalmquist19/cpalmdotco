@@ -93,20 +93,11 @@ export const PROJECTS: Project[] = [
       { label: "View on GitHub", href: `${GITHUB_URL}/relay` },
       { label: "Eval results and raw data", href: `${GITHUB_URL}/cpalmdotco/tree/main/docs/relay-eval` },
     ],
-    sections: [
-      {
-        heading: "At a glance",
-        bullets: [
-          "The agent: a tool-calling loop with 14 tools (files, shell, web, and headless-browser page inspection), reusable SKILL.md instructions, streaming with a stop control, and one setting to switch between LM Studio, a local server such as Ollama, OpenAI, Anthropic or Gemini.",
-          "The evals: 11 tasks, each a small realistic job run in a throwaway project folder through the real chat engine. Every task runs three times, because models are non-deterministic, and is scored on tool selection, argument validity, end-state correctness, efficiency and safety. Cost per run is tracked, and an LLM judge is optional.",
-          "Trusting the harness: 200+ automated tests, plus a self-check that replays scripted good and bad agents through the real engine and scorer, so the scorer is tested with no model and no API key. Both run in GitHub Actions on every push, and live model evals run on demand from the same workflow.",
-          "Built with Claude Code. I set the requirements, made the design calls, researched local models and tested the result. Python 3.10+, MIT licensed.",
-        ],
-      },
+    sections: [ 
       {
         heading: "Latest eval results",
         paragraphs: [
-          "Run on 28 October 2026: four hosted models (GPT 5.6 Luna and Terra, Claude Haiku 5.5 and Sonnet 5.5) and three small local models (LFM3 1.7B, LFM3 VL 2B and Spark X2.6 4B), every task three times. That's 231 scored runs in 1 hour 45 minutes, for $1.39 in total.",
+          "Run on October 28th, 2026: four hosted models (GPT 5.6 Luna and Terra, Claude Haiku 5.5 and Sonnet 5.5) and three small local models (LFM3 1.7B, LFM3 VL 2B and Spark X2.6 4B), every task three times. That's 231 scored runs in 1 hour 45 minutes, for $1.39 in total. Most of that time was the local models: they ran on my 8GB GPU and took about 90 minutes between them, against about 11 minutes for the four hosted models.",
         ],
         images: [
           {
@@ -119,6 +110,15 @@ export const PROJECTS: Project[] = [
           "Most of my suite can't tell the models apart. Eight of the 11 tasks were passed on every run by every model. Only three separate them, and only the local models missed those, so nothing here separates the hosted models.",
           "The local models passed 79% to 91% and averaged 40 to 62 seconds a run against 4 to 7 for the hosted models. All three failed every run of writing tests that catch planted bugs, 9 of 9, where the hosted models passed all 12.",
           "Tool errors per run: 0.00 for both GPT 5.6 models, 0.09 for both Claude models, 0.36 to 0.52 for the local models.",
+        ],
+      },
+      {
+        heading: "At a glance",
+        bullets: [
+          "The agent: a tool-calling loop with 14 tools (files, shell, web, and headless-browser page inspection), reusable SKILL.md instructions, streaming with a stop control, and one setting to switch between LM Studio, a local server such as Ollama, OpenAI, Anthropic or Gemini.",
+          "The evals: 11 tasks, each a small realistic job run in a throwaway project folder through the real chat engine. Every task runs three times, because models are non-deterministic, and is scored on tool selection, argument validity, end-state correctness, efficiency and safety. Cost per run is tracked, and an LLM judge is optional.",
+          "Trusting the harness: 200+ automated tests, plus a self-check that replays scripted good and bad agents through the real engine and scorer, so the scorer is tested with no model and no API key. Both run in GitHub Actions on every push, and live model evals run on demand from the same workflow.",
+          "Built with Claude Code. I set the requirements, made the design calls, researched local models and tested the result. Python 3.10+, MIT licensed.",
         ],
       },
       {

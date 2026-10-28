@@ -18,7 +18,7 @@ const FOLLOW_UPS = [
   {
     match: /\b(?:qa|sdet|resume|experience|role|automation|ersp)/g,
     prompts: [
-      "What roles is Caleb looking for?",
+      "How does Caleb test non-deterministic systems?",
       "What's Caleb's test automation experience?",
       "What AI projects has Caleb built besides Relay?",
     ],

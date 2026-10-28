@@ -6,7 +6,7 @@
 
 ## Eval results: seven models, 231 scored runs, $1.39
 
-I built [Relay](https://github.com/cpalmquist19/relay), a tool-calling coding agent, and a harness that measures it. This is its latest comparison: four hosted models (GPT 5.6 Luna and Terra, Claude Haiku 5.5 and Sonnet 5.5) and three small local models (LFM3 1.7B, LFM3 VL 2B and Spark X2.6 4B), each run three times on 11 tasks. The run took 1 hour 45 minutes and cost $1.39.
+I built [Relay](https://github.com/cpalmquist19/relay), a tool-calling coding agent, and a harness that measures it. This is its latest comparison: four hosted models (GPT 5.6 Luna and Terra, Claude Haiku 5.5 and Sonnet 5.5) and three small local models (LFM3 1.7B, LFM3 VL 2B and Spark X2.6 4B), each run three times on 11 tasks. The run took 1 hour 45 minutes and cost $1.39. Most of the time was the local models, which ran on my 8GB GPU and took about 90 minutes between them, against about 11 minutes for the four hosted models.
 
 ![Eval dashboard summary: 231 runs, 7 models, 3 of 11 tasks separate them, $1.39 spent](docs/relay-eval/summary.webp)
 

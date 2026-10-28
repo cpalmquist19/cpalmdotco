@@ -2,7 +2,7 @@ import { SpotlightCard } from "../spotlight-card";
 
 const CHAT_PROMPTS = [
   "How does Relay's evaluation harness work?",
-  "What roles is Caleb looking for?",
+  "What roles would Caleb be good at?",
   "What does Relay do, and why did Caleb build it?",
   "How did Caleb go from QA to building AI systems?",
 ];
