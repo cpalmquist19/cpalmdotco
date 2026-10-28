@@ -6,6 +6,9 @@ import { useEffect, useRef, type MouseEvent } from "react";
 import { NAV, isActive } from "@/site/config";
 import { ResumeMenu } from "./resume-menu";
 
+/** How long a clicked link ignores further clicks while its page loads */
+const PENDING_MS = 1500;
+
 const ITEM =
   "block rounded-full border transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400";
 const IDLE = "border-transparent text-muted hover:bg-accent-soft/10 hover:text-white";
@@ -20,8 +23,9 @@ const CTA = "border-transparent bg-cta font-semibold text-cta-ink hover:bg-cta-h
 export function SiteNav({ variant }: { variant: "bar" | "row" }) {
   const pathname = usePathname();
   const row = variant === "row";
-  // The page a click is already on its way to, so spam-clicking a link doesn't start the same navigation again
-  const pending = useRef<string | null>(null);
+  // The page a click is already on its way to, so spam-clicking a link doesn't start the same navigation again.
+  // It expires, so a navigation that never finishes (a dropped connection) doesn't leave that link dead
+  const pending = useRef<{ href: string; until: number } | null>(null);
 
   useEffect(() => {
     pending.current = null;
@@ -31,11 +35,12 @@ export function SiteNav({ variant }: { variant: "bar" | "row" }) {
   function skipRepeat(event: MouseEvent, href: string) {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     if (href.includes("#")) return;
-    if (href === pathname || href === pending.current) {
+    const now = event.timeStamp;
+    if (href === pathname || (pending.current?.href === href && now < pending.current.until)) {
       event.preventDefault();
       return;
     }
-    pending.current = href;
+    pending.current = { href, until: now + PENDING_MS };
   }
 
   return (
