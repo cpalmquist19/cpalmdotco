@@ -14,9 +14,7 @@ How it works:
 - Workflow: a CLI (quark new, data, train, generate, compare, components) and four Colab or local notebooks. Colab keeps data and results on Google Drive and can resume after a disconnect. Training can be stopped and resumed, and resuming with a changed config is refused unless explicitly allowed.
 
 Goal:
-The target is a chatbot of roughly 125M to 350M parameters with a 2048-token context for children to talk to. It is trained on general educational English, with extra weight on education, early childhood, and neurodiversity-affirming content about neurodivergence. Final training will run on a paid GPU, while components and data weights are chosen with small, cheap experiments.
+The goal is a chatbot of roughly 125M to 350M parameters with a 2048-token context. Final training will run on a paid GPU, while components and data weights are chosen with small, cheap experiments.
 
-Status:
-- Done: the scaffold, a baseline GPT with data pipeline, trainer, generation and notebooks (reaching validation loss 1.48 on TinyStories, with resume from Drive verified), the component registry, the first add-on components, the compare tool, the size ladder, FineWeb-Edu streaming, and data mixtures.
-- In progress: the first 8-arm component comparison on FineWeb-Edu is running, and the first chatbot data mix is being built and its content curation reviewed.
-- Planned: more components, weight experiments on the data mix, the target-size run, then chat fine-tuning with child safety.`;
+Not specified:
+Caleb has not said who the chatbot is for or how far along the project is, so do not guess either. If asked, say that is not covered here and suggest the GitHub repository or contacting Caleb.`;
