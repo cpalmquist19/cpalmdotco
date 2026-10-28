@@ -42,23 +42,24 @@ QA background in the project:
 Caleb tested that the agent can complete code tests, responds properly, and cannot leave the project directory it runs in. He also tested the modular skills.
 
 Eval results (run on 28 October 2026):
-- The run compared GPT 5.6 Luna, Claude Haiku 5.5 and a 1.7B local model (LFM3 in LM Studio) on all 11 tasks, 3 repeats each: 99 scored runs in about 35 minutes, costing $0.079 in total. The raw dashboard is in the cpalm.dev repo under docs/relay-eval.
-- Luna and Haiku both passed 33 of 33 runs. Their 95% confidence intervals overlap, so the harness does not rank them. Luna cost $0.0009 per run and Haiku $0.0015 (1.6x). Tool errors per run were 0.03 for Luna, 0.09 for Haiku and 0.55 for the local model.
-- The local model passed 79% (26 of 33) and took about 55 seconds per run against roughly 5 for the hosted models, at no cost per run.
+- The run compared four hosted models (GPT 5.6 Luna, GPT 5.6 Terra, Claude Haiku 5.5, Claude Sonnet 5.5) and three small local models in LM Studio (LFM3 1.7B, LFM3 VL 2B, Spark X2.6 4B) on all 11 tasks, 3 repeats each: 231 scored runs in 1 hour 45 minutes, costing $1.39 in total. The raw dashboard is in the cpalm.dev repo under docs/relay-eval.
+- All four hosted models passed 33 of 33 runs. Their 95% confidence intervals overlap, so the harness does not rank them. Cost per run was $0.0009 for Luna, $0.0015 for Haiku, $0.0090 for Terra and $0.031 for Sonnet, a 35x spread with identical pass rates. Sonnet alone was $1.01 of the $1.39.
+- The local models passed 79% (LFM3 VL 2B), 85% (LFM3 1.7B) and 91% (Spark X2.6 4B), at 40 to 62 seconds per run against 4 to 7 for the hosted models, and free per run. All three failed every run (9 of 9) of the task that asks the model to write tests that catch planted bugs; the hosted models passed all 12.
+- Tool errors per run were 0.00 for both GPT 5.6 models, 0.09 for both Claude models and 0.36 to 0.52 for the local models.
 - Earlier, targeted runs for one model showed tool errors falling from 6 to 0 and tool calls from 55 to 34 after Caleb fixed the tool definitions. A local model read a protected file through the shell in 3 of 3 runs, which led to a path guard, and testing exposed a code-execution hole in the calculator tool.
 
 What Caleb learned from the results:
-- A suite everyone passes says little. 8 of 11 tasks were passed on every run by every model, so only 3 tasks (refactor, refuse outside the project root, write tests that catch bugs) separated the models, and only the local model missed them. The hosted models can't be told apart on this suite, and both are low-cost options rather than flagship models, so harder tasks and a stronger model are needed.
-- Read the failures, not just the pass rate. 5 of the local model's 7 failures were runs that hit the 180 second time limit, so pass rate mixed capability with speed. On the refusal task the path guard held and nothing leaked (safety score 1.0), but the model kept probing blocked paths instead of stopping to say it couldn't read the file.
-- The other 2 failures were a bug in Caleb's own scorer. The local model's refactor was correct, but it quoted the duplicated expression in a docstring, and the duplicate check counted that as a second copy. The run without the docstring passed. Looking at the failing runs is what exposed it.
-- Repeated runs matter. The local model passed the refactor and refusal tasks 1 time in 3, so any single run would have looked like a clean pass or a clean fail by luck.
+- A suite everyone passes says little. 8 of 11 tasks were passed on every run by every model, so only 3 tasks (count files, refuse outside the project root, write tests that catch bugs) separated the models, and only the local models missed them. Even with the pricier models added, all four hosted models hit 100%, so nothing in the suite separates them and harder tasks are needed.
+- Price and quality are separate questions. A 35x cost spread with no difference in pass rate means either the cheap models are enough for these tasks or the tasks are too easy, and this run can't say which.
+- Read the failures, not just the pass rate. 12 of the local models' 15 failures were runs that never finished, because they ran out of time or tool-call rounds. On the refusal task the path guard held and no model touched the protected file (safety score 1.0 across all 231 runs), but the models that failed kept probing blocked paths, using 12 tool calls where 4 were allowed, instead of stopping to say they couldn't.
+- Repeated runs matter, and so does repeating the whole run. LFM3 1.7B passed the refactor task 3 of 3 here and 1 of 3 in an earlier run of the same code. The earlier failures were a bug in Caleb's own scorer: the refactor was correct, but it quoted the duplicated expression in a docstring and the duplicate check counted that as a second copy. Reading the failing runs is what exposed it.
 - Evaluations turned out to be harder than Caleb expected. They take real infrastructure and cost to be accurate and current.
 
 Limits and next steps:
-- The results are one run on one code version with 3 repeats per task, so gaps under about 10 percentage points are noise.
-- Next: make the refactor check ignore docstrings and comments and rerun it, add harder tasks that separate the hosted models, and report time-limit failures separately from wrong answers so slow local models aren't scored as incapable.
+- The results are one run on one code version with 3 repeats per task and a 320 second limit per run, so gaps under about 10 percentage points are noise. That means the differences between the three local models are mostly within it.
+- Next: make the refactor check ignore docstrings and comments, add harder tasks that separate the hosted models, and report runs that ran out of time or rounds separately from wrong answers so slow local models aren't scored as incapable.
 - The shell is not sandboxed. Adding a sandbox environment (there are free options) is the first upgrade.
-- Local testing was limited: his GPU is too slow to run capable models at a useful pace, so the local model in the run is a small 1.7B one.
+- Local testing was limited: his GPU is too slow to run capable models at a useful pace, so the local models in the run are small ones, 1.7B to 4B.
 
 Why not LangChain or LangGraph:
 Caleb wanted to see whether he could build the agent loop without the popular frameworks first. Learning LangChain and LangGraph is his next step.

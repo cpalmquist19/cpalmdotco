@@ -86,7 +86,7 @@ export const PROJECTS: Project[] = [
     slug: "relay",
     title: "Relay",
     description:
-      "A tool-calling coding agent and the evaluation harness I built to measure it. The latest run compares GPT 5.6 Luna, Claude Haiku 5.5 and a local 1.7B model across 11 tasks and 99 scored runs for $0.08, with pass rate, confidence intervals, speed and cost for each model.",
+      "A tool-calling coding agent and the evaluation harness I built to measure it. The latest run compares seven models, four hosted and three local, across 11 tasks and 231 scored runs for $1.39, with pass rate, confidence intervals, speed and cost for each.",
     tags: ["Python", "LLM", "Agents", "Evals"],
     image: relayCard,
     links: [
@@ -106,19 +106,19 @@ export const PROJECTS: Project[] = [
       {
         heading: "Latest eval results",
         paragraphs: [
-          "Run on 28 October 2026: GPT 5.6 Luna, Claude Haiku 5.5 and a 1.7B local model (LFM3 in LM Studio), every task three times. That's 99 scored runs in about 35 minutes, for $0.079 in total.",
+          "Run on 28 October 2026: four hosted models (GPT 5.6 Luna and Terra, Claude Haiku 5.5 and Sonnet 5.5) and three small local models (LFM3 1.7B, LFM3 VL 2B and Spark X2.6 4B), every task three times. That's 231 scored runs in 1 hour 45 minutes, for $1.39 in total.",
         ],
         images: [
           {
             src: relayEvalSummary,
-            alt: "Relay eval dashboard summary: 99 runs, 3 models, 3 of 11 tasks separate them, $0.079 spent, with the dashboard's generated findings",
+            alt: "Relay eval dashboard summary: 231 runs, 7 models, 3 of 11 tasks separate them, $1.39 spent, with the dashboard's generated findings",
           },
         ],
         bullets: [
-          "The two hosted models tie. Luna and Haiku both passed 33 of 33 runs, and their 95% confidence intervals overlap, so the harness doesn't rank them.",
-          "Most of my suite can't tell the models apart. Eight of the 11 tasks were passed on every run by every model. Only three separate them, and only the local model missed those.",
-          "The local model passed 79% (26 of 33) and averaged 55 seconds a run against roughly 5 for the hosted models.",
-          "Tool errors per run: 0.03 for Luna, 0.09 for Haiku, 0.55 for the local model.",
+          "The four hosted models tie. All four passed 33 of 33 runs, and their 95% confidence intervals overlap, so the harness doesn't rank them.",
+          "Most of my suite can't tell the models apart. Eight of the 11 tasks were passed on every run by every model. Only three separate them, and only the local models missed those, so nothing here separates the hosted models.",
+          "The local models passed 79% to 91% and averaged 40 to 62 seconds a run against 4 to 7 for the hosted models. All three failed every run of writing tests that catch planted bugs, 9 of 9, where the hosted models passed all 12.",
+          "Tool errors per run: 0.00 for both GPT 5.6 models, 0.09 for both Claude models, 0.36 to 0.52 for the local models.",
         ],
       },
       {
@@ -126,12 +126,13 @@ export const PROJECTS: Project[] = [
         images: [
           {
             src: relayEvalCost,
-            alt: "Relay eval dashboard cost table: the local model is free, GPT 5.6 Luna costs $0.0009 a run and Claude Haiku 5.5 $0.0015",
+            alt: "Relay eval dashboard cost table: the local models are free, GPT 5.6 Luna costs $0.0009 a run, Claude Haiku 5.5 $0.0015, GPT 5.6 Terra $0.0090 and Claude Sonnet 5.5 $0.031",
           },
         ],
         bullets: [
-          "Luna cost $0.0009 a run and Haiku $0.0015 (1.6x). The local model was free, at about 12 times the latency.",
+          "Cost per run ran from $0.0009 (Luna) to $0.031 (Sonnet), a 35x spread, with identical pass rates. Sonnet alone was $1.01 of the $1.39 total. On this suite the extra spend bought nothing measurable, which says more about the suite than about the models.",
           "Cost per passing run is reported next to cost per run, so a cheap model that fails often can't look like a bargain.",
+          "The local models were free per run, at about 10 times the latency.",
         ],
       },
       {
@@ -139,22 +140,22 @@ export const PROJECTS: Project[] = [
         images: [
           {
             src: relayEvalHeatmap,
-            alt: "Pass and fail heatmap by task and model. Only refactor_extract_duplicate, refuse_outside_root and write_tests_that_catch_bugs separate the models, and only the local model misses them",
+            alt: "Pass and fail heatmap by task and model. Only count_files, refuse_outside_root and write_tests_that_catch_bugs separate the models, and only the local models miss them",
           },
         ],
         bullets: [
-          "Five of the local model's seven failures were runs that hit the 180 second time limit: all three on writing tests that catch planted bugs, and two on refusing to read outside the project root.",
-          "On the refusal task the path guard held and nothing leaked (safety score 1.0). The model kept probing blocked paths, using 9 and 11 tool calls where 4 were allowed, instead of stopping to say it couldn't read the file.",
-          "The other two failures were a bug in my own scorer. The local model's refactor was correct, but it quoted the duplicated expression in a docstring and my duplicate check counted that as a second copy. The run without the docstring passed.",
+          "Twelve of the local models' 15 failures were runs that never finished, because they ran out of time or tool-call rounds.",
+          "On the refusal task the path guard held and no model touched the protected file: the safety score was 1.0 across all 231 runs. The models that failed kept probing blocked paths, using 12 tool calls where 4 were allowed, instead of stopping to say they couldn't.",
+          "LFM3 1.7B passed the refactor task 3 of 3 here and 1 of 3 in an earlier run of the same code. Those earlier failures were a bug in my own scorer: the refactor was correct, but it quoted the duplicated expression in a docstring and my duplicate check counted that as a second copy.",
         ],
       },
       {
         heading: "What I learned",
         bullets: [
-          "A suite everyone passes says little. I need harder tasks and a stronger model: both hosted models here are low-cost options, not flagships.",
-          "Read the failures, not just the pass rate. Reading the failing runs is what exposed the scorer bug.",
-          "Pass rate mixes capability with speed. Under a fixed time limit, a slow model fails tasks it might finish given longer.",
-          "Repeated runs matter. The local model passed the refactor and refusal tasks one time in three, so a single run would have looked like a clean pass or a clean fail by luck.",
+          "A suite everyone passes says little. Even with the pricier models added, all four hosted models hit 100%, so I need harder tasks that separate them.",
+          "Price and quality are separate questions. A 35x cost spread with no difference in pass rate means either the cheap models are enough for these tasks or the tasks are too easy, and this run can't say which.",
+          "Read the failures, not just the pass rate. Most failures were runs that never finished rather than wrong answers, and reading the failing runs is what exposed the scorer bug.",
+          "Repeated runs matter, and so does repeating the whole run. The same model on the same code went from 1 of 3 to 3 of 3 on one task between runs.",
           "Evaluations turned out to be harder than I expected. Accurate, current results take real infrastructure and cost.",
         ],
       },
@@ -184,10 +185,10 @@ export const PROJECTS: Project[] = [
       {
         heading: "Limits and what's next",
         bullets: [
-          "The results are one run on one code version with three repeats per task, so gaps under about 10 percentage points are noise.",
-          "Next: make the refactor check ignore docstrings and comments and rerun it, add harder tasks that separate the hosted models, and report time-limit failures separately from wrong answers, so slow local models aren't scored as incapable.",
+          "The results are one run on one code version, with three repeats per task and a 320 second limit per run. Gaps under about 10 percentage points are noise, so the differences between the three local models are mostly within it.",
+          "Next: make the refactor check ignore docstrings and comments, add harder tasks that separate the hosted models, and report runs that ran out of time or rounds separately from wrong answers, so slow local models aren't scored as incapable.",
           "The shell isn't sandboxed. Adding a sandbox environment is the first upgrade.",
-          "Local testing was limited, because my GPU is too slow to run capable models at a useful pace, so the local model in the run is a small 1.7B one.",
+          "Local testing was limited, because my GPU is too slow to run capable models at a useful pace, so the local models in the run are small ones, 1.7B to 4B.",
         ],
       },
     ],

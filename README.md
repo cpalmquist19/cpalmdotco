@@ -4,28 +4,28 @@
 
 [**Live site**](https://www.cpalm.dev) · [**Relay (agent + eval harness)**](https://github.com/cpalmquist19/relay) · [LinkedIn](https://www.linkedin.com/in/calebfrommaine) · [GitHub](https://github.com/cpalmquist19)
 
-## Eval results: three models, 99 scored runs, $0.08
+## Eval results: seven models, 231 scored runs, $1.39
 
-I built [Relay](https://github.com/cpalmquist19/relay), a tool-calling coding agent, and a harness that measures it. This is its latest comparison: GPT 5.6 Luna, Claude Haiku 5.5 and a 1.7B local model, each run three times on 11 tasks. The whole run took 35 minutes and cost $0.079.
+I built [Relay](https://github.com/cpalmquist19/relay), a tool-calling coding agent, and a harness that measures it. This is its latest comparison: four hosted models (GPT 5.6 Luna and Terra, Claude Haiku 5.5 and Sonnet 5.5) and three small local models (LFM3 1.7B, LFM3 VL 2B and Spark X2.6 4B), each run three times on 11 tasks. The run took 1 hour 45 minutes and cost $1.39.
 
-![Eval dashboard summary: 99 runs, 3 models, 3 of 11 tasks separate them, $0.079 spent](docs/relay-eval/summary.webp)
+![Eval dashboard summary: 231 runs, 7 models, 3 of 11 tasks separate them, $1.39 spent](docs/relay-eval/summary.webp)
 
 ### What it found
 
-- **The two hosted models tie, and the data says so.** Luna and Haiku both passed 33 of 33 runs. Their 95% intervals overlap, so the harness refuses to rank them. On cost, Luna ran at $0.0009 a run against Haiku's $0.0015 (1.6x).
-- **Most of my suite doesn't discriminate.** 8 of 11 tasks were passed by every model on every run. Only 3 tasks separate the models, so a high pass rate on this suite says less than it appears to. Harder tasks are the next step.
-- **The small local model passed 79% (26 of 33) at about 12x the latency** (55 s a run against roughly 5 s), at no cost per run. Reading its 7 failures showed that capability was only part of it:
-  - **5 hit the 180 s time limit**: all 3 on writing tests that catch planted bugs, and 2 on refusing to read outside the project root. On the refusal task the path guard held and nothing leaked (safety score 1.0), but the model kept probing blocked paths instead of stopping to say it couldn't.
-  - **2 were my scorer's fault.** The model's refactor was correct, but it quoted the duplicated expression in a docstring and my duplicate check counted that as a second copy. The run without the docstring passed.
-- **Pass rate mixes capability with speed.** Under a fixed time limit, a slow model fails tasks it might finish given more time. Failure reasons need reading, not just counting.
-- **Repeated runs expose inconsistency.** The local model passed the refactoring and refusal tasks 1 time in 3. A single run of either would have looked like a clean pass or a clean fail depending on luck.
-- **Tool behavior shows up in the secondary metrics.** Tool errors per run: Luna 0.03, Haiku 0.09, the local model 0.55.
+- **Four hosted models, one result, a 35x price spread.** All four passed 33 of 33 runs, and their 95% intervals overlap, so the harness doesn't rank them. Cost per run: Luna $0.0009, Haiku $0.0015, Terra $0.0090, Sonnet $0.031. Sonnet alone was $1.01 of the $1.39. On this suite the extra spend bought nothing measurable, which says more about the suite than about the models.
+- **Most of my suite doesn't discriminate.** 8 of 11 tasks were passed by every model on every run. Only 3 tasks separate the models, and only the local models miss them, so nothing here can tell the hosted models apart. Harder tasks are the next step.
+- **The local models passed 79% to 91% and ran about 10x slower**: 40 to 62 s a run against 4 to 7 s, at no cost per run. All three failed every run (9 of 9) of writing tests that catch planted bugs; the four hosted models passed all 12.
+- **Reading the failures mattered more than counting them.** 12 of the local models' 15 failures were runs that never finished, because they ran out of time or tool-call rounds. On the refusal task (don't read outside the project root) the path guard held and no model touched the protected file: the safety score was 1.0 across all 231 runs. The models that failed kept probing blocked paths, using 12 tool calls where 4 were allowed, instead of stopping to say they couldn't.
+- **Same code, different result.** LFM3 1.7B passed the refactor task 3 of 3 here, and 1 of 3 in an earlier run of the same code. Those earlier failures were my scorer's fault: the model's refactor was correct, but it quoted the duplicated expression in a docstring and my duplicate check counted that as a second copy. Single runs mislead, and so do fragile checks.
+- **Tool behavior shows up in the secondary metrics.** Tool errors per run: 0.00 for both GPT 5.6 models, 0.09 for both Claude models, 0.36 to 0.52 for the local models.
 
-![Pass and fail heatmap: only refactor_extract_duplicate, refuse_outside_root and write_tests_that_catch_bugs separate the models, and only the local model misses them](docs/relay-eval/heatmap.webp)
+![Cost per run and per passing run for each model: the local models are free, GPT 5.6 Luna is $0.0009 a run and Claude Sonnet 5.5 is $0.031](docs/relay-eval/cost.webp)
 
-**Limits I'd state myself:** three repeats per task means gaps under about 10 percentage points are noise; this is one run on one code version (`adc1085`); the two hosted models are low-cost options, not flagships; and the suite's ceiling effect is a finding about the suite, not a verdict on the models.
+![Pass and fail heatmap: only count_files, refuse_outside_root and write_tests_that_catch_bugs separate the models, and only the local models miss them](docs/relay-eval/heatmap.webp)
 
-**Next:** make the refactor check ignore docstrings and comments and rerun it, add harder tasks that separate the hosted models, and report time-limit failures separately from wrong answers so slow local models aren't scored as incapable.
+**Limits I'd state myself:** three repeats per task means gaps under about 10 percentage points are noise, so the differences between the three local models are mostly within it; this is one run on one code version (`adc1085`) with a 320 s limit per run; and the suite's ceiling effect is a finding about the suite, not a verdict on the models.
+
+**Next:** make the refactor check ignore docstrings and comments, add harder tasks that separate the hosted models (all four sit at 100%), and report runs that ran out of time or rounds separately from wrong answers, so slow local models aren't scored as incapable.
 
 The full interactive dashboard is in [`docs/relay-eval/dashboard.html`](docs/relay-eval/dashboard.html). It is a single self-contained file, so download it and open it in a browser. Click any heatmap cell to read the prompt, tool calls and answer for that run. The raw summary table is in [`comparison.md`](docs/relay-eval/comparison.md).
 
