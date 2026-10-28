@@ -55,7 +55,7 @@ test.describe("pages", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Better tools.");
     await expect(page.getByRole("complementary", { name: "Ask me about Caleb" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "cpalm.co: read the write-up" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "cpalm.dev: read the write-up" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Relay: read the write-up" })).toBeVisible();
   });
 
@@ -74,9 +74,9 @@ test.describe("pages", () => {
 
   test("project pages step with [ and ], and Escape goes back", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("link", { name: "cpalm.co: read the write-up" }).click();
-    await expect(page).toHaveURL(/\/projects\/cpalm-co$/);
-    await expect(page.getByRole("heading", { level: 1, name: "cpalm.co" })).toBeVisible();
+    await page.getByRole("link", { name: "cpalm.dev: read the write-up" }).click();
+    await expect(page).toHaveURL(/\/projects\/cpalm-dev$/);
+    await expect(page.getByRole("heading", { level: 1, name: "cpalm.dev" })).toBeVisible();
 
     // The view takes focus when it opens, so the keys work without clicking anywhere first
     await expect(page.locator("[data-view]")).toBeFocused();
@@ -87,7 +87,7 @@ test.describe("pages", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Relay" })).toBeVisible();
 
     await page.keyboard.press("[");
-    await expect(page).toHaveURL(/\/projects\/cpalm-co$/);
+    await expect(page).toHaveURL(/\/projects\/cpalm-dev$/);
 
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL(/\/#projects$/);
@@ -233,9 +233,61 @@ test.describe("chat", () => {
     const reply = page.getByRole("log").locator("strong", { hasText: "Relay" });
     await expect(reply).toBeVisible();
 
-    await page.getByRole("link", { name: "cpalm.co: read the write-up" }).click();
-    await expect(page).toHaveURL(/\/projects\/cpalm-co$/);
+    await page.getByRole("link", { name: "cpalm.dev: read the write-up" }).click();
+    await expect(page).toHaveURL(/\/projects\/cpalm-dev$/);
     await expect(reply).toBeVisible();
+  });
+});
+
+test.describe("sharing and missing pages", () => {
+  const content = (page: Page, selector: string) => page.locator(selector).first().getAttribute("content");
+
+  test("a shared link has a title, a canonical address and a preview image that loads", async ({ page }) => {
+    await page.goto("/");
+    expect(await content(page, 'meta[property="og:title"]')).toBe("Caleb Palmquist | AI Quality Engineer");
+    expect(await content(page, 'meta[name="twitter:card"]')).toBe("summary_large_image");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.cpalm.dev");
+
+    // The tag names the live domain, so ask the server under test for the same file
+    const image = new URL((await content(page, 'meta[property="og:image"]'))!);
+    const response = await page.request.get(image.pathname + image.search);
+    expect(response.status()).toBe(200);
+    expect(response.headers()["content-type"]).toBe("image/png");
+  });
+
+  test("a project page has its own title, canonical address and preview image", async ({ page }) => {
+    await page.goto("/projects/relay");
+    await expect(page).toHaveTitle("Relay | Caleb Palmquist");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.cpalm.dev/projects/relay");
+    expect(await content(page, 'meta[property="og:image"]')).toContain("/projects/relay/opengraph-image");
+  });
+
+  test("robots.txt and the sitemap name the live domain", async ({ request }) => {
+    const robots = await (await request.get("/robots.txt")).text();
+    expect(robots).toContain("Sitemap: https://www.cpalm.dev/sitemap.xml");
+    expect(robots).toContain("Disallow: /api/");
+
+    const sitemap = await (await request.get("/sitemap.xml")).text();
+    for (const path of ["", "/experience", "/skills", "/projects/relay", "/projects/cpalm-dev"]) {
+      expect(sitemap).toContain(`<loc>https://www.cpalm.dev${path}</loc>`);
+    }
+  });
+
+  for (const address of ["/no/such/page", "/projects/no-such-project"]) {
+    test(`${address} shows the site's 404 inside the shell`, async ({ page }) => {
+      const response = await page.goto(address);
+      expect(response?.status()).toBe(404);
+      await expect(page.getByRole("heading", { level: 1, name: "Page not found" })).toBeVisible();
+      await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
+      await expect(page.getByRole("complementary", { name: "Ask me about Caleb" })).toBeVisible();
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
+    });
+  }
+
+  test("the project's first address redirects to its current one", async ({ page }) => {
+    await page.goto("/projects/cpalm-co");
+    await expect(page).toHaveURL(/\/projects\/cpalm-dev$/);
+    await expect(page.getByRole("heading", { level: 1, name: "cpalm.dev" })).toBeVisible();
   });
 });
 

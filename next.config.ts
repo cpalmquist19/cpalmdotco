@@ -71,6 +71,10 @@ export default function nextConfig(phase: string): NextConfig {
       // the image optimizer so each version gets its own optimized copy.
       localPatterns: [{ pathname: "/**" }],
     },
+    async redirects() {
+      // The project page was first published under the wrong domain's name
+      return [{ source: "/projects/cpalm-co", destination: "/projects/cpalm-dev", permanent: true }];
+    },
     async headers() {
       return [
         {

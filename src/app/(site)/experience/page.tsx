@@ -5,6 +5,7 @@ import { Bullets, Section, Timeline, TimelineItem, View, ViewBody, ViewHeader } 
 export const metadata: Metadata = {
   title: "Experience",
   description: SUMMARY,
+  alternates: { canonical: "/experience" },
 };
 
 export default function ExperiencePage() {

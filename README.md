@@ -91,7 +91,11 @@ Commit the results: the deployed site cannot reach the resume repo. `npm run res
 
 ```
 src/app/
-  layout.tsx            Root layout, fonts, and page metadata
+  layout.tsx            Root layout, fonts, and the default page metadata
+  opengraph-image.tsx   The link preview card for the site; a project has its own beside its page
+  robots.ts, sitemap.ts What search engines are told, built from the address and projects in src/site
+  (site)/not-found.tsx, (site)/error.tsx   The 404 and error pages, inside the shell. (site)/[...missing] sends unknown addresses to the 404
+  global-error.tsx      The fallback if the root layout itself fails
   (site)/layout.tsx     The shell: background, header and nav, and the chat. Persists across navigation
   (site)/page.tsx       Home page: hero and featured work
   (site)/projects/[slug]/page.tsx   A project's write-up
@@ -157,6 +161,7 @@ Limits and caveats:
 - **Models:** edit `CHAT_MODELS` in `src/lib/models.ts`. The first entry is the default.
 - **Suggested chat prompts:** edit `CHAT_PROMPTS` in `src/app/chat/starter-prompts.tsx`.
 - **Navigation:** edit `NAV` in `src/site/config.ts`. The active item follows the route.
+- **Site address, title and description:** edit `SITE_URL`, `SITE_TITLE` and `SITE_DESCRIPTION` in `src/site/config.ts`. They feed the page titles, link previews, canonical links, `robots.txt` and the sitemap. The preview cards are drawn by `src/lib/og-card.tsx` at build time, using the Geist font from `@fontsource/geist-sans`. A new project gets a card automatically, with the BEAM-E picture until you add its art to `CARD_FILES` in `src/app/(site)/projects/[slug]/opengraph-image.tsx`.
 - **A new page in the left column:** add a route under `src/app/(site)/` that returns a `View` (see `view.tsx`). It shares the shell, so the chat stays mounted.
 - **Site title and description:** edit `metadata` in `src/app/layout.tsx`.
 - **Background:** replace `public/distance.jpg`.

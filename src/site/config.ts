@@ -4,6 +4,13 @@
 export const GITHUB_URL = "https://github.com/cpalmquist19";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/calebfrommaine";
 
+// Where the site lives. Link previews and the sitemap need absolute addresses, so they are built from this
+export const SITE_URL = "https://www.cpalm.dev";
+export const SITE_NAME = "Caleb Palmquist";
+export const SITE_TITLE = "Caleb Palmquist | AI Quality Engineer";
+export const SITE_DESCRIPTION =
+  "AI quality engineer who builds and evaluates LLM agents. Browse my projects and experience, or ask BEAM-E, a live AI assistant, about my work.";
+
 export type NavItem =
   // A page of this site. `paths` are the routes it is active on, where a path also covers its children ("/projects" covers "/projects/relay")
   | { kind: "route"; label: string; href: string; paths: string[] }

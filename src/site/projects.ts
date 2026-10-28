@@ -26,8 +26,8 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
-    slug: "cpalm-co",
-    title: "cpalm.co",
+    slug: "cpalm-dev",
+    title: "cpalm.dev",
     description:
       "Portfolio site with BEAM-E, a live AI assistant that answers questions about my work on either Claude or GPT. Messages are screened for injection and abuse before they reach the model, with per-visitor rate limits and a daily spend cap, all backed by a test suite and CI.",
     tags: ["Next.js", "TypeScript", "LLM", "AI Safety"],

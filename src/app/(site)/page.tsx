@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import { GITHUB_URL } from "@/site/config";
 import { PROJECTS } from "@/site/projects";
 import { AlignToCards } from "../align-to-cards";
 import { ArrowUpRight, BrainIcon, GitHubIcon, ShieldCheckIcon, WorkflowIcon } from "../icons";
 import { ProjectGrid } from "../project-grid";
 import { SpotlightCard } from "../spotlight-card";
+
+// The title and description are the site's defaults, set in the root layout
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const FOCUS_AREAS = [
   { label: "AI Agents", Icon: BrainIcon },

@@ -5,6 +5,7 @@ import { TONE_NAMES, TagList, View, ViewBody, ViewHeader } from "../../view";
 export const metadata: Metadata = {
   title: "Skills",
   description: "Languages, AI and LLM tooling, web frameworks, test automation, data, and CI/CD tools Caleb Palmquist works with.",
+  alternates: { canonical: "/skills" },
 };
 
 export default function SkillsPage() {

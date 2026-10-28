@@ -12,8 +12,11 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
-  const project = findProject((await params).slug);
-  return project ? { title: project.title, description: project.description } : {};
+  const { slug } = await params;
+  const project = findProject(slug);
+  return project
+    ? { title: project.title, description: project.description, alternates: { canonical: `/projects/${slug}` } }
+    : {};
 }
 
 export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
@@ -39,7 +42,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
             className="relative w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#0b1020] sm:w-32"
             style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
           >
-            <Image src={project.image} alt="" fill sizes="128px" className="object-cover" priority />
+            <Image src={project.image} alt="" fill sizes="128px" className="object-cover" loading="eager" fetchPriority="high" />
           </div>
           <div className="flex min-w-0 flex-col items-start gap-3">
             <h1 id={titleId} className="text-3xl font-semibold tracking-tight">

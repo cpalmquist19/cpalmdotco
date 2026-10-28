@@ -1,14 +1,9 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { asset } from "@/lib/asset";
 import { LINKEDIN_URL } from "@/site/config";
 import { ChatPanel } from "../chat/chat-panel";
 import { SiteNav } from "../site-nav";
-
-export const metadata: Metadata = {
-  title: { default: "Portfolio | Caleb Palmquist", template: "%s | Caleb Palmquist" },
-};
 
 /**
  * The shell every page of the site shares: background, header with the nav, and BEAM-E. Only the left column changes
