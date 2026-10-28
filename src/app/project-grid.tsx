@@ -19,6 +19,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
     // The max height keeps the row inside the column: at height H the images are H * (sum of aspect ratios) wide,
     // plus the gaps and borders (--row-extra), so on tall screens the row stops growing instead of running under the chat panel
     <ul
+      data-card-list // AlignToCards finds the cards by this
       style={
         {
           "--row-ratio": rowRatio(projects),

@@ -3,7 +3,8 @@ import type { Message } from "./types";
 // Follow-up questions offered after a reply, grouped by topic. Each one must be answerable from src/content (relay.ts, quark.ts, resume.ts); check there before adding one, or the chat will answer "I don't know"
 const FOLLOW_UPS = [
   {
-    match: /relay|eval|harness|agent|sandbox/g,
+    // Each starts at a word boundary, so "eval" matches "evals" but not "retrieval"
+    match: /\b(?:relay|eval|harness|agent|sandbox)/g,
     prompts: [
       "What does Relay's eval dashboard show?",
       "What are Relay's security trade-offs?",
@@ -15,7 +16,7 @@ const FOLLOW_UPS = [
     ],
   },
   {
-    match: /qa|sdet|resume|experience|role|automation|ersp/g,
+    match: /\b(?:qa|sdet|resume|experience|role|automation|ersp)/g,
     prompts: [
       "What roles is Caleb looking for?",
       "What's Caleb's test automation experience?",

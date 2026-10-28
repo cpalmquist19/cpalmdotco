@@ -4,6 +4,8 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 // On wide screens the cards are sized by their images, so the row can be narrower than the column.
 // This trims the header to the right edge of the last card so the link lines up with it.
+// It finds the cards by the data-card-list attribute that ProjectGrid puts on its list, anywhere in the parent.
+
 export function AlignToCards({
   className,
   children,
@@ -15,7 +17,7 @@ export function AlignToCards({
 
   useEffect(() => {
     const el = ref.current;
-    const list = el?.parentElement?.querySelector("ul");
+    const list = el?.parentElement?.querySelector("[data-card-list]");
     if (!el || !list) return;
 
     const fit = () => {

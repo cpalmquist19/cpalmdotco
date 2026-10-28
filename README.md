@@ -6,7 +6,7 @@ Built with Next.js (App Router), React, TypeScript, Tailwind CSS v4, and the Ver
 
 ## Features
 
-- Hero section with headline and call to action
+- Hero section with headline and focus areas
 - Featured work cards that open a write-up for each project (`/projects/[slug]`), plus Experience and Skills pages, all in the same shell so the chat stays put
 - Full-bleed background image
 - Responsive layout: single column on small screens, two-column hero on large screens
