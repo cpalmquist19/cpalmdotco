@@ -132,12 +132,33 @@ export const PROJECTS: Project[] = [
         ],
       },
       {
+        heading: "Eval results",
+        paragraphs: [
+          "The latest run compared GPT 5.6 Luna, Claude Haiku 5.5 and a 1.7B local model on all 11 tasks, three repeats each. That's 99 scored runs in about 35 minutes, for $0.079 in total.",
+        ],
+        bullets: [
+          "Luna and Haiku both passed 33 of 33 runs. Their 95% intervals overlap, so the harness doesn't rank them. Luna cost $0.0009 a run and Haiku $0.0015.",
+          "The local model passed 79% (26 of 33), at about 55 seconds a run against roughly 5 for the hosted models, and free per run.",
+          "Earlier, targeted runs for one model showed tool errors falling from 6 to 0 and tool calls from 55 to 34 after I fixed the tool definitions. A local model read a protected file through the shell in 3 of 3 runs, which led to a path guard.",
+        ],
+      },
+      {
+        heading: "What I learned from the results",
+        bullets: [
+          "A suite everyone passes says little. Eight of the 11 tasks were passed on every run by every model, so only three separate them, and only the local model missed those. Both hosted models are low-cost options rather than flagships, so I need harder tasks and a stronger model.",
+          "Read the failures, not just the pass rate. Five of the local model's seven failures were runs that hit the 180 second time limit, so the pass rate mixed capability with speed. On the refusal task the path guard held and nothing leaked, but the model kept probing blocked paths instead of stopping to say it couldn't read the file.",
+          "The other two failures were a bug in my own scorer. The local model's refactor was correct, but it quoted the duplicated expression in a docstring and my duplicate check counted that as a second copy. Looking at the failing runs is what exposed it.",
+          "Repeated runs matter. The local model passed the refactor and refusal tasks one time in three, so any single run would have looked like a clean pass or a clean fail by luck.",
+        ],
+      },
+      {
         heading: "Limits and what's next",
         bullets: [
+          "The results are one run on one code version with three repeats per task, so gaps under about 10 percentage points are noise.",
+          "Next: make the refactor check ignore docstrings and comments and rerun it, add harder tasks that separate the hosted models, and report time-limit failures separately from wrong answers, so slow local models aren't scored as incapable.",
           "The shell isn't sandboxed. Adding a sandbox environment is the first upgrade.",
-          "An early round of evals comparing models on success rate and cost was lost and needs redoing, so I have no published results to cite yet.",
-          "Evaluations turned out to be harder than I expected. Accurate, current results take real infrastructure and cost, and they have to represent modern agents rather than just cheap, fast models.",
-          "Local testing wasn't extensive, because my GPU is too slow to run capable models at a useful pace.",
+          "Evaluations turned out to be harder than I expected. Accurate, current results take real infrastructure and cost.",
+          "Local testing was limited, because my GPU is too slow to run capable models at a useful pace, so the local model in the run is a small 1.7B one.",
         ],
       },
       {

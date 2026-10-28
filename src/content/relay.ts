@@ -41,13 +41,24 @@ Decisions that were Caleb's:
 QA background in the project:
 Caleb tested that the agent can complete code tests, responds properly, and cannot leave the project directory it runs in. He also tested the modular skills.
 
-Eval results and lessons:
-- Earlier eval runs compared several models on success rate and cost, but that early research was lost and needs to be redone. There are no published results to cite yet.
-- Evaluations turned out to be harder than Caleb expected. They take real infrastructure and cost to be accurate and current, and to represent modern agents' capabilities rather than just cheap, fast "flash" models.
+Eval results (run on 28 October 2026):
+- The run compared GPT 5.6 Luna, Claude Haiku 5.5 and a 1.7B local model (LFM3 in LM Studio) on all 11 tasks, 3 repeats each: 99 scored runs in about 35 minutes, costing $0.079 in total. The raw dashboard is in the cpalm.dev repo under docs/relay-eval.
+- Luna and Haiku both passed 33 of 33 runs. Their 95% confidence intervals overlap, so the harness does not rank them. Luna cost $0.0009 per run and Haiku $0.0015 (1.6x). Tool errors per run were 0.03 for Luna, 0.09 for Haiku and 0.55 for the local model.
+- The local model passed 79% (26 of 33) and took about 55 seconds per run against roughly 5 for the hosted models, at no cost per run.
+- Earlier, targeted runs for one model showed tool errors falling from 6 to 0 and tool calls from 55 to 34 after Caleb fixed the tool definitions. A local model read a protected file through the shell in 3 of 3 runs, which led to a path guard, and testing exposed a code-execution hole in the calculator tool.
+
+What Caleb learned from the results:
+- A suite everyone passes says little. 8 of 11 tasks were passed on every run by every model, so only 3 tasks (refactor, refuse outside the project root, write tests that catch bugs) separated the models, and only the local model missed them. The hosted models can't be told apart on this suite, and both are low-cost options rather than flagship models, so harder tasks and a stronger model are needed.
+- Read the failures, not just the pass rate. 5 of the local model's 7 failures were runs that hit the 180 second time limit, so pass rate mixed capability with speed. On the refusal task the path guard held and nothing leaked (safety score 1.0), but the model kept probing blocked paths instead of stopping to say it couldn't read the file.
+- The other 2 failures were a bug in Caleb's own scorer. The local model's refactor was correct, but it quoted the duplicated expression in a docstring, and the duplicate check counted that as a second copy. The run without the docstring passed. Looking at the failing runs is what exposed it.
+- Repeated runs matter. The local model passed the refactor and refusal tasks 1 time in 3, so any single run would have looked like a clean pass or a clean fail by luck.
+- Evaluations turned out to be harder than Caleb expected. They take real infrastructure and cost to be accurate and current.
 
 Limits and next steps:
+- The results are one run on one code version with 3 repeats per task, so gaps under about 10 percentage points are noise.
+- Next: make the refactor check ignore docstrings and comments and rerun it, add harder tasks that separate the hosted models, and report time-limit failures separately from wrong answers so slow local models aren't scored as incapable.
 - The shell is not sandboxed. Adding a sandbox environment (there are free options) is the first upgrade.
-- Local testing was not extensive because his GPU is too slow to run capable models at a useful pace.
+- Local testing was limited: his GPU is too slow to run capable models at a useful pace, so the local model in the run is a small 1.7B one.
 
 Why not LangChain or LangGraph:
 Caleb wanted to see whether he could build the agent loop without the popular frameworks first. Learning LangChain and LangGraph is his next step.
