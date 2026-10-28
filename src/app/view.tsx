@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Section as SectionData } from "@/site/projects";
 import { ArrowLeft, ArrowRight } from "./icons";
+import { PANEL } from "./panel";
 import { ViewFocus } from "./view-focus";
 import { ViewKeys } from "./view-keys";
 
@@ -21,7 +22,7 @@ export function View({ labelledBy, children }: { labelledBy: string; children: R
       aria-labelledby={labelledBy}
       data-view=""
       tabIndex={-1}
-      className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0e1428]/85 ring-1 ring-inset ring-white/[0.03] backdrop-blur-xl focus:outline-none max-lg:order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:min-h-0"
+      className={`${PANEL} focus:outline-none max-lg:order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:min-h-0`}
       style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px -8px rgba(59,130,246,0.25)" }}
     >
       <ViewFocus />
@@ -31,7 +32,7 @@ export function View({ labelledBy, children }: { labelledBy: string; children: R
 }
 
 const PILL =
-  "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm text-[#b6c2d8] transition-colors duration-150 hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400";
+  "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm text-muted transition-colors duration-150 hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400";
 
 /**
  * Top bar: a way back to where the visitor came from, and optionally the previous and next sibling. It also wires up
@@ -85,7 +86,7 @@ export function ViewHeader({ back, prev, next, position }: { back: Crumb; prev?:
 /** The reading area. Scrolls inside the panel on xl, and is part of the page's scroll below that. The thin scrollbar matches the chat's */
 export function ViewBody({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-8 px-5 py-6 sm:px-8 sm:py-8 xl:min-h-0 xl:flex-1 xl:overflow-y-auto [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin]">
+    <div className="flex flex-col gap-8 px-5 py-6 sm:px-8 sm:py-8 xl:min-h-0 xl:flex-1 xl:overflow-y-auto thin-scrollbar">
       {children}
     </div>
   );
@@ -166,7 +167,7 @@ export function TagList({ tags, variant = "tag", tone = "blue" }: { tags: string
           key={tag}
           className={
             variant === "tag"
-              ? "rounded-full border border-blue-400/25 bg-blue-500/10 px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-[#9cc3ff]"
+              ? "rounded-full border border-blue-400/25 bg-blue-500/10 px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-accent-soft"
               : `rounded-md border px-2.5 py-1 font-mono text-[13px] transition-[border-color,box-shadow] duration-150 ${TONES[tone]}`
           }
         >
@@ -184,10 +185,10 @@ export function Timeline({ children }: { children: ReactNode }) {
 
 export function TimelineItem({ title, meta, children }: { title: string; meta?: string; children: ReactNode }) {
   return (
-    <li className="relative flex flex-col gap-2 before:absolute before:-left-[1.9rem] before:top-[0.45rem] before:size-2.5 before:rounded-full before:border-2 before:border-[#4f86f0] before:bg-[#0e1428]">
+    <li className="relative flex flex-col gap-2 before:absolute before:-left-[1.9rem] before:top-[0.45rem] before:size-2.5 before:rounded-full before:border-2 before:border-accent before:bg-surface">
       <div>
         <h3 className="text-base font-semibold text-white">{title}</h3>
-        {meta && <p className="font-mono text-xs text-[#9fb0cc]">{meta}</p>}
+        {meta && <p className="font-mono text-xs text-faint">{meta}</p>}
       </div>
       {children}
     </li>

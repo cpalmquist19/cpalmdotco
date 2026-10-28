@@ -42,7 +42,7 @@ export default function Home() {
               {/* Same hover as the project cards: lift, brighter border, blue glow, and the pointer-following light */}
               <SpotlightCard
                 spotlightRadius={90}
-                className="relative inline-flex items-center gap-2.5 overflow-hidden rounded-full border border-blue-400/40 bg-blue-500/15 px-4 py-2 text-sm font-medium text-[#9cc3ff] backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 hover:shadow-[0_10px_24px_-8px_rgba(7,12,30,0.6),0_0_24px_-4px_rgba(59,130,246,0.5)]"
+                className="relative inline-flex items-center gap-2.5 overflow-hidden rounded-full border border-blue-400/40 bg-blue-500/15 px-4 py-2 text-sm font-medium text-accent-soft backdrop-blur-md transition duration-300 ease-out hover:border-blue-400/80 hover:shadow-[0_10px_24px_-8px_rgba(7,12,30,0.6),0_0_24px_-4px_rgba(59,130,246,0.5)]"
               >
                 <Icon className="size-4 shrink-0" />
                 {label}

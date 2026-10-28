@@ -160,6 +160,7 @@ Limits and caveats:
 - **What the assistant knows:** edit the files in `src/content/`, except the resume part, which is generated as above.
 - **Models:** edit `CHAT_MODELS` in `src/lib/models.ts`. The first entry is the default.
 - **Suggested chat prompts:** edit `CHAT_PROMPTS` in `src/app/chat/starter-prompts.tsx`.
+- **Colors:** the palette is the `@theme` block at the top of `src/app/globals.css`. Each name there is a Tailwind color (`bg-surface`, `text-accent-soft`, `border-accent/30`), so change a color once, in that block. The link-preview card is drawn outside Tailwind and repeats a few of them by hand in `src/lib/og-card.tsx`.
 - **Navigation:** edit `NAV` in `src/site/config.ts`. The active item follows the route.
 - **Site address, title and description:** edit `SITE_URL`, `SITE_TITLE` and `SITE_DESCRIPTION` in `src/site/config.ts`. They feed the page titles, link previews, canonical links, `robots.txt` and the sitemap. The preview cards are drawn by `src/lib/og-card.tsx` at build time, using the Geist font from `@fontsource/geist-sans`. A new project gets a card automatically, with the BEAM-E picture until you add its art to `CARD_FILES` in `src/app/(site)/projects/[slug]/opengraph-image.tsx`.
 - **A new page in the left column:** add a route under `src/app/(site)/` that returns a `View` (see `view.tsx`). It shares the shell, so the chat stays mounted.

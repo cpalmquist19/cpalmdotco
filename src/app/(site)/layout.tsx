@@ -15,7 +15,7 @@ import { SiteNav } from "../site-nav";
  */
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative isolate min-h-dvh overflow-hidden bg-[#070b1a] font-sans text-white xl:flex xl:h-dvh xl:min-h-[600px] xl:flex-col">
+    <div className="relative isolate min-h-dvh overflow-hidden bg-night font-sans text-white xl:flex xl:h-dvh xl:min-h-[600px] xl:flex-col">
       {/* Full-bleed mountain background, with a soft scrim so the copy on the left and the nav stay readable */}
       <div
         aria-hidden="true"
@@ -28,7 +28,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 -z-10 h-44 bg-gradient-to-b from-[#070b1a]/70 to-transparent"
+        className="absolute inset-x-0 top-0 -z-10 h-44 bg-gradient-to-b from-night/70 to-transparent"
       />
 
       <header className="relative z-20 mx-auto flex w-full max-w-[1480px] shrink-0 items-center justify-between gap-6 px-6 py-5 sm:px-10 lg:px-16">
@@ -55,7 +55,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           href={LINKEDIN_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-full bg-[#f5a25d] px-4 py-2 text-sm font-semibold text-[#1a0f05] transition-colors hover:bg-[#f8b67d] md:hidden"
+          className="flex items-center gap-2 rounded-full bg-cta px-4 py-2 text-sm font-semibold text-cta-ink transition-colors hover:bg-cta-hover md:hidden"
         >
           Contact
         </a>

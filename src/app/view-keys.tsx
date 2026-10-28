@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { isMenuOpen } from "./use-dismiss";
 
 /**
  * Keyboard shortcuts for a `View`: Escape goes back, and [ and ] (or the arrow keys) step to the previous and next sibling.
@@ -18,8 +19,8 @@ export function ViewKeys({ back, prev, next }: { back: string; prev?: string; ne
       if (target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) {
         return;
       }
-      // Any open menu (the resume downloads, the model picker) gets Escape and the arrows first
-      if (document.querySelector('[aria-expanded="true"]')) return;
+      // An open menu (the resume downloads, the model picker) gets Escape and the arrows first
+      if (isMenuOpen()) return;
 
       const to =
         event.key === "Escape"

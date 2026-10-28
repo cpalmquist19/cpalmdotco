@@ -79,7 +79,7 @@ export function Composer({
             }
           }}
           disabled={isSending}
-          className="block max-h-40 w-full resize-none bg-transparent px-4 pb-1 pt-3.5 text-base leading-snug text-slate-100 placeholder:text-slate-400 focus:outline-none disabled:opacity-50 [scrollbar-color:rgba(79,134,240,0.45)_transparent] [scrollbar-width:thin]"
+          className="block max-h-40 w-full resize-none bg-transparent px-4 pb-1 pt-3.5 text-base leading-snug text-slate-100 placeholder:text-slate-400 focus:outline-none disabled:opacity-50 thin-scrollbar"
         />
         <div
           className="flex items-center justify-between gap-2 p-2 pt-0"

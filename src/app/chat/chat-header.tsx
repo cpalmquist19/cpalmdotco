@@ -5,7 +5,7 @@ import { asset } from "@/lib/asset";
 export function ChatHeader() {
   return (
     <header className="grid shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center gap-3 border-b border-white/10 px-5 py-2.5 max-sm:grid-cols-[2.5rem_1fr]">
-      <div className="size-10 overflow-hidden rounded-full bg-slate-700 ring-1 ring-[#4f86f0]/40">
+      <div className="size-10 overflow-hidden rounded-full bg-slate-700 ring-1 ring-accent/40">
         <Image
           src={asset("/beame/BEAM-E-avatar.jpg")}
           alt="BEAM-E"
@@ -18,7 +18,7 @@ export function ChatHeader() {
         <h2 className="text-base font-semibold leading-tight tracking-tight text-white">
           Ask me about Caleb
         </h2>
-        <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[#9fb0cc]">
+        <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-faint">
           I can explain his projects, technical decisions, trade-offs, and point you to evidence.
         </p>
       </div>

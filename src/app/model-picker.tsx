@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { CHAT_MODELS, type ModelId } from "@/lib/models";
+import { useDismiss } from "./use-dismiss";
 
 const ANTHROPIC_LOGO =
   "M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z";
@@ -36,23 +37,7 @@ export function ModelPicker({ value, onChange }: { value: ModelId; onChange: (id
     setOpen(false);
   }
 
-  useEffect(() => {
-    if (!open) return;
-
-    function handlePointerDown(event: PointerEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    }
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismiss(rootRef, open, () => setOpen(false));
 
   return (
     <div ref={rootRef} className="relative w-40 shrink-0">
@@ -89,7 +74,7 @@ export function ModelPicker({ value, onChange }: { value: ModelId; onChange: (id
           id={menuId}
           role="menu"
           aria-label="Model"
-          className="absolute bottom-full left-0 z-20 mb-3 w-56 overflow-hidden rounded-xl border border-white/10 bg-[#0e1428]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-md"
+          className="absolute bottom-full left-0 z-20 mb-3 w-56 overflow-hidden rounded-xl border border-white/10 bg-surface/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-md"
         >
           {MODELS.map((m) => {
             const selected = m.id === model.id;

@@ -28,7 +28,7 @@ export default function SiteError({ error, retry }: { error: Error & { digest?: 
           <button
             type="button"
             onClick={() => retry()}
-            className="rounded-full bg-[#f5a25d] px-4 py-2 text-sm font-semibold text-[#1a0f05] transition-colors hover:bg-[#f8b67d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+            className="rounded-full bg-cta px-4 py-2 text-sm font-semibold text-cta-ink transition-colors hover:bg-cta-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
           >
             Try again
           </button>

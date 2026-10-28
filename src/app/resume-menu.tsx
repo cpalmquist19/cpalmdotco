@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
+import { useDismiss } from "./use-dismiss";
 
 // Every icon shares the same page outline; only the mark inside it and the tint change
 const FORMAT_ICONS = {
@@ -43,23 +44,7 @@ export function ResumeMenu({ align = "center", compact = false }: { align?: "cen
   const rootRef = useRef<HTMLLIElement>(null);
   const menuId = useId();
 
-  useEffect(() => {
-    if (!open) return;
-
-    function handlePointerDown(event: PointerEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    }
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useDismiss(rootRef, open, () => setOpen(false));
 
   return (
     <li ref={rootRef} className="relative">
@@ -73,8 +58,8 @@ export function ResumeMenu({ align = "center", compact = false }: { align?: "cen
           compact ? "px-2.5 py-2" : "px-3 py-2 lg:pl-4 lg:pr-3.5"
         } ${
           open
-            ? "border-[#9cc3ff]/25 bg-[#9cc3ff]/15 text-white"
-            : "border-transparent text-[#b6c2d8] hover:bg-[#9cc3ff]/10 hover:text-white"
+            ? "border-accent-soft/25 bg-accent-soft/15 text-white"
+            : "border-transparent text-muted hover:bg-accent-soft/10 hover:text-white"
         }`}
       >
         Resume
@@ -97,7 +82,7 @@ export function ResumeMenu({ align = "center", compact = false }: { align?: "cen
         role="menu"
         aria-label="Resume"
         inert={!open}
-        className={`absolute top-full z-30 mt-3 w-48 rounded-xl border border-[#9cc3ff]/15 bg-[#0e1428]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-md transition-[opacity,transform,visibility] duration-200 ease-out ${
+        className={`absolute top-full z-30 mt-3 w-48 rounded-xl border border-accent-soft/15 bg-surface/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-md transition-[opacity,transform,visibility] duration-200 ease-out ${
           align === "end" ? "right-0 origin-top-right" : "left-1/2 -translate-x-1/2 origin-top"
         } ${open ? "visible translate-y-0 scale-100 opacity-100" : "invisible -translate-y-1 scale-95 opacity-0"}`}
       >

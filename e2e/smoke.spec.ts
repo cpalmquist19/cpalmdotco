@@ -239,6 +239,47 @@ test.describe("chat", () => {
   });
 });
 
+test.describe("menus", () => {
+  test("Escape closes an open menu first and only then leaves the page", async ({ page }) => {
+    await page.goto("/projects/relay");
+    const resume = page.getByRole("button", { name: "Resume" });
+    await resume.click();
+    await expect(resume).toHaveAttribute("aria-expanded", "true");
+
+    await page.keyboard.press("Escape");
+    await expect(resume).toHaveAttribute("aria-expanded", "false");
+    await expect(page).toHaveURL(/\/projects\/relay$/);
+
+    await page.keyboard.press("Escape");
+    await expect(page).toHaveURL(/\/#projects$/);
+  });
+
+  test("the [ and ] keys leave an open menu alone instead of changing page", async ({ page }) => {
+    await page.goto("/projects/relay");
+    const resume = page.getByRole("button", { name: "Resume" });
+    await resume.click();
+    await page.keyboard.press("[");
+    await expect(page).toHaveURL(/\/projects\/relay$/);
+    await expect(resume).toHaveAttribute("aria-expanded", "true");
+  });
+
+  test("a click outside closes the resume menu and the model picker", async ({ page }) => {
+    await page.goto("/");
+
+    const resume = page.getByRole("button", { name: "Resume" });
+    await resume.click();
+    await expect(resume).toHaveAttribute("aria-expanded", "true");
+    await page.getByRole("heading", { level: 1 }).click();
+    await expect(resume).toHaveAttribute("aria-expanded", "false");
+
+    const picker = page.getByRole("button", { name: /^Model:/ });
+    await picker.click();
+    await expect(picker).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Escape");
+    await expect(picker).toHaveAttribute("aria-expanded", "false");
+  });
+});
+
 test.describe("sharing and missing pages", () => {
   const content = (page: Page, selector: string) => page.locator(selector).first().getAttribute("content");
 

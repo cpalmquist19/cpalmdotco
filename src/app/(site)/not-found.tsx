@@ -17,7 +17,7 @@ export default function NotFound() {
       <ViewHeader back={{ href: "/", label: "Home" }} />
       <ViewBody>
         <header className="flex max-w-3xl flex-col gap-3">
-          <p className="font-mono text-sm text-[#9cc3ff]">404</p>
+          <p className="font-mono text-sm text-accent-soft">404</p>
           <h1 id={titleId} className="text-3xl font-semibold tracking-tight">
             Page not found
           </h1>

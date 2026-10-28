@@ -34,7 +34,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         >
           <SpotlightCard
             spotlightRadius={180}
-            className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-[#f5a25d]/40 bg-[#0e1428]/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_36px_-8px_rgba(245,162,93,0.35)] backdrop-blur-md transition duration-300 ease-out hover:border-[#f8b67d] hover:shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_48px_-4px_rgba(245,162,93,0.65)] focus-within:border-[#f8b67d] @2xl:flex-row xl:flex-row"
+            className="relative flex h-full -translate-y-1 flex-col overflow-hidden rounded-2xl border border-cta/40 bg-surface/75 shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_36px_-8px_rgba(245,162,93,0.35)] backdrop-blur-md transition duration-300 ease-out hover:border-cta-hover hover:shadow-[0_25px_50px_-12px_rgba(7,12,30,0.6),0_0_48px_-4px_rgba(245,162,93,0.65)] focus-within:border-cta-hover @2xl:flex-row xl:flex-row"
           >
             {/* The full image at its own proportions, so nothing is cropped. The image is the link */}
             <Link
@@ -53,7 +53,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               {/* Says the card opens something, in the art's empty top-right corner. Always shown, since touch screens have no hover */}
               <span
                 aria-hidden="true"
-                className="absolute right-3 top-3 z-20 flex size-8 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors duration-300 group-hover/image:border-[#f8b67d] group-hover/image:bg-[#f5a25d] group-hover/image:text-[#1a0f05] group-focus-visible/image:border-[#f8b67d] group-focus-visible/image:bg-[#f5a25d] group-focus-visible/image:text-[#1a0f05]"
+                className="absolute right-3 top-3 z-20 flex size-8 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors duration-300 group-hover/image:border-cta-hover group-hover/image:bg-cta group-hover/image:text-cta-ink group-focus-visible/image:border-cta-hover group-focus-visible/image:bg-cta group-focus-visible/image:text-cta-ink"
               >
                 <ArrowRight className="size-4 transition-transform duration-300 group-hover/image:translate-x-0.5" />
               </span>

@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+/*
+ * The site's palette. Each name becomes Tailwind classes, so bg-surface, text-accent-soft and border-accent/30 all work,
+ * and a color is changed here once. src/lib/og-card.tsx draws the link-preview card outside Tailwind and repeats a few
+ * of these by hand, so keep it in step.
+ */
+@theme {
+  /* The page behind everything */
+  --color-night: #070b1a;
+  /* Panels, menus and cards, usually at some opacity over the page */
+  --color-surface: #0e1428;
+  /* The brand blue, for borders, tints and scrollbars */
+  --color-accent: #4f86f0;
+  /* A light blue for text and outlines on dark surfaces */
+  --color-accent-soft: #9cc3ff;
+  /* The orange call to action, its hover, and the dark text that sits on it */
+  --color-cta: #f5a25d;
+  --color-cta-hover: #f8b67d;
+  --color-cta-ink: #1a0f05;
+  /* Secondary and tertiary text */
+  --color-muted: #b6c2d8;
+  --color-faint: #9fb0cc;
+}
+
+/* A slim scrollbar in the accent blue, for the panels that scroll */
+@utility thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-accent) 45%, transparent) transparent;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

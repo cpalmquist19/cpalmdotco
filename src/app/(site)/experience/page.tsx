@@ -23,7 +23,7 @@ export default function ExperiencePage() {
         </header>
 
         <Section heading={EMPLOYER.name}>
-          <p className="-mt-2 font-mono text-xs text-[#9fb0cc]">
+          <p className="-mt-2 font-mono text-xs text-faint">
             {EMPLOYER.about} · {EMPLOYER.period}
           </p>
           <Timeline>

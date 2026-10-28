@@ -67,7 +67,7 @@ export function ChatVideo({ phase }: { phase: ChatPhase }) {
       {/* Fade into the card body so the video doesn't end on a hard edge */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0e1428] to-transparent"
+        className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-surface to-transparent"
       />
       <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur-md">
         <span aria-hidden="true" className="relative flex size-2">
