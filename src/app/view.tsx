@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { Section as SectionData } from "@/site/projects";
+import type { Section as SectionData, SectionImage } from "@/site/projects";
 import { ArrowLeft, ArrowRight } from "./icons";
 import { PANEL } from "./panel";
 import { ViewFocus } from "./view-focus";
@@ -128,11 +129,30 @@ export function Bullets({ items }: { items: string[] }) {
   );
 }
 
-/** A write-up section as data: a heading over paragraphs and/or bullets */
+/** Screenshots, each at half its pixel width (they're taken at 2x) or the column's width if that is less */
+export function Screenshots({ items }: { items: SectionImage[] }) {
+  return (
+    <>
+      {items.map(({ src, alt }) => (
+        <Image
+          key={alt}
+          src={src}
+          alt={alt}
+          sizes="(min-width: 768px) 768px, 100vw"
+          className="h-auto w-full rounded-xl border border-white/10"
+          style={{ maxWidth: src.width / 2 }}
+        />
+      ))}
+    </>
+  );
+}
+
+/** A write-up section as data: a heading over paragraphs, screenshots and/or bullets */
 export function ContentSection({ section }: { section: SectionData }) {
   return (
     <Section heading={section.heading}>
       {section.paragraphs && <Paragraphs items={section.paragraphs} />}
+      {section.images && <Screenshots items={section.images} />}
       {section.bullets && <Bullets items={section.bullets} />}
     </Section>
   );

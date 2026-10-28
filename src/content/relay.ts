@@ -9,7 +9,7 @@ A local coding agent with a web UI, plus an evaluation harness that measures how
 The agent:
 - Runs against a model in LM Studio on the user's own machine, or against OpenAI, Anthropic (Claude), Google Gemini, or a local Unsloth server. The provider is chosen with one setting.
 - Streams responses to the web UI, and a generation can be stopped at any time.
-- Gives the model tools to read, write, edit and search project files, list directories, run shell commands, search the web, fetch pages, and inspect pages in a headless Playwright browser.
+- Gives the model 14 tools: read, write, edit and search project files, list directories, run shell commands, search the web, fetch pages, inspect pages in a headless Playwright browser, plus a calculator, the current time, skills and attachment viewing.
 - Loads reusable Agent Skills, which are task procedures written as SKILL.md files that the model can list and read when relevant.
 - Has a project explorer where files can be dragged into the chat as attachments, and supports image attachments for vision-capable models.
 - Is local by default: the server binds to localhost, file tools are restricted to the open project folder, and the README is explicit about the security tradeoffs (shell commands are not sandboxed, there is no login, hosted providers receive the chat, and untrusted web content can steer the model).
@@ -23,7 +23,7 @@ The eval harness:
 - Is used both to pick a model (is it reliable enough and what does it cost) and to catch regressions when the agent's prompts or tools change.
 
 Engineering:
-Python 3.10+, with unit tests run by pytest and a GitHub Actions CI workflow. It is MIT licensed.
+Python 3.10+, with 200+ pytest tests and a GitHub Actions CI workflow. On every push CI runs the unit tests and the eval selfcheck (scripted good and bad agents, no model needed). Live model evals are not run on every push: they are triggered on demand from the same workflow, against OpenAI or a self-hosted runner with LM Studio. It is MIT licensed.
 
 Why Caleb built it:
 He wanted an AI development tool that doesn't depend on the cloud or its ongoing cost. His GPU is an RTX 3070 Ti with 8GB of VRAM, so he hoped a local model could run on it. There was also controversy around some open-source agent frameworks such as OpenClaw, and building the agent himself with a local model meant he could code with AI indefinitely at no cost.

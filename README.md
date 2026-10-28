@@ -33,7 +33,7 @@ The full interactive dashboard is in [`docs/relay-eval/dashboard.html`](docs/rel
 
 - **Agent:** tool-calling loop with 14 tools (files, shell, web, Playwright page inspection), reusable `SKILL.md` instructions, a streaming UI, stop controls, and a choice of LM Studio, OpenAI, Anthropic, Gemini or a local server.
 - **Evals:** 11 coding tasks scored on tool selection, argument validity, end-state correctness, efficiency and safety. Each task repeats because models are non-deterministic, with cost per run, per-task cost, confidence intervals and an optional LLM judge.
-- **Regression gate:** the eval suite runs in GitHub Actions on every push.
+- **Trusting the harness:** 200+ automated tests plus a self-check that replays scripted good and bad agents through the real engine and scorer, so the scorer is tested with no model and no API key. Both run in GitHub Actions on every push; live model evals run on demand from the same workflow.
 - **Problems the evals found in my own agent:** in targeted runs for one model, tool errors fell from 6 to 0 and tool calls from 55 to 34 after I fixed the tool definitions. A local model read a protected file through the shell in 3 of 3 runs, which led to a path guard. Testing also exposed a code-execution hole in the calculator tool.
 
 ## BEAM-E: an LLM feature in production
