@@ -69,6 +69,16 @@ Every `.mp4` in each `public/**/raw` folder is converted to `<name>.webm` (VP9) 
 
 You can also pass specific files or folders, e.g. `npm run optimize-video -- clip.mp4 --out public --poster`. Run with `--help` for width, fps, quality, trim, and output options.
 
+### Retaking the screenshots
+
+`screenshots/` holds a full-page capture of the home page at 22 sizes, from a 360px phone to a 3440px ultrawide. With the site running (a production server is best: `npm run build && npm start`), run:
+
+```bash
+npm run screenshots
+```
+
+Each size is saved as `<category>-<width>x<height>-<device>.webp`, replacing the old file. The sizes are listed at the top of `scripts/screenshots.mjs`. Options: `--only phone` retakes the names containing that text, `--url` and `--path` point at another server or page, `--out` picks another folder, and `--prune` deletes files that are no longer in the list. Needs Chromium once (`npx playwright install chromium`).
+
 ### Updating the resume
 
 The resume is written and kept in a separate repo, next to this one (`../resume`, or wherever `RESUME_REPO` points). Its `cpalm_final.txt` is the source of truth. After changing it there, run:
