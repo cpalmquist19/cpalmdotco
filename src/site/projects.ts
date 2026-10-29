@@ -28,6 +28,8 @@ export type Project = {
   tags: string[];
   // The card art, shown alone on the home page
   image: StaticImageData;
+  // What the card's "Ask BEAM-E" button sends to the chat. It must be answerable from src/content, and pass the chat guard
+  ask: string;
   links: { label: string; href: string }[];
   sections: Section[];
 };
@@ -40,6 +42,7 @@ export const PROJECTS: Project[] = [
       "Portfolio site with BEAM-E, a live AI assistant that answers questions about my work on either Claude or GPT. Messages are screened for injection and abuse before they reach the model, with per-visitor rate limits and a daily spend cap, all backed by a test suite and CI.",
     tags: ["Next.js", "TypeScript", "LLM", "AI Safety"],
     image: calmdotcoCard,
+    ask: "What is the cpalm.dev site, and how does BEAM-E work?",
     links: [{ label: "View on GitHub", href: `${GITHUB_URL}/cpalmdotco` }],
     sections: [
       {
@@ -89,6 +92,7 @@ export const PROJECTS: Project[] = [
       "A tool-calling coding agent and the evaluation harness I built to measure it. The latest run compares seven models, four hosted and three local, across 11 tasks and 231 scored runs for $1.39, with pass rate, confidence intervals, speed and cost for each.",
     tags: ["Python", "LLM", "Agents", "Evals"],
     image: relayCard,
+    ask: "What is Relay, and what did its latest evals find?",
     links: [
       { label: "View on GitHub", href: `${GITHUB_URL}/relay` },
       { label: "Eval results and raw data", href: `${GITHUB_URL}/cpalmdotco/tree/main/docs/relay-eval` },

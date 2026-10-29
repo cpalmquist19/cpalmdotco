@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useEffectEvent } from "react";
 import { PANEL } from "../panel";
+import { listenForQuestions } from "./ask-event";
 import { ChatHeader } from "./chat-header";
 import { ChatVideo } from "./chat-video";
 import { Composer } from "./composer";
@@ -8,10 +10,21 @@ import { followUps } from "./follow-ups";
 import { MessageList } from "./message-list";
 import { StarterPrompts } from "./starter-prompts";
 import { useChat } from "./use-chat";
+import { usePrefersReducedMotion } from "./use-reduced-motion";
 
 /** The BEAM-E chat card. Talks to /api/chat and keeps the thread in the browser. */
 export function ChatPanel({ className = "" }: { className?: string }) {
   const chat = useChat();
+  const reducedMotion = usePrefersReducedMotion();
+
+  // A project card's "Ask BEAM-E" button sends its question like a chip does. Where the chat sits below or above the
+  // card (anything under xl) it scrolls into view so the visitor sees the answer start. The effect event reads the
+  // latest thread and motion setting, so the listener is attached once
+  const onQuestion = useEffectEvent((question: string) => {
+    document.getElementById("chat")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+    void chat.send(question);
+  });
+  useEffect(() => listenForQuestions(onQuestion), []);
 
   const showFollowUps = !chat.isSending && !chat.error && chat.messages[chat.messages.length - 1]?.role === "assistant";
   const suggestions = showFollowUps ? followUps(chat.messages) : [];

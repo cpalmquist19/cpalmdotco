@@ -125,6 +125,24 @@ test.describe("chat", () => {
     expect(requests[0].messages[0].content).toBe("What does Relay do, and why did Caleb build it?");
   });
 
+  test("a project page's Ask BEAM-E button sends that project's question", async ({ page }) => {
+    const requests = await mockChat(page);
+    await page.goto("/projects/relay");
+
+    await page.getByRole("button", { name: "Ask BEAM-E about Relay" }).click();
+    await expect.poll(() => requests.length).toBe(1);
+    expect(requests[0].messages[0].content).toBe("What is Relay, and what did its latest evals find?");
+    await expect(page.getByRole("log")).toContainText("What is Relay, and what did its latest evals find?");
+    await expect(page.getByRole("log")).toContainText("Caleb built Relay");
+
+    // The next project's button adds to the same conversation instead of starting a new one
+    await page.keyboard.press("[");
+    await expect(page).toHaveURL(/\/projects\/cpalm-dev$/);
+    await page.getByRole("button", { name: "Ask BEAM-E about cpalm.dev" }).click();
+    await expect.poll(() => requests.length).toBe(2);
+    expect(requests[1].messages.map((m) => m.content)).toContain("What is the cpalm.dev site, and how does BEAM-E work?");
+  });
+
   test("the model picker changes the model that is sent", async ({ page }) => {
     const requests = await mockChat(page);
     await page.goto("/");

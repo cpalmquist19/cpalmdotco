@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Section as SectionData, SectionImage } from "@/site/projects";
 import { ArrowLeft, ArrowRight } from "./icons";
-import { PANEL } from "./panel";
+import { PANEL, PILL_BUTTON } from "./panel";
 import { ViewFocus } from "./view-focus";
 import { ViewKeys } from "./view-keys";
 
@@ -222,7 +222,7 @@ export function ExternalButton({ href, children }: { href: string; children: Rea
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-full border border-blue-400/40 bg-blue-500/20 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:border-blue-400/70 hover:bg-blue-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+      className={PILL_BUTTON}
     >
       {children}
     </a>

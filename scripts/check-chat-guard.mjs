@@ -18,6 +18,8 @@ const ALLOW = [
   "How did you reach 98% accuracy on Ticket Radar?",
   "What is Relay's eval harness and how does it score models?",
   "Tell me about Quark and paired-seed ablations",
+  "What is the cpalm.dev site, and how does BEAM-E work?",
+  "What is Relay, and what did its latest evals find?",
   "Do you have experience with C#, .NET, and ASP.NET Core?",
   "What's your experience with Playwright, pytest, and CI/CD pipelines?",
   "Is Caleb open to remote roles? What's the best way to contact him?",

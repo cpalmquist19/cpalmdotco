@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PROJECTS, findProject, neighbours } from "@/site/projects";
+import { AskBeameButton } from "../../../ask-beame-button";
 import { ArrowUpRight, GitHubIcon } from "../../../icons";
 import { ContentSection, ExternalButton, TagList, View, ViewBody, ViewHeader } from "../../../view";
 
@@ -58,6 +59,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                   <ArrowUpRight className="size-3.5 text-slate-300" />
                 </ExternalButton>
               ))}
+              <AskBeameButton title={project.title} question={project.ask} />
             </div>
           </div>
         </header>
