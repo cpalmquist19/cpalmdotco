@@ -11,6 +11,7 @@ import { buildModelMessages, type ChatTurn } from "@/lib/chat-history";
 import { checkRate, clientId, recordStrike, reserveModelCall } from "@/lib/chat-limits";
 import { DEFAULT_MODEL_ID, findModel, type ModelId } from "@/lib/models";
 import { isSameOrigin } from "@/lib/same-origin";
+import { CPALMDEV } from "@/content/cpalmdev";
 import { QUARK } from "@/content/quark";
 import { RELAY } from "@/content/relay";
 import { RESUME } from "@/content/resume";
@@ -33,6 +34,8 @@ ${RESUME}
 Portfolio projects:
 
 ${RELAY}
+
+${CPALMDEV}
 
 ${QUARK}`;
 

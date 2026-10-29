@@ -181,6 +181,8 @@ if (looksInjected("Caleb built Relay, a local coding agent with a web UI.")) fai
 // Follow-up topics are picked by words in the latest exchange, not by letters inside other words
 const qaFirst = followUps([turn("Does Caleb know retrieval and QA?")]);
 if (qaFirst[0] !== "How does Caleb test non-deterministic systems?") fail(`"retrieval" should not count as "eval": got ${JSON.stringify(qaFirst)}`);
+const beameFirst = followUps([turn("How does BEAM-E stay safe?")]);
+if (beameFirst[0] !== "How does BEAM-E protect itself from abuse?") fail(`BEAM-E questions should offer the site's follow-ups first: got ${JSON.stringify(beameFirst)}`);
 const relayFirst = followUps([turn("How do Relay's evals work?")]);
 if (relayFirst[0] !== "What does Relay's eval dashboard show?") fail(`"evals" should count as "eval": got ${JSON.stringify(relayFirst)}`);
 

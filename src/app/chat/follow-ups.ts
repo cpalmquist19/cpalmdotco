@@ -1,6 +1,6 @@
 import type { Message } from "./types";
 
-// Follow-up questions offered after a reply, grouped by topic. Each one must be answerable from src/content (relay.ts, quark.ts, resume.ts); check there before adding one, or the chat will answer "I don't know"
+// Follow-up questions offered after a reply, grouped by topic. Each one must be answerable from src/content (relay.ts, cpalmdev.ts, quark.ts, resume.ts); check there before adding one, or the chat will answer "I don't know"
 const FOLLOW_UPS = [
   {
     // Each starts at a word boundary, so "eval" matches "evals" but not "retrieval"
@@ -21,6 +21,15 @@ const FOLLOW_UPS = [
       "How does Caleb test non-deterministic systems?",
       "What's Caleb's test automation experience?",
       "What AI projects has Caleb built besides Relay?",
+    ],
+  },
+  {
+    match: /\b(?:beam-?e|safeguards?|guardrails?|injection|rate.?limit|cpalm|portfolio|this site)/g,
+    prompts: [
+      "How does BEAM-E protect itself from abuse?",
+      "How is BEAM-E tested?",
+      "What are the limits of BEAM-E's safeguards?",
+      "How was this site built?",
     ],
   },
 ];
